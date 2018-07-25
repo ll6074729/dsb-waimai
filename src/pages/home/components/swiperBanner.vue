@@ -17,17 +17,17 @@
 </template>
 <script>
 export default {
-    name:'HomeSwiper',
+    name:'HomeswiperBanner',
     data () {
         return {
             swiperOption: {
-                autoplay: true,
-                loop:true,
+                // autoplay: true,
+                // loop:true,
                 pagination: {
                 el: ".swiper-pagination"
                 }
             },
-            imgurl:[{url:'https://goss.veer.com/creative/vcg/veer/612/veer-161548038.jpg',id:1},{url:'http://www.quanjing.com/image/2018image/homepage/1.jpg?v=8',id:2},{url:'http://www.quanjing.com/image/2018image/homepage/3.jpg?v=8',id:3}],
+            imgurl:[{url:require('../img/banner@3x.png'),id:1},{url:'http://www.quanjing.com/image/2018image/homepage/1.jpg?v=8',id:2},{url:'http://www.quanjing.com/image/2018image/homepage/3.jpg?v=8',id:3}],
         }
     }
 }
@@ -35,6 +35,7 @@ export default {
 <style lang="stylus" scoped>
 .warpper
     height 53.35vw
+    position relative
     .swiper-img
         height 53.35vw
         width 100%
@@ -44,4 +45,6 @@ export default {
         z-index 10    
         img 
             width 100%
+
+        
 </style>

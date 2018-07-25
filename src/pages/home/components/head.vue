@@ -27,7 +27,7 @@ export default {
 
     .head
         position absolute
-        top 5vw
+        top 2vw
         padding 0 3vw
         width 100%
         z-index 100

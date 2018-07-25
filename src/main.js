@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'css/reset.css'
+import 'css/icon.css'
 import 'swiper/dist/css/swiper.css'
 import 'css/style.css'
 Vue.use(VueAwesomeSwiper)

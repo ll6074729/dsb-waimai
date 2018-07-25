@@ -1,31 +1,47 @@
-.icon{
-    display: block;
-    width: 3.2vw;
-    height: 3.5vw;
+.hr20{
+    height: 2.7vw;
+    border: none;
+    background: #f7f7f7;
+    padding: 0;
+    margin: 0
+}
+html,body{
+    font-family: PingFang-SC-Heavy;
+}
+/* 首页标题 */
+.title{
+    font-size: 4.9vw;
+    text-align: center;
+    position: relative;
+    font-weight: bold;
+    height: 13.3vw;
+    line-height: 13.3vw;
+}
+.title::before{
+    content: "";
     position: absolute;
-    background-repeat: no-repeat
+    height: 2px;
+    width: 8vw;
+    background: #dbdbdb;
+    left: 25%;
+    top: 6.6vw;
 }
-.icon-address{
-    background-image: url('../img/address.png');
-    top:2vw;
-    left:2vw;
-    background-size: 3vw;
+.title::after{
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 8vw;
+    background: #dbdbdb;
+    right: 25%;
+    top: 6.6vw;
 }
-.icon-search{
-    background-image: url('../img/search.png');
-    top:3vw;
-    left:5vw;
-    background-size: 3vw;
+.title-94{
+    color: #ffb94f;
+    border-bottom: 1px solid #f7f7f7
 }
-.ellipse{
-    overflow: hidden;
-    text-overflow:ellipsis;
-    white-space: nowrap;
+.title-94::before{
+    background: #ffb94f;
 }
-.icon-right{
-    top: 2vw;
-    right: 2vw;
-    background-image: url('../img/right.png');
-    background-size: 2vw;
+.title-94::after{
+    background: #ffb94f;
 }
-

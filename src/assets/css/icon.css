@@ -1,0 +1,31 @@
+.icon{
+    display: block;
+    width: 3.2vw;
+    height: 3.5vw;
+    position: absolute;
+    background-repeat: no-repeat
+}
+.icon-address{
+    background-image: url('../img/address.png');
+    top:2vw;
+    left:2vw;
+    background-size: 3vw;
+}
+.icon-search{
+    background-image: url('../img/search.png');
+    top:3vw;
+    left:5vw;
+    background-size: 3vw;
+}
+.ellipse{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
+.icon-right{
+    top: 2vw;
+    right: 2vw;
+    background-image: url('../img/right.png');
+    background-size: 2vw;
+}
+
