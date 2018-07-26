@@ -1,8 +1,6 @@
 <template>
     <div class="box">
-        <div class="title">
-            优选商家
-        </div>
+        <slot></slot>
         <div class="tab">
             <div class="item-tab active">销量优先</div>
             <div class="item-tab">评分优先</div>
@@ -10,7 +8,7 @@
         </div>
         <div ref="warpper" class="shop">
             <div>
-                <div class="shop-list" v-for="item in list" :key="item.id">
+                <router-link class="shop-list"  v-for="item in list" :key="item.id" :to="'/shop/'+item.id">
                     <div class="shop-list-item">
                         <div class="shop-left">
                             <img :src="item.imgUrl" alt="" class="shop-img">
@@ -21,11 +19,23 @@
                                 <div class="shop-status" v-if="item.status == 1">休息中</div>
                             </div>
                             <div class="shop-content">
-                                <div class="shop-score">{{item.score}}</div>
+                                <div class="shop-score">
+                                    <el-rate
+                                        v-model="item.score"
+                                        disabled
+                                        allow-half
+                                        show-score
+                                        void-color="#ff3800"
+                                        text-color="#333"
+                                        score-template="{value}">
+                                    </el-rate>
+
+                                </div>
                                 <div class="shop-sale">{{item.sale}}m | 月售 {{item.sale}}</div>
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
+                                    
                                     <span  v-for="label in item.label" :key="label">{{label}}</span>
                                 </div>
                                 <div class="shop-label-right">
@@ -36,7 +46,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </router-link>
             </div>
         </div>
         

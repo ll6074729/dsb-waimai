@@ -4,16 +4,18 @@
             大牌推荐
         </div>
         <div class="recommend-box">
-            <swiper :options="swiperOption">
+            <swiper :options="swiperOption"> 
                 <swiper-slide v-for="item in list" :key="item.id">
-                    <img :src="item.imgurl" alt="" srcset="">
-                    <p>{{item.name}}</p>
-                    <span v-if="item.status == '0'" class="status0">
-                        休息中
-                    </span>
-                    <span v-else-if="item.status=='1'" class="status1">
-                        大牌推荐
-                    </span>
+                    <router-link tag="div" :to="'/shop/'+item.id">
+                         <img :src="item.imgurl" alt="" srcset="">
+                        <p>{{item.name}}</p>
+                        <span v-if="item.status == '0'" class="status0">
+                            休息中
+                        </span>
+                        <span v-else-if="item.status=='1'" class="status1">
+                            大牌推荐
+                        </span>
+                    </router-link>
                 </swiper-slide>
                 <div class="swiper-scrollbar"></div>
             </swiper>

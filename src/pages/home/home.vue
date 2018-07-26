@@ -20,7 +20,11 @@
         <recommend :list=" Recommend"></recommend>
         <hr class="hr20">
         <!-- 商家列表 -->
-        <goods-list :list="shopList"></goods-list>
+        <goods-list :list="shopList">
+            <div class="title">
+                优选商家
+            </div>
+        </goods-list>
     </div>
 </template>
 <script>
@@ -29,7 +33,8 @@ import HomeHead from "./components/head";
 import HomeswiperTab from "./components/swiperTab"
 import HomeswiperTip from "./components/swiperTip"
 import Recommend from "./components/recommend"
-import GoodsList from "./components/goodsList"
+import GoodsList from "../../componentss/goodsList"
+import axios from 'axios'
 export default {
   name: "Home",
   components: {
@@ -40,7 +45,7 @@ export default {
     Recommend,
     GoodsList
   },
-  data() {
+  data () {
     return {
         swiperTab: [
             {
@@ -110,10 +115,27 @@ export default {
             }
         ],
         shopList:[
-            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店)",status:1,id:1,score:4,sale:532,label:["快餐","汉堡"]},
-            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店)",status:0,id:2,score:4,sale:132,label:["饮料","汉堡"]}
+            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店1)",status:1,id:1,score:4.8,sale:532,label:["快餐·中餐 ","西餐·汉堡"]},
+            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店2)",status:0,id:2,score:4.3,sale:132,label:["快餐·中餐 ","西餐·汉堡"]},
+            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店3)",status:0,id:3,score:5,sale:9992,label:["快餐·中餐 ","西餐·汉堡"]},
+            {imgUrl:require("./img/组17@3x.png"),name:"德克士（金牛凤凰立交店4)",status:0,id:4,score:4,sale:992,label:["快餐·中餐 ","西餐·汉堡"]}
         ],
     }
+  },
+  methods:{
+        // getHomeInfo () {
+        //     axios.get('')
+        //         .then(this.getHomeInfoSucc)    
+        // },
+        // getHomeInfoSucc(res){
+        //     const date = res.data.data
+        //     this.swiperTab = date.swiperTab
+        //     // this.Recommend = date.Recommend
+        //     // this.shopList = date.shopList
+        // }
+  },
+  mounted () {
+        // this.getHomeInfo()
   }
 }
 </script>
