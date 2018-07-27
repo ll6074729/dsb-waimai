@@ -7,8 +7,7 @@
             <div class="item-tab">优惠优先</div>
         </div>
         <div ref="warpper" class="shop">
-            <div>
-                <router-link class="shop-list"  v-for="item in list" :key="item.id" :to="'/shop/'+item.id">
+                <router-link class="shop-list" tag="div" v-for="item in list" :key="item.id" :to="'/shop/'+item.id">
                     <div class="shop-list-item">
                         <div class="shop-left">
                             <img :src="item.imgUrl" alt="" class="shop-img">
@@ -47,9 +46,7 @@
                         </div>
                     </div>
                 </router-link>
-            </div>
         </div>
-        
     </div>
 </template>
 <script>
@@ -57,7 +54,7 @@ import  BScroll from 'better-scroll'
 export default {
     name:'goodsList',
     mounted (){
-        this.scroll = new BScroll(this.$refs.warpper)
+        // this.scroll = new BScroll(this.$refs.warpper)
     },
     props:{
         list:Array

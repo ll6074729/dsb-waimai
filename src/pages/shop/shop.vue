@@ -6,7 +6,8 @@
                 <img src="../../assets/img/back_white.png" alt="">
             </router-link>
             <div class="shop-head-right">
-                <img src="../../assets/img/favorite.png" alt="">
+                <img src="../../assets/img/favorite.png" alt="" v-show="isCollect" @click="collect">
+                <img src="../../assets/img/favorite_white.png" alt="" v-show="!isCollect" @click="collect">
             </div>
         </div>
         <!-- 商家信息 -->
@@ -62,40 +63,52 @@
         <div class="shop-box">
             <div class="tab">
                 <div class="tab-btn" :class="{'active':isShowA}" @click="tab()">商品</div>
-                <div class="tab-btn" :class="{'active':isShowB} " @click="tab()">评论</div>
+                <div class="tab-btn" :class="{'active':!isShowA} " @click="tab()">评论</div>
             </div>
             <div class="tab-box">
                 <div class="shop-buy" v-show="isShowA">
-                    <shop-menu>1</shop-menu>
+                    <shop-menu></shop-menu>
+                    <shop-product></shop-product>
                 </div>
-                <div class="shop-comment" v-show="isShowB">
+                <div class="shop-comment" v-show="!isShowA">
                     2
                 </div>
             </div>
+            <div class="shop-cart">
+                <!-- <shop-foot></shop-foot> -->
+                <shop-buy></shop-buy>
+            </div>
+            
         </div>
     </div>
 </template>
 <script>
-import Shopmenu from "./components/shopmenu"
+import ShopMenu from "./components/shopmenu"
+import ShopProduct from "./components/shopproduct"
+import ShopFoot from "./components/shopfoot"
+import ShopBuy from "./components/shopbuy"
 export default {
     name:'Shop',
     components:{
-        Shopmenu
+        ShopMenu,
+        ShopProduct,
+        ShopFoot,
+        ShopBuy
     },
     data () {
         return {
             shop:{imgUrl:require("../../assets/img/组17@3x.png"),name:"德克士（金牛凤凰立交店4)",status:0,id:4,score:4,sale:992,describe:"四川省城市职业学院9栋楼下"},
             activity:[{type:1,warp:"满20减5，满30减10，满40减20，满50减3020减5，满30减10，满40减20，满50减30"},{type:2,warp:"配送费 2 元"},{type:3,warp:"满 13.0 元送可口可乐"}],
             isShowA:true,
-            isShowB:false,
-            
+            isCollect:true,
         }
     },
     methods:{
         tab () {
-            // console.log(this.isShowA)
             this.isShowA = !this.isShowA
-            this.isShowB = !this.isShowB
+        },
+        collect () {
+            this.isCollect = !this.isCollect
         }
     }
 }
@@ -222,6 +235,7 @@ export default {
                     font-size 2.93vw
                     line-height 5vw
     .shop-box
+        // padding-bottom 13.33vw
         .tab
             display flex
             height 10.66vw
@@ -233,5 +247,15 @@ export default {
                 text-align center
             .active
                 color #4897fe
-
+        .tab-box
+            position relative
+            width 100%
+            .shop-buy
+                display flex
+        .shop-cart
+            position fixed
+            bottom 0
+            width 100%
+            background-color #ffffff
+            box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.05)
 </style>

@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import ElementUI from 'element-ui'
-import {Rate,Input} from 'element-ui'
+import {Rate,Input,Badge} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'css/reset.css'
 import 'css/icon.css'
@@ -14,6 +14,8 @@ import 'css/style.css'
 Vue.use(VueAwesomeSwiper)
 Vue.use(ElementUI)
 Vue.use(Rate)
+Vue.use(Input)
+Vue.use(Badge)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
