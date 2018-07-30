@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="position: relative">
         <!-- 头部 -->
         <div class="shop-head">
             <router-link class="shop-head-left" tag="div" to="/">
@@ -71,12 +71,12 @@
                     <shop-product></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
-                    2
+                    <shop-comment></shop-comment>
                 </div>
             </div>
             <div class="shop-cart">
-                <!-- <shop-foot></shop-foot> -->
-                <shop-buy></shop-buy>
+                <shop-foot></shop-foot>
+                <!-- <shop-buy></shop-buy> -->
             </div>
             
         </div>
@@ -87,13 +87,15 @@ import ShopMenu from "./components/shopmenu"
 import ShopProduct from "./components/shopproduct"
 import ShopFoot from "./components/shopfoot"
 import ShopBuy from "./components/shopbuy"
+import ShopComment from "./components/comment"
 export default {
     name:'Shop',
     components:{
         ShopMenu,
         ShopProduct,
         ShopFoot,
-        ShopBuy
+        ShopBuy,
+        ShopComment,
     },
     data () {
         return {
@@ -252,6 +254,7 @@ export default {
             width 100%
             .shop-buy
                 display flex
+                position relative
         .shop-cart
             position fixed
             bottom 0

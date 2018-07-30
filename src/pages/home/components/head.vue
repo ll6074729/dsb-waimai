@@ -1,5 +1,5 @@
 <template>
-    <div class="head">
+    <div class="head" :class="{ishead:ishead}" ref="head">
         <div class="address">
             <a href="javascript:;">
                 <i class="icon-address icon">
@@ -19,16 +19,32 @@ export default {
     name:'Homehead',
     data () {
         return {
+            ishead:false
         }
+    },
+    mounted () {
+        window.addEventListener("scroll",this.handleScroll)
+    },
+    methods : {
+        // handleScroll () {
+        //     var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        //     console.log(scrollTop)
+        //     if(scrollTop >= 180){
+        //         this.ishead = true
+        //     }else{
+        //         this.ishead = false
+        //     }
+        // },
     }
 }
 </script>
 <style lang="stylus" scoped>
-
+    .ishead
+        background #469af1
     .head
-        position absolute
-        top 2vw
-        padding 0 3vw
+        position fixed
+        top 0vw
+        padding 2vw 3vw
         width 100%
         z-index 100
         display flex

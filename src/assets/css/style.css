@@ -45,3 +45,38 @@ html,body{
 .title-94::after{
     background: #ffb94f;
 }
+.db{
+    display: inline-block
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.df{
+    display: flex;
+    justify-content: space-between
+}
+.pr{
+    position: relative;
+}
+.buybtn{
+    width:32vw;
+    height:13.33vw;
+    background: #469afe;
+    color: #fff;
+    text-align:center;
+    line-height:13.33vw;
+    font-size:4.26vw;
+}
+.price1{
+    font-size:4.8vw;
+    color:#469afe;
+}
+
+.price2{
+    font-size:3.2vw;
+    color:#999;
+    text-decoration:line-through;
+}

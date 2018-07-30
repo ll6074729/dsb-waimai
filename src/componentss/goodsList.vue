@@ -68,6 +68,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import "~css/style"
+.box
+    position relative
     .tab
         display flex
         padding 0 6vw
@@ -82,6 +84,12 @@ export default {
             color #469afe
             font-weight bold
     .shop
+        // position absolute
+        // top 23.9vw
+        // left 0
+        // right 0
+        // bottom 0
+        // overflow hidden
         .shop-list
             .shop-list-item
                 border-top 1px solid #f7f7f7

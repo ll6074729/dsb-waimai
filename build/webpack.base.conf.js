@@ -39,6 +39,7 @@ module.exports = {
       'css':resolve('src/assets/css'),
       'js':resolve('src/assets/js'),
       'cp':resolve('src/components'),
+      'st':resolve('src/assets/static'),
     }
   },
   module: {

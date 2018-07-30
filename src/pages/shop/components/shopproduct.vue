@@ -65,6 +65,12 @@ export default {
         border none!important
     .shop-product 
         flex 1
+        position absolute
+        top 2vw
+        left 26.66vw
+        right 0
+        bottom 0
+        overflow hidden
         .area 
             .cate-title
                 width 95%

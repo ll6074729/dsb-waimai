@@ -13,11 +13,11 @@
                 配送费: ￥1
             </div>
         </div>
-        <div class="buybtn">
+        <router-link tag="div" class="buybtn" to="/cart">
             立即下单
-        </div>
+        </router-link>
     </div>
-    <div class="cart">
+    <!-- <div class="cart">
         <div class="cart-head">
             <div class="cart-title">购物车</div>
             <div class="cart-clean">清空</div>
@@ -164,7 +164,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
     
 </template>
@@ -173,7 +173,7 @@ import BScroll from 'better-scroll'
 export default {
     name:"ShopFoot",
     mounted() {
-        this.scroll = new BScroll(this.$refs.isgoods)
+        // this.scroll = new BScroll(this.$refs.isgoods)
     },
     data () {
         return{
@@ -210,22 +210,6 @@ export default {
             line-height 6.66vw
             flex 1
             padding-left 4vw
-            .shop-price
-                .price1
-                    font-size 4.8vw
-                    color #469afe
-                .price2
-                    font-size 3.2vw
-                    color #999
-                    text-decoration line-through
-        .buybtn
-            width 32vw
-            height 13.33vw
-            background #469afe
-            color #fff
-            text-align center
-            line-height 13.33vw
-            font-size 4.26vw
     .cart
         position absolute
         background-color #fff
