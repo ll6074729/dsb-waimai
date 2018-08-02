@@ -25,6 +25,7 @@
                 优选商家
             </div>
         </goods-list>
+        <tab-bar></tab-bar>
     </div>
 </template>
 <script>
@@ -35,6 +36,7 @@ import HomeswiperTip from "./components/swiperTip"
 import Recommend from "./components/recommend"
 import GoodsList from "../../componentss/goodsList"
 import axios from 'axios'
+import TabBar from '../../componentss/tabbar'
 export default {
   name: "Home",
   components: {
@@ -43,7 +45,8 @@ export default {
     HomeswiperTab,
     HomeswiperTip,
     Recommend,
-    GoodsList
+    GoodsList,
+    TabBar
   },
   data () {
     return {

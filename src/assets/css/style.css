@@ -80,3 +80,9 @@ html,body{
     color:#999;
     text-decoration:line-through;
 }
+.pd100{
+    padding: 0 13.33vw
+}
+.pd20{
+    padding: 0 2.66vw
+}

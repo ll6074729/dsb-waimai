@@ -1,10 +1,15 @@
 <template>
     <div>
         <div class="shop-head">
-            <div class="shop-head-img db">
+            <div class="shop-head-img">
                 <img src="../../../assets/img/组17@3x.png" alt="">
             </div>
-            <div class="shop-head-name db">土耳其烤肉饭（长职）</div>
+            <div class="shop-head-name">土耳其烤肉饭（长职）</div>
+            <div class="takeout-img">
+                <a href="tel:13398499055">
+                    <img src="../../../assets/img/call.png" alt="">
+                </a>
+            </div>
         </div>
         <div class="goods-list">
             <div class="goods-list-item">
@@ -59,16 +64,25 @@ export default {
 <style lang="stylus" scoped>
 @import "~css/style"
     .shop-head
-        padding 2vw 5.33vw
+        padding 0 5.33vw
+        display flex
+        height 13.33vw
+        line-height 13.33vw
         .shop-head-img
             vertical-align middle
+            margin-right 2.66vw
             img 
                 width 6.66vw
                 height 6.66vw
                 border-radius 50%
         .shop-head-name
             font-size 3.73vw
-            margin-left 2.93vw
+            margin-right auto 
+        .takeout-img
+            a
+                img 
+                    width 10.66vw
+                    height 10.66vw    
     .goods-list
         .goods-list-item
             padding 2.66vw 5.33vw

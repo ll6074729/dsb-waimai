@@ -5,12 +5,14 @@ import App from './App'
 import router from './router'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import ElementUI from 'element-ui'
-import {Rate,Input,Badge} from 'element-ui'
+import {Rate,Input,Badge,Form} from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'css/reset.css'
 import 'css/icon.css'
 import 'swiper/dist/css/swiper.css'
 import 'css/style.css'
+import AwesomePicker from 'vue-awesome-picker'
+Vue.use(AwesomePicker)
 Vue.use(VueAwesomeSwiper)
 Vue.use(ElementUI)
 Vue.use(Rate)

@@ -26,15 +26,15 @@ export default {
         window.addEventListener("scroll",this.handleScroll)
     },
     methods : {
-        // handleScroll () {
-        //     var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        //     console.log(scrollTop)
-        //     if(scrollTop >= 180){
-        //         this.ishead = true
-        //     }else{
-        //         this.ishead = false
-        //     }
-        // },
+        handleScroll () {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+            console.log(scrollTop)
+            if(scrollTop >= 180){
+                this.ishead = true
+            }else{
+                this.ishead = false
+            }
+        },
     }
 }
 </script>

@@ -1,22 +1,8 @@
 <template>
     <div>
-        <div class="cost-item df">
-            <div class="cost-type">配送费</div>
-            <div class="cost-price">￥2</div>
-        </div>
-        <div class="cost-item df">
-            <div class="cost-type">餐盒费</div>
-            <div class="cost-price">￥1</div>
-        </div>
+        <expen-ses></expen-ses>
         <hr class="hr20">
-        <div class="cost-activity df">
-            <div class="activity-type">满减</div>
-            <div class="activity-name">满80减32</div>
-        </div>
-        <div class="cost-activity df">
-            <div class="activity-type">赠品</div>
-            <div class="activity-name">可口可乐</div>
-        </div>
+        <aciti-vity></aciti-vity>
         <div class="cost-item df">
             <div class="cost-type">优惠券</div>
             <div class="cost-coupon">3张可用</div>
@@ -33,8 +19,14 @@
     </div>
 </template>
 <script>
+import AcitiVity from "./activity"
+import ExpenSes from "./expenses"
 export default {
-    name:"Cost"
+    name:"Cost",
+    components:{
+        AcitiVity,
+        ExpenSes
+    }
 }
 </script>
 <style lang="stylus" scoped>
@@ -42,8 +34,6 @@ export default {
         padding 4.56vw 5.33vw
         border-bottom 1px solid #f7f7f7
         font-size 4.266vw
-        .cost-price
-            font-weight bold
         .cost-right
             margin-right -2vw
             img 
@@ -69,15 +59,4 @@ export default {
             right 8vw    
             color #999
             font-size 3.2vw
-    .cost-activity
-        padding 2.3vw 5.33vw
-        font-size 3.2vw
-        border-bottom 1px solid #f7f7f7
-        .activity-type
-            background red
-            padding 1.33vw 2.13vw
-            color #fff
-        .activity-name
-            line-height 5.6vw    
-            color #999
 </style>

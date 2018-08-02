@@ -19,9 +19,6 @@
             <router-link class="buybtn fr" tag="div" to="/pay">
                 立即购买
             </router-link>
-            <!-- <div class="buybtn fr">
-                立即购买
-            </div> -->
         </div>
     </div>
 </template>
