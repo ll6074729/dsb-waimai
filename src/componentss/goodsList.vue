@@ -70,6 +70,7 @@ export default {
 @import "~css/style"
 .box
     position relative
+    padding-bottom 14vw
     .tab
         display flex
         padding 0 6vw

@@ -1,12 +1,12 @@
 <template>
     <div class="head" :class="{ishead:ishead}" ref="head">
         <div class="address">
-            <a href="javascript:;">
+            <router-link to="/Location" tag="a">
                 <i class="icon-address icon">
                 </i>
                 <span class="address-text ellipse">成都</span>  
                 <i class="icon icon-right"></i>
-            </a>
+            </router-link>
         </div>
         <div class="search">
             <i class="icon-search icon"></i>
@@ -28,7 +28,6 @@ export default {
     methods : {
         handleScroll () {
             var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-            console.log(scrollTop)
             if(scrollTop >= 180){
                 this.ishead = true
             }else{

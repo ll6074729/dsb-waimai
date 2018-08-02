@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="list"  v-for="item in list" :key="item.id">
-            <router-link tag="div" to="/OrderInfo">
+            <router-link tag="div" to="/OrderDetails">
                 <div class="order-head">
                     <img :src="item.shopimg" alt="">
                     <div class="shop-box">

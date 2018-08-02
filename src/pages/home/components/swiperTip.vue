@@ -19,7 +19,7 @@ export default {
     data () {
         return {
             swiperOption:{
-                autoplay:300,
+                autoplay:true,
                 loop:true,
                 direction : 'vertical',
                 // slidesPerView: 2,

@@ -37,12 +37,13 @@ export default {
         background-color #f7f7f7
         text-align center
         padding-bottom 13.33vw
+        padding-top 6vw
         .submit-btn
-            background-color linear-gradient(90deg, 
+            background-image linear-gradient(90deg, 
             #4c91fe 0%, 
             #41a1fe 33%, 
             #35b0fd 65%, 
-            #4c91fe 100%),
+            #4c91fe 100%);
             color #ffffff
             width 94.66vw
             height 13.33vw

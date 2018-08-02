@@ -12,7 +12,17 @@
 </template>
 <script>
 export default {
-    name:"headback"
+    name:"headback",
+    data () {
+        return {
+
+        }
+    },
+    methods:{
+        back () {
+            this.$router.go(-1)
+        }
+    }
 }
 </script>
 <style lang="stylus" scoped>

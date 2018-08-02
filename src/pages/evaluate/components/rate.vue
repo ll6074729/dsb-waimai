@@ -20,6 +20,8 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+    .block >>> .el-rate__icon
+        font-size 9vw
     .block
         text-align center
         padding 6vw 0

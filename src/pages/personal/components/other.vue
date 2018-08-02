@@ -1,13 +1,13 @@
 <template>
     <div class="df">
-        <div>
+        <router-link to="/concurrent" tag="div">
             <img src="../../../assets/img/组19@3x.png" alt="">
             <p>兼职</p>
-        </div>
-        <div>
+        </router-link>
+        <router-link to="/checkin" tag="div">
             <img src="../../../assets/img/组20@3x.png" alt="">
             <p>加盟</p>
-        </div>
+        </router-link>
         <div>
             <img src="../../../assets/img/组21@3x.png" alt="">
             <p>入住</p> 

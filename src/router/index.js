@@ -11,6 +11,9 @@ import Personal from '@/pages/personal/personal'
 import Site from '@/pages/personal/site'
 import Evaluate from '@/pages/evaluate/evaluate'
 import Complaint from '@/pages/complaint/complaint'
+import Checkin from '@/pages/checkin/checkin'
+import Concurrent from '@/pages/concurrent/concurrent'
+import Location from '@/pages/location/location'
 Vue.use(Router)
 
 export default new Router({
@@ -19,6 +22,11 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/Location',
+      name: 'Location',
+      component: Location
     },
     {
       path:'/search',
@@ -69,6 +77,16 @@ export default new Router({
       path:'/complaint',
       name:'Complaint',
       component:Complaint
+    },
+    {
+      path:'/checkin',
+      name:'Checkin',
+      component:Checkin
+    },
+    {
+      path:'/concurrent',
+      name:"Concurrent",
+      component:Concurrent
     }
   ]
 })
