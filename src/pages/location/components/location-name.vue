@@ -3,9 +3,9 @@
         <div class="df fs32 pd20">
             <div class="loc">
                 <img src="../../../assets/img/address-cart.png" alt="">
-                <span class="loc-name">成都市金牛区</span>
+                <span class="loc-name">成都</span>
             </div>
-            <div class="loc-btn">
+            <div class="loc-btn" @click="chooesclick">
                 <img src="../../../assets/img/loc@3x.png" alt="">
                 <span class="loc-name">重新定位</span>
             </div>
@@ -13,10 +13,19 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
     name:"locationName",
     data () {
         return {
+
+        }
+    },
+    computed: {
+        ...mapState(['city'])
+    },
+    methods:{
+        chooesclick () {
 
         }
     }

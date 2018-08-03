@@ -26,6 +26,7 @@
             </div>
         </goods-list>
         <tab-bar></tab-bar>
+        <all-map></all-map>
     </div>
 </template>
 <script>
@@ -46,7 +47,7 @@ export default {
     HomeswiperTip,
     Recommend,
     GoodsList,
-    TabBar
+    TabBar,
   },
   data () {
     return {
@@ -125,21 +126,24 @@ export default {
         ],
     }
   },
-  methods:{
-        // getHomeInfo () {
-        //     axios.get('')
-        //         .then(this.getHomeInfoSucc)    
-        // },
-        // getHomeInfoSucc(res){
-        //     const date = res.data.data
-        //     this.swiperTab = date.swiperTab
-        //     // this.Recommend = date.Recommend
-        //     // this.shopList = date.shopList
-        // }
-  },
-  mounted () {
-        // this.getHomeInfo()
-  }
+//   methods:{
+//         // getHomeInfo () {
+//         //     axios.get('')
+//         //         .then(this.getHomeInfoSucc)    
+//         // },
+//         // getHomeInfoSucc(res){
+//         //     const date = res.data.data
+//         //     this.swiperTab = date.swiperTab
+//         //     // this.Recommend = date.Recommend
+//         //     // this.shopList = date.shopList
+//         // }
+        
+//   },
+//   mounted () {
+//         // this.getHomeInfo()
+//         // this.WXconfig.wxShowMenu()
+//   }
+
 }
 </script>
 <style lang="stylus" scoped>
