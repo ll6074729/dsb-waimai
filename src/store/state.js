@@ -3,15 +3,15 @@
  * defaultCity 定位到的名字
  * longitude latitude 经纬度
  */
-let defaultCity = '...' 
+let defaultCity = '获取中...' 
 let longitude = ''
 let latitude = ''
 try {
-    if (localStorage.city) {
+    if (localStorage.defaultCity) {
       defaultCity = localStorage.city
     }
   } catch (e) {}
 
 export default{
-    city:defaultCity
+  defaultCity:defaultCity
 }

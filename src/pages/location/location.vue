@@ -1,9 +1,10 @@
 <template>
-    <div >
+    <div  v-loading.fullscreen.lock="fullscreenLoading">
         <head-top></head-top>
         <location-name></location-name>
         <location-list></location-list>
-        <all-map></all-map>
+        <all-map :loding = "fullscreenLoading" v-on:lodingS = "lodingS()" refs="AllMap"></all-map>
+
     </div>
 </template>
 <script>
@@ -11,13 +12,12 @@ import HeadTop from "./components/headtop"
 import LocationName from "./components/location-name"
 import LocationList from "./components/location-list"
 import AllMap from "../../componentss/allmap"
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 import { Loading } from 'element-ui'
 export default {
     name:"Location",
     created () {
-        // Loading.service(options);
-        this.openFullScreen()
+        // this.openFullScreen()
     },
     components:{
         HeadTop,
@@ -26,21 +26,20 @@ export default {
         AllMap
     },
     computed: {
-        ...mapState(['city'])
+        // ...mapState(['defaultCity'])
     },
     methods:{
         openFullScreen () {
-            const loading = this.$loading({
-                lock: true,
-                text: 'Loading',
-                spinner: 'el-icon-loading',
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
+            this.fullscreenLoading = true
+        },
+        lodingS () {
+            console.log('aaaa')
+            this.fullscreenLoading = false;
         }
     },
     data () {
         return {
-
+            fullscreenLoading: false
         }
     }
 }

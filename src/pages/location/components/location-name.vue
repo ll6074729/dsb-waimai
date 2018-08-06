@@ -3,7 +3,7 @@
         <div class="df fs32 pd20">
             <div class="loc">
                 <img src="../../../assets/img/address-cart.png" alt="">
-                <span class="loc-name">成都</span>
+                <span class="loc-name">{{this.$store.state.defaultCity}}</span>
             </div>
             <div class="loc-btn" @click="chooesclick">
                 <img src="../../../assets/img/loc@3x.png" alt="">
@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+// import { mapState } from 'vuex'
 export default {
     name:"locationName",
     data () {
@@ -21,8 +21,9 @@ export default {
 
         }
     },
+    props:Array,
     computed: {
-        ...mapState(['city'])
+        // ...mapState(['defaultCity'])
     },
     methods:{
         chooesclick () {

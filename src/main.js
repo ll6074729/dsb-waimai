@@ -14,7 +14,8 @@ import 'css/border.css'
 import 'swiper/dist/css/swiper.css'
 import 'css/style.css'
 import AwesomePicker from 'vue-awesome-picker'
-import Store from './store/index'
+import store from './store/index'
+import styleIndex from './assets/static/index'
 
 
 // import WXconfig from 'st/wx'
@@ -29,12 +30,13 @@ Vue.use(BaiduMap, {
   ak: 'ySYb24WsXpbFzl80OKpgeb2xN2CFKdmB'
 })
 Vue.config.productionTip = false
+Vue.prototype.styleIndex = styleIndex
 // Vue.prototype.WXconfig = WXconfig
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  Store,
+  store,
   components: { App },
   template: '<App/>'
 })

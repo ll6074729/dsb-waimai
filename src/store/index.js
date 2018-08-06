@@ -1,10 +1,27 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import State from './state'
-import Mutations from './mutations'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    State,
-    Mutations,
+    state:{
+        defaultCity :"获取中...",
+        defaultSchool :"获取中...",
+    },
+    actions:{
+        changeCity (ctx ,city ){
+            ctx.commit('changeCity',city)
+        },
+        changeSchool (ctx ,school ){
+            ctx.commit('changeSchool',school)
+        },
+    },
+    mutations:{
+        changeSchool (state,school){
+            state.defaultSchool = school
+        },
+        changeCity (state ,city ){
+            state.defaultCity = city
+        }
+    }
 })

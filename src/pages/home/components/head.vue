@@ -4,7 +4,9 @@
             <router-link to="/Location" tag="a">
                 <i class="icon-address icon">
                 </i>
-                <span class="address-text ellipse">成都</span>  
+                <span class="address-text ellipse">
+                    {{this.$store.state.defaultSchool}}
+                </span>  
                 <i class="icon icon-right"></i>
             </router-link>
         </div>
@@ -23,11 +25,11 @@ export default {
         }
     },
     mounted () {
-        window.addEventListener("scroll",this.handleScroll)
+        window.addEventListener("scroll",this.handleTop)
     },
     methods : {
-        handleScroll () {
-            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        handleTop () {
+            var scrollTop = this.styleIndex.handleScroll()
             if(scrollTop >= 180){
                 this.ishead = true
             }else{

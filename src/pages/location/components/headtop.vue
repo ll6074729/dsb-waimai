@@ -1,9 +1,9 @@
 <template>
     <div>
          <div class="search-head">
-            <router-link to="/" class="search-head-left">
+            <!-- <router-link to="/" class="search-head-left">
                 <img src="../../../assets/img/back.png" alt="">
-            </router-link>
+            </router-link> -->
             <div class="search-head-center">
                 <el-input
                     placeholder="请输入内容"
@@ -20,7 +20,12 @@
 </template>
 <script>
 export default {
-    name:"headTop"
+    name:"headTop",
+    data () {
+        return {
+            input10:""
+        }
+    }
 }
 </script>
 <style lang="stylus" scoped>

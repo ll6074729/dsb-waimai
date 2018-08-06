@@ -28,17 +28,8 @@
                 <div class="list-title fs24">
                     热门校区
                 </div>
-                <div class="list-item">
-                    四川长江职业学院
-                </div>
-                <div class="list-item">
-                    四川电影电视学院（安仁校区）
-                </div>
-                <div class="list-item">
-                    四川音乐学院
-                </div>
-                <div class="list-item">
-                    四川大学
+                <div class="list-item" @click="handClickSchool(item)" v-for="(item,index) in school" :key="index">
+                    {{item}}
                 </div>
             </div>
             
@@ -47,7 +38,18 @@
 </template>
 <script>
 export default {
-    name:"locationList"
+    name:"locationList",
+    data () {
+        return {
+            school : ["四川长江职业学院","四川电影电视学院(安仁校区)","四川音乐学院","四川大学"]
+        }
+    },
+    methods:{
+        handClickSchool (school) {
+            this.$store.dispatch("changeSchool",school)
+            this.$router.push({path:"/"})
+        }
+    }
 }
 </script>
 <style lang="stylus" scoped>
