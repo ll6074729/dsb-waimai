@@ -7,7 +7,6 @@
 <script>
 //   import {getStore, setStore, removeStore} from '@/config/Utils'
   import BMap from 'BMap'
-  import axios from 'axios'
   import { Loading } from 'element-ui'
   export default {
     data () {
@@ -21,11 +20,28 @@
     props:["loding"],
     mounted () {
       this.ready()
+      this.aa()
     },
     methods: {
       changeLoading (){
         this.$emit("lodingS","flase")
         this.$store.dispatch("changeCity",this.BMap_address)
+      },
+      aa () {
+         this.$http({
+            method: 'post',
+            url: 'http://api.dqvip.cc/buyer/area_list',
+            data: {
+              // long_and_lat:r.longitude +"," + r.latitude
+                long_and_lat:"104.106714,30.681411",
+            },
+            headers:{
+              'Accept':'application/json',
+              // 'Authorization': this.$store.state.token_type +' ' + this.$store.state.access_token,
+              'content-type': 'multipart/form-data',
+              'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjVhOTI3MmZjOGE0MTdlZDk0MzAzYzIwODUyNjJhMWMxNjE0Mzg5MjAwMDY0M2IxYWZlYzk4ZTQ1YjU0NDViZGYzOGUxMTk4NGI1NTdlMTliIn0.eyJhdWQiOiIyIiwianRpIjoiNWE5MjcyZmM4YTQxN2VkOTQzMDNjMjA4NTI2MmExYzE2MTQzODkyMDAwNjQzYjFhZmVjOThlNDViNTQ0NWJkZjM4ZTExOTg0YjU1N2UxOWIiLCJpYXQiOjE1MzM3MjAwNTksIm5iZiI6MTUzMzcyMDA1OSwiZXhwIjoxNTM2MzEyMDU5LCJzdWIiOiIyMiIsInNjb3BlcyI6WyIqIl19.fIdh255EGy6Ybqw6vJxRoIiH059QI--U7pZor3iGjepyELqJirW-YhniKLjM5gSXflekVJPv5-R-QgbkiQfp68jjiRo7eGJNpZcvoTH2rpjoSYGwyM5gzrqsZZVicACaej-2Z2G9bgAGQpErk4lW13x1wow4JQiUHRVQiqVauleuM7A7UGN0nTH4yUxH_BUc6pemmSnX2sBU4W-7WGyp-VzM_NSWN9YhUMsNdxHFml8I5C0b3fItEsItLyXKCbU6egjCtVNFVUnEaFQ9QHAQK-OaESaWSwHSs6VTasKbOk0D3bG-S2gjSzSLXdQub8Fxmd2n5kuyxtKMguwHDJFHjKERjGBC5oYwVXHr4f5GOpNTBPs-2haV7tSvxSaqw7Snwo3j59kuPJfaPLL-zD_xlp_msfnkDwfKxMrLy3-YAzMtWYE225m00GHNDVuaFkTW3kVkX_5xqLMefctzBTSmMX5hCigBpbcLy1_pSD6e7Z0Vm9PnAqGBI9rjkQu8nHvjjGgTGUa4WEzkZqMGUYKT7nfISmtvf85fepX80HdZg8-DE2CVKFzkiOesDX3SercopVTr4iuRwW2oQslgmPcnYxAH96-MotD-WNn55j7dVO5gYJ9nkET0UcHUjObX0rAIsKmsajYJg9nySONuk0FNyyr0T1pPzKJT0sdVuTtfE4I'
+            },
+          })
       },
       ready () {
         let map = new BMap.Map('allmap')
@@ -41,16 +57,16 @@
             if (r.point) {
                 this.center.lng = r.longitude
                 this.center.lat = r.latitude
-                axios({
+                this.$http({
                   method: 'post',
-                  url: './api/area_list',
-                  data: {
+                  url: 'http://api.dqvip.cc/buyer/area_list',
+                  params: {
                     long_and_lat:r.longitude +"," + r.latitude
                   },
                   headers:{
                     'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImJmYzcyMjAyYjgyZjdiM2I3ZjQ0YjA2ZGJlMGRhZTRmMzcwN2ZkZjBlOGQ0ZTZjZmI3YTIxZGQ2Mjc0MTAyMjMyMTRiNWRiMGU0MzcyN2ZlIn0.eyJhdWQiOiIyIiwianRpIjoiYmZjNzIyMDJiODJmN2IzYjdmNDRiMDZkYmUwZGFlNGYzNzA3ZmRmMGU4ZDRlNmNmYjdhMjFkZDYyNzQxMDIyMzIxNGI1ZGIwZTQzNzI3ZmUiLCJpYXQiOjE1MzM1NDE5MzQsIm5iZiI6MTUzMzU0MTkzNCwiZXhwIjoxNTMzNzU3OTM0LCJzdWIiOiIxMyIsInNjb3BlcyI6WyIqIl19.nFLlN0Y-h-vPe64NmsaN9WIHy92OzcQF0R9orzQ7CyMV9bCsC3NDzmxQN0qYfSJPLsOcZvIpbIiewZf9FY3geuQqbfXAgnF0DDimhxRre8MHNJqKLVXHMlMPxVD01vVfCs5LNeJMLqCOVnRsanruTOprKtkFLxUJhS1w6Qv6yb3feNLC3hd6AuNsYsRGF7i8WgacI0Het-DrfT4pAPY3LE0HGB-k8deinMIZJWhEgbMxuF9YOQI7jp1ZBnZXxZhlx3GDKUbP7eRx5q7Q9CILLgfrVjIJbnC59yt2xTveV2CaDFRbPKifteujUJoI5O5B8N9f-bDQndSng5HNS_HFkCthT8v10cmwCkyNxaY9RvJ7uoQCPW-CDnqNwgigyi5dvklQ-p0x8DPrRsickELv-1Djz9SRRZEqliKn_lCX8zJfDEdNcR_MpIDLI86tNFdsuj6erZqoIWqJTSBrXYvjnxN7nH31pJrEEHHMgsOEGH2QHQ_V9b7sYBrmBiH_YJqQuUo7TZjaWhN3yFKI5-SZMA_HQzFkWIK5nCAjGmEbFsoFgqqK36nMFRotwyoAbfpcaeuYLpLkKy25WZUxDnXFYxhCKTPb5BjpoOgp2by2TXJDlamgiGJPNQyXGiL13dWmcjEyocnzkDEQigsZdHrRnhZe0BVcgTJruk_Pzox-UbE',
-                    'content-type': 'multipart/form-data'
+                    'Authorization': this.$store.state.token_type +' ' + this.$store.state.access_token,
+                    'content-type': 'multipart/form-data',
                   },
                 })
                   .then(function (response) {

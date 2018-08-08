@@ -33,7 +33,6 @@ export default {
             this.fullscreenLoading = true
         },
         lodingS () {
-            console.log('aaaa')
             this.fullscreenLoading = false;
         }
     },

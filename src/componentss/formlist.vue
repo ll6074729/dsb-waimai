@@ -83,7 +83,7 @@ export default {
 <style lang="stylus" scoped>
 .box
     padding-top 7vw
-    padding-bottom 15vw
+    padding-bottom 8vw
     .box-item
         border-radius 1.33vw
         margin 2.66vw
@@ -123,4 +123,9 @@ export default {
     .ps
         color #ffffff
         text-align center   
+    .ps-m
+        color #999
+        text-align center    
+.box-m
+    background-color #f7f7f7        
 </style>

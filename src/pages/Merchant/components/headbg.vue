@@ -3,7 +3,7 @@
         <div class="back" @click="back()">
             <img src="../../../assets/img/back_white.png" alt="">
         </div>
-        <img src="../../../assets/img/checkin.png" alt="" class="headbg-img">
+        <img src="../../../assets/img/Merchantbg.png" alt="" class="headbg-img">
     </div>
 </template>
 <script>

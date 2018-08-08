@@ -8,10 +8,10 @@
             <img src="../../../assets/img/组20@3x.png" alt="">
             <p>加盟</p>
         </router-link>
-        <div>
+        <router-link to="/Merchant" tag="div">
             <img src="../../../assets/img/组21@3x.png" alt="">
-            <p>入住</p> 
-        </div>
+            <p>入住</p>
+        </router-link>
     </div>
 </template>
 <script>

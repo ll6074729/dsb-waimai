@@ -8,10 +8,10 @@
             <p class="fs40">0</p>
             <p class="fs24">优惠卷</p>
         </div>
-        <div>
+        <router-link tag="div" to="/integral">
             <p class="fs40">564</p>
             <p class="fs24">积分</p>
-        </div>
+        </router-link>
     </div>
 </template>
 <script>

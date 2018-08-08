@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <router-link to="/site" tag="div" class="list-item">
+        <router-link to="/sitelist" tag="div" class="list-item">
             <div class="list-icon">
                 <img src="../../../assets/img/ts-focus-point@3x.png" alt="">
             </div>
