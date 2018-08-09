@@ -2,9 +2,9 @@
     <div class="warpper">
         <swiper :options="swiperOption">
             <!-- slides -->
-            <swiper-slide v-for="item in imgurl" :key="item.id">
+            <swiper-slide v-for="item in banner" :key="item.ad_id">
                 <a href="javascript:;">
-                    <img class="swiper-img" :src="item.url" alt="" srcset="">
+                    <img class="swiper-img" :src="item.ad_code" :alt="item.ad_name" srcset="">
                 </a>
             </swiper-slide>
             <!-- Optional controls -->
@@ -18,6 +18,9 @@
 <script>
 export default {
     name:'HomeswiperBanner',
+    props:{
+        banner:Array
+    },
     data () {
         return {
             swiperOption: {
@@ -27,7 +30,6 @@ export default {
                 el: ".swiper-pagination"
                 }
             },
-            imgurl:[{url:require('../img/banner@3x.png'),id:1},{url:'http://www.quanjing.com/image/2018image/homepage/1.jpg?v=8',id:2},{url:'http://www.quanjing.com/image/2018image/homepage/3.jpg?v=8',id:3}],
         }
     }
 }

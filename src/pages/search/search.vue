@@ -17,9 +17,7 @@
             </div>
         </div>
         <goods-list :list="shopList"></goods-list>
-
     </div>
-    
 </template>
 <script>
 import GoodsList from "../../componentss/goodsList"

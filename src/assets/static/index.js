@@ -35,7 +35,7 @@ export default{
         }).then(function(res) {
             let wxArray = res.data
             wx.config({
-                debug: true,
+                debug: false,
                 appId: wxArray.appId, // 和获取Ticke的必须一样------必填，公众号的唯一标识
                 timestamp:wxArray.timestamp, // 必填，生成签名的时间戳
                 nonceStr: wxArray.nonceStr, // 必填，生成签名的随机串

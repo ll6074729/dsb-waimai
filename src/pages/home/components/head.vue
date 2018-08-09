@@ -10,10 +10,10 @@
                 <i class="icon icon-right"></i>
             </router-link>
         </div>
-        <div class="search">
+        <router-link to="/search" tag="div" class="search">
             <i class="icon-search icon"></i>
             <input type="text" placeholder="输入搜索内容" maxlength="22">
-        </div>
+        </router-link>
     </div>
 </template>
 <script>

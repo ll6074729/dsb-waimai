@@ -1,59 +1,75 @@
 <template>
     <div>
-        <div class="list">
-            <div class="list-catagory">
-                <div class="list-title fs24">
-                    附近校区
+        <div class="list" ref="list">
+            <ul>
+                <div class="list-catagory">
+                    <div class="list-title fs24">
+                        附近校区
+                    </div>
+                    <div class="list-no fs24" v-show="isnearby">
+                        <p class="list-ps">附近暂无校区</p>
+                        <p class="ps">
+                            注意：本平台只配送校内订单，不支持配送至校外
+                        </p>
+                    </div>
+                    <div class="list-item" 
+                        @click="handClickSchool(item.address,item.area_id)"
+                        v-for="(item,index) in nearbySchool" 
+                        :key="index">
+                        {{item.address}}
+                    </div>
                 </div>
-                <div class="list-no fs24">
-                    <p class="list-ps">附近暂无校区</p>
-                    <p class="ps">
-                        注意：本平台只配送校内订单，不支持配送至校外
-                    </p>
+                <div class="list-catagory">
+                    <div class="list-title fs24">
+                        热门校区
+                    </div>
+                    <ul>
+                        <li class="list-item"
+                            v-on:click="handClickSchool(item.address,item.area_id)"
+                            v-for="(item,index) in allSchool" 
+                            :key="index">
+                            {{item.address}}
+                        </li>
+                    </ul>
                 </div>
-                <!-- <div class="list-item">
-                    四川长江职业学院
-                </div>
-                <div class="list-item">
-                    四川电影电视学院（安仁校区）
-                </div>
-                <div class="list-item">
-                    四川音乐学院
-                </div>
-                <div class="list-item">
-                    四川大学
-                </div> -->
-            </div>
-            <div class="list-catagory">
-                <div class="list-title fs24">
-                    热门校区
-                </div>
-                <div class="list-item" @click="handClickSchool(item)" v-for="(item,index) in school" :key="index">
-                    {{item}}
-                </div>
-            </div>
-            
+            </ul>
         </div>
     </div>
 </template>
 <script>
+import  BScroll from 'better-scroll'
 export default {
     name:"locationList",
+    props:{
+        nearbySchool:Array, //附近
+        allSchool:Array //所有
+    },
     data () {
         return {
-            school : ["四川长江职业学院","四川电影电视学院(安仁校区)","四川音乐学院","四川大学"]
+            isnearby:false
         }
     },
+    mounted (){
+        this.scroll = new BScroll(this.$refs.list)
+    },
     methods:{
-        handClickSchool (school) {
+        handClickSchool (school,area_id) {
             this.$store.dispatch("changeSchool",school)
+            this.$store.dispatch("changearea",area_id)
             this.$router.push({path:"/"})
-        }
+        },
     }
 }
 </script>
 <style lang="stylus" scoped>
     .list
+        overflow hidden
+        position absolute
+        top 24vw
+        left 0
+        right 0
+        bottom 0
+        z-index 99
         .list-catagory
             .list-title
                 padding 2.66vw 5.6vw

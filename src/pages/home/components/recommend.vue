@@ -5,10 +5,10 @@
         </div>
         <div class="recommend-box">
             <swiper :options="swiperOption"> 
-                <swiper-slide v-for="item in list" :key="item.id">
-                    <router-link tag="div" :to="'/shop/'+item.id">
-                         <img :src="item.imgurl" alt="" srcset="">
-                        <p>{{item.name}}</p>
+                <swiper-slide v-for="item in list" :key="item.shop_id">
+                    <router-link tag="div" :to="'/shop/'+item.shop_id">
+                         <img :src="item.logo" alt="" srcset="">
+                        <p>{{item.shop_name}}</p>
                         <span v-if="item.status == '0'" class="status0">
                             休息中
                         </span>

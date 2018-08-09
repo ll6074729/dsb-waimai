@@ -5,7 +5,7 @@
         </div>
         <div class="tip-content">
             <swiper :options="swiperOption">
-                <swiper-slide v-for="item in tips" :key="item.id">
+                <swiper-slide v-for="item in notice" :key="item.article_id">
                         {{item.content}}
                 </swiper-slide> 
             </swiper>
@@ -15,7 +15,9 @@
 <script>
 export default {
     name:'HomeswiperTip',
-
+    props:{
+        notice:Array
+    },
     data () {
         return {
             swiperOption:{
@@ -24,7 +26,6 @@ export default {
                 direction : 'vertical',
                 // slidesPerView: 2,
             },
-            tips:[{content:"学生一放假商家集体休息 请不要点餐家集体休息 请不要点餐家集体休息 请不要点餐",id:1},{content:"现在是放假时间现在是放假时间现在是放假时间现在是放假时间现在是放假时间现在是放假时间现在是放假时间",id:2}]
         }
     },
 

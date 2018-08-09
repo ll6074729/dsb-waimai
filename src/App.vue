@@ -16,7 +16,7 @@ export default {
   },
   mounted () {
     this.styleIndex.wxShowMenu()
-    this.$store.dispatch('changeUser')
+    // this.$store.dispatch('changeUser')
   },
   methods:{
 

@@ -3,11 +3,11 @@
         <div class="df fs32 pd20">
             <div class="loc">
                 <img src="../../../assets/img/address-cart.png" alt="">
-                <span class="loc-name">{{this.$store.state.defaultCity}}--{{this.$store.state.token_type}}</span>
+                <span class="loc-name">{{this.$store.state.defaultCity}}</span>
             </div>
             <div class="loc-btn" @click="chooesclick">
                 <img src="../../../assets/img/loc@3x.png" alt="">
-                <span class="loc-name">重新定位 ---{{this.$store.state.expires}}</span>
+                <span class="loc-name">重新定位 </span>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         chooesclick () {
-
+            this.$router.go(0)
         }
     }
 }

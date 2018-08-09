@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+
 Vue.use(Vuex)
 let defaultCity = "获取中..."
 let defaultSchool = "获取中..."
-
+let area_id
 
 /**
  * 登录接口需要的参数
@@ -22,13 +22,17 @@ try{
     }
 }catch (e){}
 
+try{
+    if(localStorage.area_id){
+        area_id = localStorage.area_id
+    }
+}catch (e){}
+
 export default new Vuex.Store({
     state:{
         defaultCity : defaultCity,
         defaultSchool : defaultSchool,
-        access_token : '',
-        token_type : '',
-        expires :''
+        area_id : area_id 
     },
     actions:{
         changeCity (ctx ,city ){
@@ -37,38 +41,23 @@ export default new Vuex.Store({
         changeSchool (ctx ,school ){
             ctx.commit('changeSchool',school)
         },
-        changeUser(ctx){
-            axios.get('/mobile/index/getUser')
-                .then(function (res) {
-                    let date = res.data.data
-                    ctx.commit('changeAccess',date.access_token)
-                    ctx.commit('changeTokeType',date.token_type)
-                    ctx.commit('changeExpires',date.expires_in)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            
+        changearea (ctx ,area_id ){
+            ctx.commit('changearea',area_id)
         },
     },
     mutations:{
-        changeAccess (state,token){
-            state.access_token = token
-        },
-        changeTokeType(state, type){
-            state.token_type = type
-        },
-        changeExpires(state, expires){
-            let timestamp = Date.parse(new Date())/1000;
-            state.expires = parseInt(expires) + parseInt(timestamp)
+        changearea (state,area_id){
+            state.area_id = area_id
+            try {
+                localStorage.area_id = area_id
+            }catch (e){
+            }
         },
         changeSchool (state,school){
             state.defaultSchool = school
             try {
                 localStorage.defaultSchool = school
-
             }catch (e){
-                console.log('schoole',1)
             }
         },
         changeCity (state ,city ){
@@ -76,7 +65,6 @@ export default new Vuex.Store({
             try {
                 localStorage.defaultCity = city
             }catch (e){
-                console.log('city',2)
             }
         }
     }
