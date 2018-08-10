@@ -3,7 +3,7 @@
         <swiper :options="swiperOption">
             <swiper-slide v-for="(page,index) of pages" :key="index">
                 <div class="icon" v-for="item of page" :key="item.type_id">
-                    <router-link :to="'/search/'+item.type_id">
+                    <router-link :to="{path:'search',query:{type_id:item.type_id}}">
                         <div class="icon-img">
                             <img class="icon-img-content" :src="item.type_pic" alt="">
                         </div>

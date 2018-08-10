@@ -4,23 +4,26 @@
         <div class="tab">
             <div class="item-tab active">销量优先</div>
             <div class="item-tab">评分优先</div>
-            <div class="item-tab">优惠优先</div>
+            <div class="item-tab">热门新店</div>
         </div>
         <div ref="warpper" class="shop">
-                <router-link class="shop-list" tag="div" v-for="item in list" :key="item.id" :to="'/shop/'+item.id">
-                    <div class="shop-list-item">
+                <!-- <router-link class="shop-list" tag="div" v-for="(item,index) in shopList.data" :key="index" > -->
+                    <!-- {{index}} -->
+                    <!-- <div class="shop-list-item">
                         <div class="shop-left">
-                            <img :src="item.imgUrl" alt="" class="shop-img">
+                            <img :src="item.logo" alt="" class="shop-img">
+                            <span class="tag new" v-if="item.is_new == 1">new</span>
+                            <span class="tag hot" v-if="item.is_hot == 1">hot</span>
                         </div>
                         <div class="shop-right">
                             <div class="shop-title">
-                                <div class="shop-name">{{item.name}}</div>
+                                <div class="shop-name">{{item.shop_name}}</div>
                                 <div class="shop-status" v-if="item.status == 1">休息中</div>
                             </div>
                             <div class="shop-content">
                                 <div class="shop-score">
                                     <el-rate
-                                        v-model="item.score"
+                                        v-model="item.store_ratings"
                                         disabled
                                         allow-half
                                         show-score
@@ -30,12 +33,12 @@
                                     </el-rate>
 
                                 </div>
-                                <div class="shop-sale">{{item.sale}}m | 月售 {{item.sale}}</div>
+                                <div class="shop-sale">{{item.sale}}m | 销量 {{item.sale}}</div>
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
                                     
-                                    <span  v-for="label in item.label" :key="label">{{label}}</span>
+                                    <span  v-for="label in item.tags" :key="label">{{label}}</span>
                                 </div>
                                 <div class="shop-label-right">
                                     <span class="label-status">
@@ -44,8 +47,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </router-link>
+                    </div> -->
+                <!-- </router-link> -->
         </div>
     </div>
 </template>
@@ -53,17 +56,23 @@
 import  BScroll from 'better-scroll'
 export default {
     name:'goodsList',
-    mounted (){
-        // this.scroll = new BScroll(this.$refs.warpper)
-    },
     props:{
-        list:Array
+        shopList:Array
     },
     data () {
         return {
 
         }
-    }
+    },
+    methods : {
+        showshopList () {
+            console.log(this.shopList,444)
+        }
+    },
+    mounted (){
+        // this.scroll = new BScroll(this.$refs.warpper)
+        this.showshopList()
+    },
 }
 </script>
 <style lang="stylus" scoped>
@@ -85,12 +94,13 @@ export default {
             color #469afe
             font-weight bold
     .shop
-        // position absolute
-        // top 23.9vw
-        // left 0
-        // right 0
-        // bottom 0
-        // overflow hidden
+        position absolute
+        top 24vw
+        left 0
+        right 0
+        bottom 0
+        overflow hidden
+        z-index 1
         .shop-list
             .shop-list-item
                 border-top 1px solid #f7f7f7
@@ -99,10 +109,25 @@ export default {
                 .shop-left 
                     flex 0 18.66vw
                     height 100%;
+                    position relative
                     .shop-img
                         width 16vw
                         height 16vw
                         padding-right 2.66vw
+                    .tag
+                        position absolute
+                        right 0
+                        top 0
+                        width 8vw
+                        height 3.2vw
+                        text-align center
+                        color #fff
+                        line-height 3.2vw
+                        font-style italic
+                    .new
+                        background-color #31dd7a
+                    .hot
+                        background-color #dd3131    
                 .shop-right 
                     flex 1 auto    
                     overflow-x hidden

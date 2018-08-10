@@ -6,25 +6,25 @@
                 <img src="../../assets/img/back_white.png" alt="">
             </router-link>
             <div class="shop-head-right">
-                <img src="../../assets/img/favorite.png" alt="" v-show="isCollect" @click="collect">
-                <img src="../../assets/img/favorite_white.png" alt="" v-show="!isCollect" @click="collect">
+                <img src="../../assets/img/favorite.png" alt="" v-show="isCollect" @click="isCollectA">
+                <img src="../../assets/img/favorite_white.png" alt="" v-show="!isCollect" @click="isCollectA">
             </div>
         </div>
         <!-- 商家信息 -->
         <div class="shop-warp">
             <div class="shop-info">
                 <div class="shop-left">
-                    <img :src="shop.imgUrl" alt="" class="shop-img">
+                    <img :src="shop.logo" alt="" class="shop-img">
                 </div>
                 <div class="shop-right">
                     <div class="shop-title">
-                        <div class="shop-name">{{shop.name}}</div>
+                        <div class="shop-name">{{shop.shop_name}}</div>
                         <div class="shop-status" v-if="shop.status == 1">休息中</div>
                     </div>
                     <div class="shop-content">
                         <div class="shop-score">
                             <el-rate
-                                v-model="shop.score"
+                                v-model="shop.store_ratings"
                                 disabled
                                 allow-half
                                 show-score
@@ -33,10 +33,10 @@
                                 score-template="{value}">
                             </el-rate>
                         </div>
-                        <div class="shop-sale">{{shop.sale}}m | 月售 {{shop.sale}}</div>
+                        <div class="shop-sale">{{shop.sales}}m | 销量 {{shop.sales}}</div>
                     </div>
                     <div class="shop-foot">
-                        {{shop.describe}}
+                        {{shop.addr}}
                     </div>
                 </div>
             </div>
@@ -59,13 +59,14 @@
                 </div>
             </div>
         </div>
+        <shop-recommend></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box">
-            <div class="tab">
+            <div class="tab" :class="{ishead:ishead}" ref="tabTop">
                 <div class="tab-btn" :class="{'active':isShowA}" @click="tab()">商品</div>
                 <div class="tab-btn" :class="{'active':!isShowA} " @click="tab()">评论</div>
             </div>
-            <div class="tab-box">
+            <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
                     <shop-menu></shop-menu>
                     <shop-product></shop-product>
@@ -88,6 +89,8 @@ import ShopProduct from "./components/shopproduct"
 import ShopFoot from "./components/shopfoot"
 import ShopBuy from "./components/shopbuy"
 import ShopComment from "./components/comment"
+import ShopRecommend from "./components/shoprecommend"
+import axios from 'axios'
 export default {
     name:'Shop',
     components:{
@@ -96,22 +99,116 @@ export default {
         ShopFoot,
         ShopBuy,
         ShopComment,
+        ShopRecommend
     },
     data () {
         return {
-            shop:{imgUrl:require("../../assets/img/组17@3x.png"),name:"德克士（金牛凤凰立交店4)",status:0,id:4,score:4,sale:992,describe:"四川省城市职业学院9栋楼下"},
+            shop:[],
             activity:[{type:1,warp:"满20减5，满30减10，满40减20，满50减3020减5，满30减10，满40减20，满50减30"},{type:2,warp:"配送费 2 元"},{type:3,warp:"满 13.0 元送可口可乐"}],
             isShowA:true,
-            isCollect:true,
+            isCollect: false, 
+            ishead:false
         }
     },
     methods:{
         tab () {
             this.isShowA = !this.isShowA
         },
-        collect () {
+        isCollectA () {
             this.isCollect = !this.isCollect
+            this.getCollect()
+        },
+        getCollect () {
+            // 更改收藏状态
+            axios({
+                method: 'get',
+                url: '/api/buyer/collect_shop/1/'+this.isCollect,
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+isCollect+'',
+                    // q_type:'get'
+                },
+                headers:{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.collect)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        collect (res) {
+            console.log(res)
+            this.isCollect = eval(res.data.message)
+            if(!eval(res.data.message)){
+                this.$message({
+                    message: '收藏成功',
+                    type: 'success',
+                    // duration:0
+                });
+            }else{
+                this.$message({
+                    message: '取消收藏',
+                    type: 'warning',
+                    // duration:0
+                });
+            }
+        },
+        getlist () {
+            // 不需要传值  获取列表
+            axios({
+                method: 'get',
+                url: '/api/buyer/collect_list',
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+isCollect+'',
+                    // q_type:'get'
+                },
+                headers:{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.getlistbox)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        // 获取收藏店铺列表
+        getlistbox (res) {
+            console.log(res.data.data[0].shop)
+            this.shop = res.data.data[0].shop
+            if(res.data.data == ''){
+                this.isCollect = false
+            }else{
+                for(let i = 0;i<res.data.data.length;i++){
+                // collect.push(res.data.data[i].shop)
+                    if(res.data.data[i].shop_id == this.$route.params.id){
+                        this.isCollect = true
+                    }else{
+                        this.isCollect = false
+                    }
+                }
+            }
+        },
+        // 固定在顶部
+        handleTop () {
+            // var scroll = this.styleIndex.handleScroll()
+            var tabTop = this.$refs.tabTop.getBoundingClientRect()
+            // var tabHeight = this.$refs.tabTop
+            // event.currentTarget.offsetTop
+            console.log(tabTop.top)
+            var tabTop1 = tabTop.top
+            // console.log(this.$refs.tabTop)
+            if(tabTop1 >= 0 ){
+                this.ishead = false
+            }else{
+                this.ishead = true
+            }
         }
+    },
+    mounted () {
+        this.getlist()
+        window.addEventListener('scroll',this.handleTop)
     }
 }
 </script>
@@ -120,7 +217,7 @@ export default {
         font-size 2.13vw
         color rgb(255,255,255)!important
     .shop-score >>> .el-rate
-        height 2.13vw
+        height 2.13vw 
     .shop-head
         display flex
         justify-content space-between
@@ -249,12 +346,20 @@ export default {
                 text-align center
             .active
                 color #4897fe
+        .ishead
+            position fixed
+            top 0
+            width 100%      
+            background-color #fff
+            z-index 1000  
         .tab-box
             position relative
             width 100%
             .shop-buy
                 display flex
                 position relative
+        .tab-box-ab
+            padding-top 10.66vw        
         .shop-cart
             position fixed
             bottom 0

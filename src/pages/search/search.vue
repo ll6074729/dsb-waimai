@@ -16,25 +16,50 @@
                 <img src="../../assets/img/search@3x.png" alt="" srcset="">
             </div>
         </div>
-        <goods-list :list="shopList"></goods-list>
+        <goods-list :shopList="shopList"></goods-list>
     </div>
 </template>
 <script>
 import GoodsList from "../../componentss/goodsList"
+import axios from "axios"
 export default {
     name:'Search',
     components:{
-        GoodsList:GoodsList
+        GoodsList
     },
     data () {
         return {
             input10: '',
-            shopList:[
-                {imgUrl:require("../../assets/img/组17@3x.png"),name:"德克士（金牛凤凰立交店)",status:1,id:1,score:4,sale:532,label:["快餐·中餐 ","西餐·汉堡"]},
-                {imgUrl:require("../../assets/img/组17@3x.png"),name:"德克士（金牛凤凰立交店)",status:0,id:2,score:4,sale:132,label:["饮料·奶茶","汉堡·炸鸡"]}
-            ],
+            shopList:[{id:1,name:"liuy"},{id:2,name:"li"}],
+            // shopList:[],
         }
-    }
+    },
+    methods:{
+        handSearch () {
+            axios({
+                method: 'post',
+                url: '/mobile/api/q',
+                data: {
+                    url:'http://api.dqvip.cc/buyer/shop_list',
+                    type_id : this.$route.query.type_id,
+                    area_id : this.$store.state.area_id,
+                    q_type:'get'
+                },
+            })
+                .then(this.getSearch)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getSearch (res) {
+            const date = eval('(' + res.data + ')')
+            this.shopList = date.data.data
+            console.log(this.shopList)
+        }
+    },
+    mounted () {
+        this.handSearch()
+    },
 }
 </script>
 <style lang="stylus" scoped>

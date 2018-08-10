@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 let defaultCity = "获取中..."
 let defaultSchool = "获取中..."
-let area_id
+let area_id = 4
 
 /**
  * 登录接口需要的参数

@@ -48,7 +48,6 @@ export default {
     },
     methods:{
          handClickSchool (school,area_id) {
-            console.log(132)
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
             this.$router.push({path:"/"})

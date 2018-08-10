@@ -49,8 +49,15 @@ export default {
     data () {
         return {
             comment:[{id:1,name:"一直下雨",userImg:"https://bpic.588ku.com/element_water_img/18/07/03/32ba65ec9c2ed72759a09e287caa26ab.jpg",time:"2017-08-12 12:15",rate:4,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"感谢您对小店的认可，祝您用餐愉快，我们会继续努力！用餐过程中如有任何问题，您可随时联系我们。我们会第一时间为您服务，谢谢！",commodity:["小计面包","烤肉饭"]},
-            {id:2,name:"干死小菠菜",userImg:"https://bpic.588ku.com/element_water_img/18/07/14/77926eb9de021e758a0448d618d06ff6.jpg",time:"2017-08-12 12:15",rate:4.6,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"你好啊",commodity:["小计面包"]}]
+            {id:2,name:"干死小菠菜",userImg:"https://bpic.588ku.com/element_water_img/18/07/14/77926eb9de021e758a0448d618d06ff6.jpg",time:"2017-08-12 12:15",rate:4.6,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"你好啊",commodity:["小计面包"]},
+            {id:3,name:"干死高波波",userImg:"https://bpic.588ku.com/element_water_img/18/07/14/77926eb9de021e758a0448d618d06ff6.jpg",time:"2017-08-12 12:15",rate:4.6,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"冲啊，干死高波波 ，为了全世界，为了我们的小孩子",commodity:["小计面包"]}]
         }
+    },
+    mounted () {
+
+    },
+    methods : {
+
     }
 }
 </script>
@@ -126,4 +133,6 @@ export default {
                     border 1px solid #92c1ff
                     border-radius .8vw
                     background-color #ecf5ff
+            &:last-child
+                padding-bottom 20vw       
 </style>    
