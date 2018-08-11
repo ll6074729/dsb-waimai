@@ -89,6 +89,7 @@ export default {
         getAllSchool (res) {
             const res1 = eval('(' + res.data + ')')
             const date = res1.data
+            console.log(date)
             this.allSchool = date
         }
     }

@@ -116,21 +116,18 @@ export default {
         },
         isCollectA () {
             this.isCollect = !this.isCollect
+            console.log(this.isCollect,333)
             this.getCollect()
         },
         getCollect () {
             // 更改收藏状态
             axios({
-                method: 'get',
-                url: '/api/buyer/collect_shop/1/'+this.isCollect,
+                method: 'post',
+                url: 'mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+isCollect+'',
-                    // q_type:'get'
+                    url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+this.isCollect,
+                    q_type:'get'
                 },
-                headers:{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.collect)
                 .catch(function (error) {
@@ -139,8 +136,8 @@ export default {
         },
         collect (res) {
             console.log(res)
-            this.isCollect = eval(res.data.message)
-            if(!eval(res.data.message)){
+            // this.isCollect = eval(res.data.message)
+            if(eval(res.data.message)){
                 this.$message({
                     message: '收藏成功',
                     type: 'success',
@@ -157,16 +154,13 @@ export default {
         getlist () {
             // 不需要传值  获取列表
             axios({
-                method: 'get',
-                url: '/api/buyer/collect_list',
+                method: 'post',
+                url: 'mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+isCollect+'',
-                    // q_type:'get'
+                    url:'http://api.dqvip.cc/buyer/collect_list',
+                    q_type:'get'
                 },
-                headers:{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
+               
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
@@ -175,30 +169,29 @@ export default {
         },
         // 获取收藏店铺列表
         getlistbox (res) {
-            console.log(res.data.data[0].shop)
-            this.shop = res.data.data[0].shop
-            if(res.data.data == ''){
+            const date = eval('('+res.data+')')
+            console.log(date)
+            
+            if(date.data == ''){
                 this.isCollect = false
             }else{
-                for(let i = 0;i<res.data.data.length;i++){
-                // collect.push(res.data.data[i].shop)
-                    if(res.data.data[i].shop_id == this.$route.params.id){
+                this.shop = date.data[0].shop
+                for(let i = 0;i<date.data.length;i++){
+                    if(date.data[i].shop_id == this.$route.params.id){
+                        console.log(date.data[i].shop_id,666)
                         this.isCollect = true
                     }else{
                         this.isCollect = false
+                        console.log(date.data[i].shop_id,555)
                     }
                 }
             }
+            console.log(this.isCollect,2222)
         },
         // 固定在顶部
         handleTop () {
-            // var scroll = this.styleIndex.handleScroll()
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
-            // var tabHeight = this.$refs.tabTop
-            // event.currentTarget.offsetTop
-            console.log(tabTop.top)
             var tabTop1 = tabTop.top
-            // console.log(this.$refs.tabTop)
             if(tabTop1 >= 0 ){
                 this.ishead = false
             }else{

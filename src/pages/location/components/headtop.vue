@@ -50,7 +50,19 @@ export default {
          handClickSchool (school,area_id) {
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
-            this.$router.push({path:"/"})
+            this.$http({
+                method: 'post',
+                url: 'mobile/api/q',
+                data: {
+                    url:'http://api.dqvip.cc/buyer/user_locator',
+                    area_id:area_id,
+                    q_type:'post'
+                },
+            })
+                .then(this.$router.push({path:"/"}))
+                .catch(function (error) {
+                    console.log(error);
+                })
         },
     },
     watch :{

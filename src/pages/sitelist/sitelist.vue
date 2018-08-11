@@ -9,25 +9,24 @@
             </router-link>
         </div>
 
-        <div class="sitelist">
-
+        <div class="sitelist" v-show="isshow" v-for="item in list" :key="item.address_id">
             <div class="site-item">
                 <hr class="hr20">
                 <div class="siteinfo">
                     <div class="userinfo">
                         <div class="username">
-                            小嚎嚎
+                            {{item.consignee}}
                         </div>
                         <div class="userphone">
-                            15651448477
+                            {{item.mobile}}
                         </div>
                     </div>
                     <div class="sitename fs24">
-                        四川省成都市金牛区绿地红星国际C座1426
+                        {{item.address}}
                     </div>
                 </div>
                 <div class="df">
-                    <div class="defaultsite">
+                    <div class="defaultsite" :class="{active:is_default}">
                         <img src="../../assets/img/uncheck.png" alt="">
                         <span>默认地址</span>
                     </div>
@@ -35,42 +34,15 @@
                         <div class="hand-edit">
                             编辑
                         </div>
-                        <div class="hand-delete">
+                        <div class="hand-delete" @click="open2(item.address_id)">
                             删除
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="site-item">
-                <hr class="hr20">
-                <div class="siteinfo">
-                    <div class="userinfo">
-                        <div class="username">
-                            小嚎嚎2
-                        </div>
-                        <div class="userphone">
-                            15651448477
-                        </div>
-                    </div>
-                    <div class="sitename fs24">
-                        四川省成都市金牛区绿地红星国际C座1426
-                    </div>
-                </div>
-                <div class="df">
-                    <div class="defaultsite active">
-                        <img src="../../assets/img/check.png" alt="">
-                        <span>默认地址</span>
-                    </div>
-                    <div class="handle">
-                        <div class="hand-edit">
-                            编辑
-                        </div>
-                        <div class="hand-delete"  @click="open2">
-                            删除
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+        <div class="siteno" v-show="!isshow">
+            暂时没有地址
         </div>
     </div>
 </template>
@@ -79,11 +51,38 @@ export default {
     name:"sitelist",
     data () {
         return {
-
+            isshow:'',
+            list:[],
         }
     },
     methods: {
-        open2() {
+        getsddr () {
+            this.$http({
+                method: 'post',
+                url: 'mobile/api/q',
+                data: {
+                    url:'http://api.dqvip.cc/buyer/list_address',
+                    q_type:'get'
+                },
+            })
+                .then(this.getaddrList)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getaddrList (res){
+
+            const date = eval('('+res.data+')')
+            console.log(date)
+            if(date.data == ''){
+                this.isshow = false
+            }else{
+                this.isshow = true
+                this.list = date.data
+                console.log()
+            }
+        },
+        open2(msg) {
             this.$confirm('确认删除该地址?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -91,10 +90,20 @@ export default {
                 center:true,
                 customClass:"messBox"
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+                this.$http({
+                    method: 'post',
+                    url: 'mobile/api/q',
+                    data: {
+                        url:'http://api.dqvip.cc/buyer/del_address',
+                        address_id:msg,
+                        q_type:'delete'
+                    },
+                })
+                .then(this.issuccess)
+                .catch(function (error) {
+                    console.log(error);
                 });
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -102,9 +111,20 @@ export default {
                 });          
             });
         },
+        issuccess (res) {
+            let date = eval('('+res.data+')')
+            console.log(date)
+            this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+        },
         back () {
             this.$router.go(-1)
         },
+    },
+    mounted () {
+        this.getsddr()
     }
 }
 </script>
@@ -117,6 +137,8 @@ export default {
             img 
                 width 2.13vw
                 height 4.13vw
+    .siteno
+        text-align center            
     .sitelist
         .site-item
             .siteinfo

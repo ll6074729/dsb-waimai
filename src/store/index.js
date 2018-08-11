@@ -5,6 +5,7 @@ Vue.use(Vuex)
 let defaultCity = "获取中..."
 let defaultSchool = "获取中..."
 let area_id = 4
+let SchoolList 
 
 /**
  * 登录接口需要的参数
@@ -28,11 +29,18 @@ try{
     }
 }catch (e){}
 
+try{
+    if(localStorage.SchoolList){
+        SchoolList = localStorage.SchoolList
+    }
+}catch (e){}
+
 export default new Vuex.Store({
     state:{
-        defaultCity : defaultCity,
-        defaultSchool : defaultSchool,
-        area_id : area_id 
+        defaultCity,
+        defaultSchool,
+        area_id,
+        SchoolList
     },
     actions:{
         changeCity (ctx ,city ){
@@ -44,8 +52,18 @@ export default new Vuex.Store({
         changearea (ctx ,area_id ){
             ctx.commit('changearea',area_id)
         },
+        changeSchoolList (ctx , SchoolList){
+            ctx.commit('changeSchoolList',SchoolList)
+        }
     },
     mutations:{
+        changeSchoolList (){
+            state.SchoolList = SchoolList
+            try {
+                localStorage.SchoolList = SchoolList
+            }catch (e){
+            }
+        },
         changearea (state,area_id){
             state.area_id = area_id
             try {
