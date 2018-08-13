@@ -1,15 +1,16 @@
 <template>
     <div>
-        <div class="menu-list" ref="warpper">
-            <div>
-                <div class="menu-item" 
-                    v-for="(item,index) in list" 
+        <div class="menu-list" ref="cate">
+            <ul>
+                <li class="menu-item" 
+                    v-for="(item,index) in cate" 
                     :key="index" 
                     :class="{active :index == num }"
-                    @click="tablist(index)">
-                    {{item}}
-                </div>
-            </div>
+                    @click="tablist(index)"
+                    >
+                    {{item.cate_name}}
+                </li>
+            </ul>
         </div>
         
     </div>
@@ -19,11 +20,13 @@ import BScroll from 'better-scroll'
 export default {
     name:"ShopMenu",
     mounted(){
-        this.scroll = new BScroll(this.$refs.warpper)
+        this.scroll = new BScroll(this.$refs.cate)
+    },
+    props:{
+        cate:Array
     },
     data () {
         return {
-            list:['店长推荐','烧菜','凉菜','饮品'],
             num :0,
         }
     },
@@ -41,6 +44,13 @@ export default {
         height 100%
         background-color #f7f7f7
         padding-bottom 13.33vw
+        overflow hidden
+        // position absolute
+        // top 0
+        // left 0
+        // right 0
+        // bottom 0
+        // z-index 1
         .menu-item
             height 13.33vw
             line-height 13.33vw

@@ -101,23 +101,33 @@ export default {
                 })
                 .then(this.issuccess)
                 .catch(function (error) {
-                    console.log(error);
-                });
+                    console.log(error)
+                })
                 
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });          
-            });
+                })          
+            })
         },
         issuccess (res) {
+            
             let date = eval('('+res.data+')')
             console.log(date)
-            this.$message({
+            if(date.status == 200 ){
+                this.$message({
                     type: 'success',
                     message: '删除成功!'
                 })
+                this.getsddr()
+            }else{
+                this.$message({
+                    type: 'error',
+                    message: date.message
+                })
+            }
+
         },
         back () {
             this.$router.go(-1)

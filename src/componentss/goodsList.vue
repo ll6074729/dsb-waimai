@@ -6,7 +6,7 @@
             <div class="item-tab">评分优先</div>
             <div class="item-tab">热门新店</div>
         </div>
-        <div ref="warpper" class="shop">
+        <div ref="shopList" class="shop">
                 <!-- <router-link class="shop-list" tag="div" v-for="(item,index) in shopList.data" :key="index" > -->
                     <!-- {{index}} -->
                     <!-- <div class="shop-list-item">
@@ -70,7 +70,7 @@ export default {
         }
     },
     mounted (){
-        // this.scroll = new BScroll(this.$refs.warpper)
+        // this.scroll = new BScroll(this.$refs.shopList)
         this.showshopList()
     },
 }

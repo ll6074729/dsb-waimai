@@ -41,25 +41,25 @@
                 </div>
             </div>
             <div class="activity">
-                <div v-for="item in activity" :key="item.type">
+                <div v-for="item in shop.prom" :key="item.prom_id">
                     <div class="list-item">
                         <span class="list-item-left">
-                            <div class="shop-label-activity shop-label-type1"  v-if="item.type == 1">
+                            <div class="shop-label-activity shop-label-type1"  v-if="item.type == 0">
                                 满减
                             </div>
                             <div class="shop-label-activity shop-label-type2"  v-else-if="item.type == 2">
-                                配送
+                                首单
                             </div>
-                            <div class="shop-label-activity shop-label-type3"  v-else-if="item.type == 3">
+                            <div class="shop-label-activity shop-label-type3"  v-else-if="item.type == 1">
                                 赠品
                             </div>
                         </span>
-                        <span class="list-item-right">{{item.warp}}</span>
+                        <span class="list-item-right">{{item.title}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <shop-recommend></shop-recommend>
+        <shop-recommend :food = "shop.recommend_goods"></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box">
             <div class="tab" :class="{ishead:ishead}" ref="tabTop">
@@ -68,8 +68,8 @@
             </div>
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
-                    <shop-menu></shop-menu>
-                    <shop-product></shop-product>
+                    <shop-menu :cate="shop.cate"></shop-menu>
+                    <shop-product :goods="shop.cate"></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
                     <shop-comment></shop-comment>
@@ -90,7 +90,6 @@ import ShopFoot from "./components/shopfoot"
 import ShopBuy from "./components/shopbuy"
 import ShopComment from "./components/comment"
 import ShopRecommend from "./components/shoprecommend"
-import axios from 'axios'
 export default {
     name:'Shop',
     components:{
@@ -104,7 +103,6 @@ export default {
     data () {
         return {
             shop:[],
-            activity:[{type:1,warp:"满20减5，满30减10，满40减20，满50减3020减5，满30减10，满40减20，满50减30"},{type:2,warp:"配送费 2 元"},{type:3,warp:"满 13.0 元送可口可乐"}],
             isShowA:true,
             isCollect: false, 
             ishead:false
@@ -121,11 +119,13 @@ export default {
         },
         getCollect () {
             // 更改收藏状态
-            axios({
+            this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
                 data: {
-                    url:'http://api.dqvip.cc/buyer/collect_shop/'+this.$route.params.id+'/'+this.isCollect,
+                    url:'http://api.dqvip.cc/buyer/collect_shop',
+                    shop_id:this.$route.params.id,
+                    collect_type:this.isCollect,
                     q_type:'get'
                 },
             })
@@ -135,9 +135,10 @@ export default {
                 })
         },
         collect (res) {
-            console.log(res)
+            let date = eval('('+res.data+')')
+            console.log(eval(date))
             // this.isCollect = eval(res.data.message)
-            if(eval(res.data.message)){
+            if(date.message  == false){
                 this.$message({
                     message: '收藏成功',
                     type: 'success',
@@ -152,42 +153,55 @@ export default {
             }
         },
         getlist () {
-            // 不需要传值  获取列表
-            axios({
+            // 获取店铺信息 传一个店铺ID
+            this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
                 data: {
-                    url:'http://api.dqvip.cc/buyer/collect_list',
-                    q_type:'get'
+                    url:'http://api.dqvip.cc/buyer/shop_info',
+                    shop_id:this.$route.params.id,
+                    q_type:'post'
                 },
-               
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        // 获取收藏店铺列表
-        getlistbox (res) {
-            const date = eval('('+res.data+')')
+        getlistbox(res){
+            console.log(res)
+            let date = eval('('+res.data+')')
             console.log(date)
-            
-            if(date.data == ''){
+            this.shop = date.data
+            if(this.shop.is_collect == 0){
                 this.isCollect = false
             }else{
-                this.shop = date.data[0].shop
-                for(let i = 0;i<date.data.length;i++){
-                    if(date.data[i].shop_id == this.$route.params.id){
-                        console.log(date.data[i].shop_id,666)
-                        this.isCollect = true
-                    }else{
-                        this.isCollect = false
-                        console.log(date.data[i].shop_id,555)
-                    }
-                }
+                this.isCollect = true
             }
-            console.log(this.isCollect,2222)
+            // const date = eval('('+res.data+')')
+            // console.log(date)
         },
+        // 获取收藏店铺列表
+        // getlistbox (res) {
+        //     const date = eval('('+res.data+')')
+        //     console.log(date)
+            
+        //     if(date.data == ''){
+        //         this.isCollect = false
+        //     }else{
+        //         this.shop = date.data[0].shop
+        //         for(let i = 0;i<date.data.length;i++){
+        //             if(date.data[i].shop_id == this.$route.params.id){
+        //                 console.log(date.data[i].shop_id,666)
+        //                 this.isCollect = true
+        //             }else{
+        //                 this.isCollect = false
+        //                 console.log(date.data[i].shop_id,555)
+        //             }
+        //         }
+        //     }
+        //     console.log(this.isCollect,2222)
+        // },
         // 固定在顶部
         handleTop () {
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
@@ -301,7 +315,7 @@ export default {
                 display flex
                 margin 2.66vw 0
                 .list-item-left 
-                    width 8.66vw
+                    // width 8.66vw
                     margin-right 1.33vw
                     .shop-label-activity
                         font-size 1.6vw

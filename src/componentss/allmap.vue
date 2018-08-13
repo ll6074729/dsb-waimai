@@ -40,7 +40,8 @@
             if (r.point) {
                 this.center.lng = r.longitude
                 this.center.lat = r.latitude
-                this.$emit('handMap',r.longitude +"," + r.latitude) //坐标传给父级
+                // this.$emit('handMap',r.longitude +"," + r.latitude) //坐标传给父级
+                this.$emit('handMap','104.106714,30.681411')
                 let markers = new BMap.Marker(r.point)
                 map.addOverlay(markers)
                 map.panTo(r.point)

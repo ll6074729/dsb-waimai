@@ -1,28 +1,28 @@
 <template>
         <div class="shop-product" ref="shop">
-            <div>
-                <div class="area" 
-                    v-for="(item , key) in list" 
-                    :key="key"
-                    :ref="key"
+            <ul>
+                <li class="area" 
+                    v-for="(item , index) in goods" 
+                    :key="index"
+                    :ref="index"
                     >
-                    <div class="cate-title"> {{key}}</div>
+                    <div class="cate-title" v-if="!(item.goods.length ==0)"> {{item.cate_name}}</div>
                     <div class="item-list">
-                        <div class="item" v-for="itemList in item" :key="itemList.id">
+                        <div class="item" v-for="itemList in item.goods" :key="itemList.cate_id">
                             <div class="shop-left">
                                 <div class="shop-img">
-                                    <img :src="itemList.img" alt="">
+                                    <img :src="itemList.details_figure" alt="">
                                 </div>
                             </div>
                             <div class="shop-right">
                                 <div class="shop-name">
-                                    {{itemList.name}}
+                                    {{itemList.title}}
                                 </div>
                                 <div class="shop-spec">
-                                    {{itemList.spec}}
+                                    {{itemList.intro}}
                                 </div>
                                 <div class="shop-info">
-                                    月售：{{itemList.sale}} | 好评率：{{itemList.zan}}
+                                    销量：{{itemList.sold_num}} | 好评率：{{itemList.sold_num}}
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-price">
@@ -36,8 +36,8 @@
                              
                         </div>
                     </div>
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
 </template>
 <script>
@@ -47,15 +47,11 @@ export default {
     mounted (){
         this.scroll = new BScroll(this.$refs.shop)
     },
+    props:{
+        goods:Array
+    },
     data () {
         return {
-            list: {"店长推荐": [{"id": 56,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}, 
-                    {"id": 57,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}, 
-                    {"id": 58,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}],
-                    "烧菜": [{"id": 6,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"},
-                    {"id": 7,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"},
-                    {"id": 8,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}]},
-           
         }
     }
 }
@@ -94,6 +90,8 @@ export default {
                                 width 100%
                                 height 100%
                     .shop-right
+                        flex 1
+                        min-width 0
                         .shop-name
                             font-size 4vw
                             line-height 5vw

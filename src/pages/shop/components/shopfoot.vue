@@ -1,9 +1,11 @@
 <template>
 <div>
-    <div class="shop-foot">
-        <el-badge value="" :max="99" class="item">
-            <img src="../../../assets/img/shoppingcart.png" alt="">
-        </el-badge>
+    <div class="shop-foot"  >
+        <div  class="item" @click="iscartstatus()">
+            <el-badge value="10" :max="99">
+                <img src="../../../assets/img/shoppingcart.png" alt="">
+            </el-badge>
+        </div>
         <div class="shop-cart-info">
             <div class="shop-price">
                 <span class="price1">￥23.00</span>
@@ -17,7 +19,7 @@
             立即下单
         </router-link>
     </div>
-    <!-- <div class="cart">
+    <div class="cart" v-show="iscartshow">
         <div class="cart-head">
             <div class="cart-title">购物车</div>
             <div class="cart-clean">清空</div>
@@ -164,7 +166,7 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 </div>
     
 </template>
@@ -173,11 +175,17 @@ import BScroll from 'better-scroll'
 export default {
     name:"ShopFoot",
     mounted() {
-        // this.scroll = new BScroll(this.$refs.isgoods)
+        this.scroll = new BScroll(this.$refs.isgoods)
     },
     data () {
         return{
-
+            iscartshow:false
+        }
+    },
+    methods:{
+        iscartstatus () {
+            console.log('223213234')
+            this.iscartshow = !this.iscartshow
         }
     }
 }
@@ -188,7 +196,9 @@ export default {
         display flex
         justify-content space-between
         z-index 12
-        position relative
+        position fixed
+        bottom 0
+        width 100%
         background-color #fff;
         .item
             box-sizing border-box
@@ -211,7 +221,7 @@ export default {
             flex 1
             padding-left 4vw
     .cart
-        position absolute
+        position relative
         background-color #fff
         width 100%
         bottom 13.33vw
@@ -226,6 +236,12 @@ export default {
             background-color #f7f7f7
             font-size 4.26vw
         .isgoods
+            position absolute
+            top 0
+            left 0
+            right 0
+            bottom 13.33vw
+            overflow hidden
             .isgoods-item
                 // height 26.66vw
                 display flex

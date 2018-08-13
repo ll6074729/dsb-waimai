@@ -40,6 +40,14 @@ export default {
                 },
             },
         }
+    },
+    methods:{
+        recommend () {
+            console.log(this.list,456)
+        }
+    },
+    mounted () {
+        this.recommend()
     }
 }
 </script>

@@ -6,7 +6,7 @@
                     <div class="list-title fs24">
                         附近校区
                     </div>
-                    <div class="list-no fs24" v-show="isnearby">
+                    <div class="list-no fs24" v-show="!nearbySchool.length">
                         <p class="list-ps">附近暂无校区</p>
                         <p class="ps">
                             注意：本平台只配送校内订单，不支持配送至校外

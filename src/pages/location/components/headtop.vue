@@ -16,13 +16,13 @@
                 搜索
             </div> -->
         </div>
-        <div class="search-content" v-if="keyword" ref="search">
+        <div class="search-content" v-show="keyword" ref="search">
             <ul>
                 <li v-for="(item,index) of list" :key="index" class="list-item" v-show="keyword" @click="handClickSchool(item.address,item.area_id)">
                     {{item.address}}
                 </li>
             </ul>
-            <div  v-show="!keyword">
+            <div  v-show="!list.length">
                 暂时没有
             </div>
         </div>
@@ -50,6 +50,7 @@ export default {
          handClickSchool (school,area_id) {
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
+            console.log(school)
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',

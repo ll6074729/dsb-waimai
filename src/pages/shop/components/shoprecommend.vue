@@ -1,20 +1,20 @@
 <template>
     <div class="swiper-shop">
         <swiper :options="swiperOption"> 
-            <swiper-slide v-for="item in list" :key="item.id">
+            <swiper-slide v-for="item in food" :key="item.goods_id">
                 <div class="box">
                     <div class="box-left">
                         <img :src="item.img" alt="">
                     </div>
                     <div class="box-right">
                         <div class="box-right-title">
-                            {{item.name}}
+                            {{item.title}}
                         </div>
                         <div class="box-right-price">
                             ￥{{item.price}}
                         </div>
                         <div class="box-right-foot">
-                            <span>+</span>
+                            <span @click="addCart(item.goods_id)">+</span>
                         </div>
                     </div>
                 </div>
@@ -25,14 +25,12 @@
 <script>
 export default {
     name:"shoprecommend",
+    props:{
+        food:Array
+    },
     data () {
         return {
-            list:[{"id": 56,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}, 
-                {"id": 57,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}, 
-                {"id": 58,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"},
-                {"id": 59,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}, 
-                {"id": 60,"img": require("../../../assets/img/food.jpg"),"name": "鱼香肉丝盖浇饭鱼香肉丝盖浇饭","spec":"商品说明商品说明商品说明商品说明商品说明","sale":"658","zan":"96%","price":"15.00","num":"100"}],
-            swiperOption:{
+           swiperOption:{
                 autoplay:false,
                 slidesPerView : 1.7
             }    
@@ -42,6 +40,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
     @import "~css/style"
+    .swiper-shop >>> .swiper-container
+        z-index 0
     .swiper-shop
         background-color #f7f7f7
         padding-top 2.66vw
@@ -60,7 +60,8 @@ export default {
                 .box-right-title
                     font-size 4vw
                     line-height 5vw
-                    font-weight bold   
+                    font-weight bold  
+                    min-height 10vw 
                     ellipsisClamp()
                 .box-right-price
                     font-size 3.73vw

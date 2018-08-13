@@ -36,7 +36,6 @@ import HomeswiperTab from "./components/swiperTab"
 import HomeswiperTip from "./components/swiperTip"
 import Recommend from "./components/recommend"
 import GoodsList from "../../componentss/goodsList"
-import axios from 'axios'
 import TabBar from '../../componentss/tabbar'
 export default {
   name: "Home",
@@ -63,11 +62,12 @@ export default {
             if(this.$store.state.area_id == undefined){
                 this.$router.push({path:"/Location"})
             }else{
-                axios({
+                this.$http({
                     method: 'post',
                     url: 'mobile/api/q',
                     data: {
-                        url:'http://api.dqvip.cc/home/4',
+                        url:'http://api.dqvip.cc/home',
+                        area_id:4,
                         q_type:'get'
                     },
                 })
@@ -78,6 +78,7 @@ export default {
             }
         },
         getHomeInfoSucc(res){
+            console.log(res)
             const date = eval('(' + res.data + ')')
             console.log(date.data)
             this.banner = date.data.banner //banner图
@@ -86,13 +87,13 @@ export default {
             this.Recommend = date.data.recommend_shop //大牌推荐
         },
         handSearch () {
-            axios({
+            this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_list',
                     type_id : this.$route.query.type_id,
-                    area_id : this.$store.state.area_id,
+                    area_id : 4,
                     q_type:'get'
                 },
             })
@@ -102,8 +103,9 @@ export default {
                 })
         },
         getSearch (res) {
-            const date1 = eval('(' + res.data + ')')
-            this.shopList = date1.data.data //商家列表
+            let date = eval('(' + res.data + ')')
+            console.log(date,888)
+            this.shopList = date.data.data //商家列表
             console.log(this.shopList,999)
         }
     },
