@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <shop-recommend :food = "shop.recommend_goods"></shop-recommend>
+        <shop-recommend :food = "shop.recommend_goods" @upup="changeBuy" @AglinCart="AglinCart"></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box">
             <div class="tab" :class="{ishead:ishead}" ref="tabTop">
@@ -72,12 +72,12 @@
                     <shop-product :goods="shop.cate"></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
-                    <shop-comment></shop-comment>
+                    <shop-comment ></shop-comment>
                 </div>
             </div>
             <div class="shop-cart">
-                <shop-foot></shop-foot>
-                <!-- <shop-buy></shop-buy> -->
+                <shop-foot :isBuy="!isBuy" :cart="cart" @cleanCart ="cleanCart"></shop-foot>
+                <shop-buy :isBuy="isBuy" @closeGoodsInfo="changeGoodsInfo"></shop-buy>
             </div>
             
         </div>
@@ -103,12 +103,27 @@ export default {
     data () {
         return {
             shop:[],
+            cart:[],
             isShowA:true,
             isCollect: false, 
-            ishead:false
+            ishead:false,
+            isBuy:false
         }
     },
     methods:{
+        // 再次请求购物车
+        AglinCart (msg) {
+            console.log(msg,666)
+            this.isBuy = msg
+            this.getCart()
+        },
+        // 更改显示 立即购买 还是规格选择
+        changeBuy (msg) {
+            this.isBuy = msg
+        },
+        changeGoodsInfo (msg){
+            this.isBuy = msg
+        },
         tab () {
             this.isShowA = !this.isShowA
         },
@@ -156,12 +171,17 @@ export default {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
+                // url: 'mobile/api/q',
+                url:"/api/buyer/shop_info",
                 data: {
-                    url:'http://api.dqvip.cc/buyer/shop_info',
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
-                    q_type:'post'
+                    // q_type:'post'
                 },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
@@ -169,39 +189,45 @@ export default {
                 })
         },
         getlistbox(res){
-            console.log(res)
-            let date = eval('('+res.data+')')
-            console.log(date)
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.shop = date.data
             if(this.shop.is_collect == 0){
                 this.isCollect = false
             }else{
                 this.isCollect = true
             }
-            // const date = eval('('+res.data+')')
-            // console.log(date)
         },
-        // 获取收藏店铺列表
-        // getlistbox (res) {
-        //     const date = eval('('+res.data+')')
-        //     console.log(date)
-            
-        //     if(date.data == ''){
-        //         this.isCollect = false
-        //     }else{
-        //         this.shop = date.data[0].shop
-        //         for(let i = 0;i<date.data.length;i++){
-        //             if(date.data[i].shop_id == this.$route.params.id){
-        //                 console.log(date.data[i].shop_id,666)
-        //                 this.isCollect = true
-        //             }else{
-        //                 this.isCollect = false
-        //                 console.log(date.data[i].shop_id,555)
-        //             }
-        //         }
-        //     }
-        //     console.log(this.isCollect,2222)
-        // },
+        getCart () {
+            // 获取购物车信息 传一个店铺ID
+            this.$http({
+                method: 'post',
+                // url: 'mobile/api/q',
+                url:"/api/buyer/cart_list",
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    shop_id:this.$route.params.id,
+                    // q_type:'post'
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.getCartList)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getCartList (res) {
+            let date = res.data
+            // console.log(date,888)
+            this.cart = date.data
+        },
+        // 清空购物车
+        cleanCart (msg){
+            this.cart = msg
+        },
         // 固定在顶部
         handleTop () {
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
@@ -213,8 +239,11 @@ export default {
             }
         }
     },
+    watch () {
+    },
     mounted () {
         this.getlist()
+        this.getCart()
         window.addEventListener('scroll',this.handleTop)
     }
 }
@@ -370,7 +399,7 @@ export default {
         .shop-cart
             position fixed
             bottom 0
+            top 50%
             width 100%
-            background-color #ffffff
             box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.05)
 </style>

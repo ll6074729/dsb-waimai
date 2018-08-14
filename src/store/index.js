@@ -6,6 +6,7 @@ let defaultCity = "获取中..."
 let defaultSchool = "获取中..."
 let area_id = 4
 let SchoolList 
+let cart
 
 /**
  * 登录接口需要的参数
@@ -40,7 +41,8 @@ export default new Vuex.Store({
         defaultCity,
         defaultSchool,
         area_id,
-        SchoolList
+        SchoolList,
+        cart
     },
     actions:{
         changeCity (ctx ,city ){
@@ -57,7 +59,10 @@ export default new Vuex.Store({
         }
     },
     mutations:{
-        changeSchoolList (){
+        cart(state,cart){
+            state.cart = cart
+        },
+        changeSchoolList (state,SchoolList){
             state.SchoolList = SchoolList
             try {
                 localStorage.SchoolList = SchoolList

@@ -1,54 +1,64 @@
 <template>
-    <div>
+    <div class="buy_box" v-show="isBuy">
         <div class="head">
             <div class="head-left">
                 <div class="head-img">
-                    <img src="../../../assets/img/food.jpg" alt="">
+                    <img src="goodsinfo.goods_info.details_figure" alt="" :onerror="defaultImg">
                 </div>
             </div>
             <div class="head-right">
-                <div class="food-name">小龙坎火锅冒菜</div>
-                <div class="food-price">￥15.00</div>
+                <div class="food-name">{{goodsinfo.goods_info.title}}</div>
+                <div class="food-price">￥{{goodsinfo.goods_info.price}}</div>
             </div>
-            <div class="colse">
+            <div class="colse" @click="closeGoodsInfo">
                 <img src="../../../assets/img/close.png" alt="">
             </div>
         </div>
-        <div class="category">
-            <div>
-                <div class="category-item">
-                    <div class="category-name">分量：</div>
-                    <div class="category-list">
-                        <div class="item">大份</div>
-                        <div class="item">中分</div>
-                        <div class="item">小份</div>
+        <div class="category" ref="categoryList">
+            <ul>
+                <li class="category-item" v-for="(item,index) in goodsinfo.spec" :key="index">
+                    <div class="category-name">{{item.name}}：</div>
+                    <div class="category-list" >
+                        <div class="item" v-for="itemList of item.item" :key="itemList.item_id">{{itemList.item}}</div>
                     </div>
-                </div>
-                <div class="category-item">
-                    <div class="category-name">口味</div>
-                    <div class="category-list">
-                        <div class="item">辣死人不偿命</div>
-                        <div class="item">我是正常人</div>
-                    </div>
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
-        <div class="join-cart">
+        <div class="join-cart" cart-id="goodsinfo.goods_info.cart_id">
             加入购物车
         </div>
     </div>
 </template>
 <script>
+import BScroll from 'better-scroll'
 export default {
     name:"ShopBuy",
+    props:{
+        isBuy:Boolean
+    },
     data () {
         return {
-
+            goodsinfo:[],
+            defaultImg:'this.src="' + require('../../../assets/img/food.jpg') + '"'
+        }
+    },
+    updated () {
+        this.$root.bus.$on('goodsinfo',value=>{
+            this.goodsinfo = value
+        }),
+        this.scroll = new BScroll(this.$refs.categoryList)
+    },
+    methods:{
+        // 关闭当前面板
+        closeGoodsInfo (){
+            this.$emit('closeGoodsInfo',false)
         }
     }
 }
 </script>
 <style lang="stylus" scoped>
+.buy_box
+    background #fff
     .head
         height 21.33vw
         padding 5.33vw 2.66vw
@@ -79,12 +89,14 @@ export default {
                 width 4.8vw
                 height 4.8vw        
     .category
-        padding 0 2.66vw     
+        padding 0 2.66vw  
+        overflow hidden   
+        max-height 40vw
         .category-item 
             .category-list
                 .item
-                    font-size 4.26vw
-                    padding 3.33vw 8vw
+                    font-size 3.26vw
+                    padding 3vw 7vw
                     border 1px solid #dbdbdb
                     color #999
                     display inline-block

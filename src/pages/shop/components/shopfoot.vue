@@ -1,8 +1,8 @@
 <template>
-<div>
+<div class="shop-cart-box" v-show="isBuy">
     <div class="shop-foot"  >
         <div  class="item" @click="iscartstatus()">
-            <el-badge value="10" :max="99">
+            <el-badge value="1" :max="99">
                 <img src="../../../assets/img/shoppingcart.png" alt="">
             </el-badge>
         </div>
@@ -22,149 +22,37 @@
     <div class="cart" v-show="iscartshow">
         <div class="cart-head">
             <div class="cart-title">购物车</div>
-            <div class="cart-clean">清空</div>
+            <div class="cart-clean" @click="cleanCart">清空</div>
         </div>
-        <div class="isgoods" ref="isgoods">
-            <div>
-                <div class="isgoods-item">
+        <div class="isgoods" ref="isgoods" v-if="cart.length>=1">
+            <ul>
+                <li class="isgoods-item" v-for="item in cart" :key="item.cart_id">
                     <div class="isgood-left">
                         <div class="isgood-img">
                             <img src="../../../assets/img/food.jpg" alt="">
                         </div>
                     </div>
                     <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
+                        <div class="isgood-name">{{item.goods.title}}</div>
                         <div class="isgood-attr">
                             <span>大份</span>
                             <span>特辣</span>
                             <span>加肉</span>
                         </div>
                         <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
+                            <div class="isgood-price">￥{{item.goods.price}}</div>
                             <div class="isgood-num">
                                 <div class="minus">-</div>
-                                <span>1</span>
+                                <span>{{item.goods_num}}</span>
                                 <div class="plus">+</div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="isgoods-item">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img src="../../../assets/img/food.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
-                        <div class="isgood-attr">
-                            <span>大份</span>
-                            <span>特辣</span>
-                            <span>加肉</span>
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
-                            <div class="isgood-num">
-                                <div class="minus">-</div>
-                                <span>1</span>
-                                <div class="plus">+</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="isgoods-item">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img src="../../../assets/img/food.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
-                        <div class="isgood-attr">
-                            <span>大份</span>
-                            <span>特辣</span>
-                            <span>加肉</span>
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
-                            <div class="isgood-num">
-                                <div class="minus">-</div>
-                                <span>1</span>
-                                <div class="plus">+</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="isgoods-item">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img src="../../../assets/img/food.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
-                        <div class="isgood-attr">
-                            <span>大份</span>
-                            <span>特辣</span>
-                            <span>加肉</span>
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
-                            <div class="isgood-num">
-                                <div class="minus">-</div>
-                                <span>1</span>
-                                <div class="plus">+</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="isgoods-item">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img src="../../../assets/img/food.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
-                        <div class="isgood-attr">
-                            <span>大份</span>
-                            <span>特辣</span>
-                            <span>加肉</span>
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
-                            <div class="isgood-num">
-                                <div class="minus">-</div>
-                                <span>1</span>
-                                <div class="plus">+</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="isgoods-item">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img src="../../../assets/img/food.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">鱼香肉丝盖浇饭</div>
-                        <div class="isgood-attr">
-                            <span>大份</span>
-                            <span>特辣</span>
-                            <span>加肉</span>
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥12.00</div>
-                            <div class="isgood-num">
-                                <div class="minus">-</div>
-                                <span>1</span>
-                                <div class="plus">+</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </li>
+            </ul>
+        </div>
+        <div v-if="cart.length<1">
+            暂时没有
         </div>
     </div>
 </div>
@@ -174,24 +62,67 @@
 import BScroll from 'better-scroll'
 export default {
     name:"ShopFoot",
+    props:{
+        isBuy: Boolean,
+        cart:Array,
+    },
     mounted() {
+        
+    },
+    updated () {
         this.scroll = new BScroll(this.$refs.isgoods)
     },
     data () {
         return{
-            iscartshow:false
+            iscartshow:false,
         }
     },
     methods:{
         iscartstatus () {
-            console.log('223213234')
             this.iscartshow = !this.iscartshow
+        },
+        cleanCart () {
+            this.$http({
+                 method: 'delete',
+                // url: 'mobile/api/q',
+                url:"/api/buyer/cart_clear",
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    // q_type:'post'
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.cleanCartList)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        cleanCartList (res) {
+            this.$emit('cleanCart','false')
+            if(res.data.status == 200){
+                this.$message({
+                    message: '添加成功',
+                    type: 'success',
+                    // duration:0
+                });
+            }else{
+                this.$message({
+                    message: '添加失败',
+                    type: 'waring',
+                    // duration:0
+                });
+            }
+            
         }
     }
 }
 </script>
 <style lang="stylus" scoped>
-
+.shop-cart-box
+    height 100%
     .shop-foot 
         display flex
         justify-content space-between
@@ -224,8 +155,8 @@ export default {
         position relative
         background-color #fff
         width 100%
+        height 100%
         bottom 13.33vw
-        max-height 100vw
         z-index 10
         .cart-head
             height 13.33vw
@@ -237,11 +168,13 @@ export default {
             font-size 4.26vw
         .isgoods
             position absolute
-            top 0
+            top 13.33vw
             left 0
             right 0
-            bottom 13.33vw
+            bottom 26.66vw
             overflow hidden
+            z-index 1
+            height 100%
             .isgoods-item
                 // height 26.66vw
                 display flex

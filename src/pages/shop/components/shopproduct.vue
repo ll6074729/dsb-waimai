@@ -29,7 +29,9 @@
                                         ￥{{itemList.price}}
                                     </div>
                                     <div class="shop-num">
-                                        <span>+</span>
+                                        <div class="minus">-</div>
+                                        <span>1</span>
+                                        <div class="plus">+</div>
                                     </div>
                                 </div>
                             </div>
@@ -114,13 +116,23 @@ export default {
                                 color #3ea4fd
                                 font-weight bold
                             .shop-num
-                                display inline-block
-                                width 5.33vw
-                                height 5.33vw
-                                border-radius 50%
-                                color #fff
-                                background-color #469afe
-                                text-align center
-                                line-height 5vw
-                                font-weight bold
+                                span 
+                                    line-height 5vw
+                                    margin 0 4vw
+                                .minus,.plus
+                                    width 5.33vw
+                                    height 5.33vw
+                                    border-radius 50%
+                                    box-sizing border-box
+                                    font-weight bold
+                                    text-align center
+                                    display inline-block
+                                .minus
+                                    border solid 1px #469afe;
+                                    color #469afe
+                                    line-height 4vw
+                                .plus
+                                    background-color #469afe
+                                    color #fff
+                                    line-height 5vw         
 </style>
