@@ -11,7 +11,7 @@
                         <div class="item" v-for="itemList in item.goods" :key="itemList.cate_id">
                             <div class="shop-left">
                                 <div class="shop-img">
-                                    <img :src="itemList.details_figure" alt="">
+                                    <img :src="itemList.details_figure" alt=""> 
                                 </div>
                             </div>
                             <div class="shop-right">
@@ -63,12 +63,12 @@ export default {
         border none!important
     .shop-product 
         flex 1
-        position absolute
-        top 2vw
-        left 26.66vw
-        right 0
-        bottom 0
-        overflow hidden
+        // position absolute
+        // top 2vw
+        // left 26.66vw
+        // right 0
+        // bottom 0
+        // overflow hidden
         .area 
             .cate-title
                 width 95%

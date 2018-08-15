@@ -15,7 +15,7 @@
         <div class="info">
             <p>服务时间：10:00~22:00</p>
         </div>
-        <tab-bar></tab-bar>
+        <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
 </template>
 <script>
@@ -35,7 +35,7 @@ export default {
     },
     data () {
         return {
-
+            defaulttab:3,
         }
     }
 }

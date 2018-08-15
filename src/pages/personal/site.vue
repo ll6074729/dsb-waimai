@@ -71,11 +71,13 @@ export default {
             schoolAddress:'请选择您当前的地址',
             consignee:'',
             mobile:'',
+            is_default:1,
             floor:'',
             address:'',
             building:'',
             delivery_id:5, //楼层ID
             address_id:'', //编辑才传
+            address_list:this.$store.state.addressList,
             picker: {
                 textConfirm:"确定",
                 data: [{
@@ -104,12 +106,38 @@ export default {
         }
     },
     methods:{
+        setIsDefault () {
+            if(this.address_list.length == 0){
+                this.is_default = 1
+            }else {
+                this.is_default = 0
+            }
+        },
         newAddress () {
+            // this.$http({
+            //     method: 'post',
+            //     url: 'mobile/api/q',
+            //     data: {
+            //         url:'http://api.dqvip.cc/buyer/edit_address',
+            //         area_id:4,
+            //         consignee:this.consignee,
+            //         mobile:this.mobile,
+            //         floor:this.floor,
+            //         address:this.address,
+            //         building:this.building,
+            //         delivery_id:this.delivery_id,
+            //         is_default:1,
+            //         q_type:'post'
+            //     }
+            // })
+
             this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
+                 method: 'post',
+                // url: 'mobile/api/q',
+                url:"/api/buyer/edit_address",
                 data: {
-                    url:'http://api.dqvip.cc/buyer/edit_address',
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    // q_type:'post'
                     area_id:4,
                     consignee:this.consignee,
                     mobile:this.mobile,
@@ -117,7 +145,11 @@ export default {
                     address:this.address,
                     building:this.building,
                     delivery_id:this.delivery_id,
-                    q_type:'post'
+                    is_default:this.is_default,
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
                 }
             })
             .then(this.add_address)
@@ -127,7 +159,8 @@ export default {
         },
         add_address (res) {
             let that = this
-            let date = eval('('+res.data+')')
+            // let date = eval('('+res.data+')')
+            let date = res.data
             console.log(date)
             if(date.status == 200){
                 this.$message({
@@ -157,13 +190,26 @@ export default {
             this.schoolAddress = index[0].value + index[1].value + "1层"
         },
         getSchool () {
+            // this.$http({
+            //     method: 'post',
+            //     url: 'mobile/api/q',
+            //     data: {
+            //         url:'http://api.dqvip.cc/buyer/delivery',
+            //         area_id:4,
+            //         q_type:'post'
+            //     }
+            // })
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
+                url: '/api/buyer/delivery',
                 data: {
-                    url:'http://api.dqvip.cc/buyer/delivery',
+                    // url:'http://api.dqvip.cc/buyer/delivery',
                     area_id:4,
-                    q_type:'post'
+                    // q_type:'post'
+                },
+                 headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
                 }
             })
             .then(this.getAllSchool)
@@ -172,7 +218,8 @@ export default {
             });
         },
         getAllSchool (res) {
-            const date = eval('('+ res.data +')')
+            let date = res.data
+            // const date = eval('('+ res.data +')')
             const result = []
             // const date =  res.data 
             console.log(date)
@@ -187,6 +234,7 @@ export default {
     },
     mounted () {
         this.getSchool()
+        this.setIsDefault()
     },
     computed :{
         

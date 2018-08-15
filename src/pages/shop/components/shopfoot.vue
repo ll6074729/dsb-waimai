@@ -8,12 +8,15 @@
         </div>
         <div class="shop-cart-info">
             <div class="shop-price">
-                <span class="price1">￥23.00</span>
-                <span class="price2">￥30.00</span>
+                <span class="price1">￥{{rulingPrice}}</span>
+                <span class="price2" v-if="costPrice != 0">￥{{costPrice}}</span>
             </div>
-            <div class="distribution">
-                配送费: ￥1
+            <div class="distribution" v-if="addressList.length >0">
+                配送费: ￥{{delivery_cost}}
             </div>
+            <router-link tag="div" class="distribution" v-if="addressList.length == 0" to="/sitelist">
+                请先设置默认收货地址
+            </router-link>
         </div>
         <router-link tag="div" class="buybtn" to="/cart">
             立即下单
@@ -42,16 +45,16 @@
                         <div class="isgood-foot">
                             <div class="isgood-price">￥{{item.goods.price}}</div>
                             <div class="isgood-num">
-                                <div class="minus">-</div>
+                                <div class="minus" @click="removegoodsnum(item.goods_num,item.goods_id)">-</div>
                                 <span>{{item.goods_num}}</span>
-                                <div class="plus">+</div>
+                                <div class="plus" @click="addgoodsnum(item.goods_num,item.goods_id)">+</div>
                             </div>
                         </div>
                     </div>
                 </li>
             </ul>
         </div>
-        <div v-if="cart.length<1">
+        <div v-if="cart.length<1" class="isshop">
             暂时没有
         </div>
     </div>
@@ -65,19 +68,76 @@ export default {
     props:{
         isBuy: Boolean,
         cart:Array,
+        costPrice:Number,
+        rulingPrice:Number,
+        addressList:Array
     },
     mounted() {
-        
+        this.getDelivery()
     },
     updated () {
-        this.scroll = new BScroll(this.$refs.isgoods)
+        this.scroll = new BScroll(this.$refs.isgoods,{
+            click:true
+        })
     },
     data () {
         return{
             iscartshow:false,
+            delivery_cost:this.$store.state.delivery_cost
         }
     },
     methods:{
+        // 购物车增加商品
+        addgoodsnum (goods_num,goods_id) {
+            this.$http({
+                    method: 'post',
+                    // url: 'mobile/api/q',
+                    url:'/api/buyer/cart_change',
+                    data: {
+                        // url:'http://api.dqvip.cc/goods_info',
+                        goods_id:goods_id,
+                        shop_id:this.$route.params.id,
+                        goods_num:goods_num+1,
+                        // q_type:'post'
+                    },
+                    headers :{
+                        'Accept':'application/json',
+                        'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                    }
+                })
+            .then(this.$parent.AglinCart)
+            .catch(function (error) {
+                console.log(error);
+            })
+        },
+        // 获取全局配置
+        getDelivery () {
+            if(this.$store.state.delivery_cost == null || this.$store.state.delivery_cost == undefined){
+                this.$http({
+                    method: 'get',
+                    // url: 'mobile/api/q',
+                    url:"/api/init",
+                    data: {
+                        // url:'http://api.dqvip.cc/buyer/shop_info',
+                        // q_type:'post'
+                    },
+                    headers :{
+                        'Accept':'application/json',
+                        'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                    }
+                })
+                    .then(this.getDeliveryList)
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
+        },
+        getDeliveryList (res) {
+            let date = res.data
+            console.log(date.data)
+            let Distribution = parseFloat(date.data[0].value)
+            this.delivery_cost = Distribution.toFixed(2)
+        },
         iscartstatus () {
             this.iscartshow = !this.iscartshow
         },
@@ -101,22 +161,23 @@ export default {
                 })
         },
         cleanCartList (res) {
-            this.$emit('cleanCart','false')
+            this.$emit('cleanCart','')
             if(res.data.status == 200){
                 this.$message({
-                    message: '添加成功',
+                    message: '清空成功',
                     type: 'success',
-                    // duration:0
                 });
             }else{
                 this.$message({
-                    message: '添加失败',
+                    message: '清空失败',
                     type: 'waring',
-                    // duration:0
                 });
             }
             
         }
+    },
+    computed :{
+
     }
 }
 </script>
@@ -151,6 +212,8 @@ export default {
             line-height 6.66vw
             flex 1
             padding-left 4vw
+            .distribution
+                font-size 12px
     .cart
         position relative
         background-color #fff
@@ -167,16 +230,9 @@ export default {
             background-color #f7f7f7
             font-size 4.26vw
         .isgoods
-            position absolute
-            top 13.33vw
-            left 0
-            right 0
-            bottom 26.66vw
             overflow hidden
-            z-index 1
-            height 100%
+            max-height 100vw
             .isgoods-item
-                // height 26.66vw
                 display flex
                 padding 2.66vw
                 border-bottom 1px solid #f7f7f7
@@ -226,5 +282,7 @@ export default {
                                 background-color #469afe
                                 color #fff
                                 line-height 5vw
-
+        .isshop
+            text-align center
+            padding 5vw
 </style>

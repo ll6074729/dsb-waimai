@@ -44,13 +44,14 @@ export default {
         }
     },
     mounted (){
-        this.scroll = new BScroll(this.$refs.search)
+        this.scroll = new BScroll(this.$refs.search,{
+            click:true
+        })
     },
     methods:{
          handClickSchool (school,area_id) {
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
-            console.log(school)
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',

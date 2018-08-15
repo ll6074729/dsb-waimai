@@ -3,7 +3,7 @@
         <div class="head">
             <div class="head-left">
                 <div class="head-img">
-                    <img src="goodsinfo.goods_info.details_figure" alt="" :onerror="defaultImg">
+                    <img src="goodsinfo.goods_info.details_figure" alt="" :onerror="this.$store.state.defaultShop">
                 </div>
             </div>
             <div class="head-right">
@@ -19,7 +19,11 @@
                 <li class="category-item" v-for="(item,index) in goodsinfo.spec" :key="index">
                     <div class="category-name">{{item.name}}：</div>
                     <div class="category-list" >
-                        <div class="item" v-for="itemList of item.item" :key="itemList.item_id">{{itemList.item}}</div>
+                        <div class="item" 
+                            :class="{active:itemList.item_id === 1}" 
+                            v-for="(itemList,index) of item.item" 
+                            :key="itemList.item_id"
+                            @click="chooesItem(index,itemList.item_id,itemList.goods_id)">{{itemList.item}}</div>
                     </div>
                 </li>
             </ul>
@@ -38,20 +42,29 @@ export default {
     },
     data () {
         return {
-            goodsinfo:[],
-            defaultImg:'this.src="' + require('../../../assets/img/food.jpg') + '"'
+            goodsinfo:[]
         }
     },
     updated () {
         this.$root.bus.$on('goodsinfo',value=>{
             this.goodsinfo = value
         }),
-        this.scroll = new BScroll(this.$refs.categoryList)
+        this.scroll = new BScroll(this.$refs.categoryList,{
+            click:true
+        })
     },
     methods:{
         // 关闭当前面板
         closeGoodsInfo (){
             this.$emit('closeGoodsInfo',false)
+        },
+        // 选择规格
+        chooesItem (index,item_id,goods_id) {
+            console.log(index)
+            console.log(item_id)
+            console.log(goods_id)
+            // this.isActive = item_id
+
         }
     }
 }
@@ -104,6 +117,9 @@ export default {
                     margin-right 2.66vw
                     margin-top 2.66vw
                     margin-bottom 5.33vw
+                .active
+                    background-color #469afe
+                    color #fff    
     .join-cart
         height 12vw
         color #ffffff

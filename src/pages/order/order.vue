@@ -5,7 +5,7 @@
             <div class="title">历史记录</div>
             <shop-info :list="shophead" ></shop-info>
         </div>
-        <tab-bar></tab-bar>
+        <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
 </template>
 <script>
@@ -23,6 +23,7 @@ export default {
     },
     data () {
         return{
+            defaulttab:1,
             // shophead:[{id:1,shopname:"德克士",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-30  12:33",shopstatus:"1"},
             //     {id:2,shopname:"肯不起",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-01  12:33",shopstatus:"2"},
             //     {id:3,shopname:"麦得就是贵",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-06  12:33",shopstatus:"3"}

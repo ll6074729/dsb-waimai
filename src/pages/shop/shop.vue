@@ -14,7 +14,7 @@
         <div class="shop-warp">
             <div class="shop-info">
                 <div class="shop-left">
-                    <img :src="shop.logo" alt="" class="shop-img">
+                    <img :src="shop.logo" alt="" class="shop-img" :onerror="this.$store.state.defaultHead">
                 </div>
                 <div class="shop-right">
                     <div class="shop-title">
@@ -76,8 +76,18 @@
                 </div>
             </div>
             <div class="shop-cart">
-                <shop-foot :isBuy="!isBuy" :cart="cart" @cleanCart ="cleanCart"></shop-foot>
-                <shop-buy :isBuy="isBuy" @closeGoodsInfo="changeGoodsInfo"></shop-buy>
+                <shop-foot 
+                    :isBuy="!isBuy" 
+                    :cart="cart"
+                    @cleanCart ="cleanCart" 
+                    :costPrice="costPrice" 
+                    :rulingPrice="rulingPrice" 
+                    :addressList="addressList"
+                    ></shop-foot>
+                <shop-buy 
+                :isBuy="isBuy" 
+                @closeGoodsInfo="changeGoodsInfo"
+                ></shop-buy>
             </div>
             
         </div>
@@ -102,19 +112,21 @@ export default {
     },
     data () {
         return {
-            shop:[],
-            cart:[],
+            shop:[], //店铺信息
+            cart:[], //购物车
             isShowA:true,
-            isCollect: false, 
+            isCollect: false,  //是否收藏
             ishead:false,
-            isBuy:false
+            isBuy:false, //规格
+            costPrice:0, //原价
+            rulingPrice:0, //折扣价
+            addressList:[],
         }
     },
     methods:{
         // 再次请求购物车
         AglinCart (msg) {
-            console.log(msg,666)
-            this.isBuy = msg
+            // this.isBuy = msg
             this.getCart()
         },
         // 更改显示 立即购买 还是规格选择
@@ -131,6 +143,30 @@ export default {
             this.isCollect = !this.isCollect
             console.log(this.isCollect,333)
             this.getCollect()
+        },
+        // 获取地址
+        getaddressList () {
+            this.$http({
+                method: 'get',
+                url:"/api/buyer/list_address",
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    // q_type:'post'
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.getaddrList)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getaddrList (res){
+            // const date = eval('('+res.data+')')
+            let date = res.data
+            this.addressList = date.data
         },
         getCollect () {
             // 更改收藏状态
@@ -226,6 +262,7 @@ export default {
         },
         // 清空购物车
         cleanCart (msg){
+            console.log(msg,555)
             this.cart = msg
         },
         // 固定在顶部
@@ -239,11 +276,28 @@ export default {
             }
         }
     },
-    watch () {
+    watch : {
+        cart () {
+            // console.log(this.cart)
+            let cart = this.cart
+            let total = 0
+            for(let i in cart){
+                total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
+            }
+            console.log(total.toFixed(2),123)
+            this.costPrice = total.toFixed(2)
+            this.rulingPrice = total.toFixed(2)
+        }
+    },
+    computed : {
+        // costPrice () {
+        //     console.log(this.cart)
+        // }
     },
     mounted () {
         this.getlist()
         this.getCart()
+        this.getaddressList()
         window.addEventListener('scroll',this.handleTop)
     }
 }
@@ -399,7 +453,7 @@ export default {
         .shop-cart
             position fixed
             bottom 0
-            top 50%
+            background-color #fff
             width 100%
             box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.05)
 </style>

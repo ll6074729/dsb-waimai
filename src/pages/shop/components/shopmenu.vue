@@ -6,6 +6,7 @@
                     v-for="(item,index) in cate" 
                     :key="index" 
                     :class="{active :index == num }"
+                    v-if="item.goods.length>=1"
                     @click="tablist(index)"
                     >
                     {{item.cate_name}}
@@ -20,14 +21,16 @@ import BScroll from 'better-scroll'
 export default {
     name:"ShopMenu",
     mounted(){
-        this.scroll = new BScroll(this.$refs.cate)
+        this.scroll = new BScroll(this.$refs.cate,{
+            click:true
+        })
     },
     props:{
         cate:Array
     },
     data () {
         return {
-            num :0,
+            num :-1,
         }
     },
     methods:{

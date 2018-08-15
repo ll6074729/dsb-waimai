@@ -26,8 +26,10 @@
                     </div>
                 </div>
                 <div class="df">
-                    <div class="defaultsite" :class="{active:is_default}">
-                        <img src="../../assets/img/uncheck.png" alt="">
+                    <div class="defaultsite" :class="{active:item.is_default == 1}" @click="setDefault(item.address_id)">
+
+                        <img src="../../assets/img/uncheck.png" v-if="item.is_default == 0" alt="">
+                        <img src="../../assets/img/check.png" v-if="item.is_default == 1" alt="">
                         <span>默认地址</span>
                     </div>
                     <div class="handle">
@@ -56,14 +58,50 @@ export default {
         }
     },
     methods: {
-        getsddr () {
+        // 修改默认地址
+        setDefault (address_id){
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
+                url:"/api/buyer/default_address",
                 data: {
-                    url:'http://api.dqvip.cc/buyer/list_address',
-                    q_type:'get'
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    address_id:address_id,
+                    // q_type:'post'
                 },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.setDefaultfuc)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        setDefaultfuc (res) {
+            console.log(res)
+            this.list = res.data.data
+        },
+        getsddr () {
+            // this.$http({
+            //     method: 'post',
+            //     url: 'mobile/api/q',
+            //     data: {
+            //         url:'http://api.dqvip.cc/buyer/list_address',
+            //         q_type:'get'
+            //     },
+            // })
+            this.$http({
+                method: 'get',
+                url:"/api/buyer/list_address",
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    // q_type:'post'
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
             })
                 .then(this.getaddrList)
                 .catch(function (error) {
@@ -72,14 +110,17 @@ export default {
         },
         getaddrList (res){
 
-            const date = eval('('+res.data+')')
+            // const date = eval('('+res.data+')')
+            let date = res.data
             console.log(date)
+            this.$store.dispatch('addressList',date.data)
             if(date.data == ''){
                 this.isshow = false
             }else{
                 this.isshow = true
                 this.list = date.data
-                console.log()
+                // 把列表传给其他子组件
+                
             }
         },
         open2(msg) {
@@ -90,14 +131,27 @@ export default {
                 center:true,
                 customClass:"messBox"
             }).then(() => {
+                // this.$http({
+                //     method: 'post',
+                //     url: 'mobile/api/q',
+                //     data: {
+                //         url:'http://api.dqvip.cc/buyer/del_address',
+                //         address_id:msg,
+                //         q_type:'delete'
+                //     },
+                // })
                 this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
+                    method: 'delete',
+                    url:"/api/buyer/del_address",
                     data: {
-                        url:'http://api.dqvip.cc/buyer/del_address',
+                        // url:'http://api.dqvip.cc/buyer/shop_info',
+                        // q_type:'post'
                         address_id:msg,
-                        q_type:'delete'
                     },
+                    headers :{
+                        'Accept':'application/json',
+                        'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                    }
                 })
                 .then(this.issuccess)
                 .catch(function (error) {
@@ -113,7 +167,8 @@ export default {
         },
         issuccess (res) {
             
-            let date = eval('('+res.data+')')
+            // let date = eval('('+res.data+')')
+            let date = res.data
             console.log(date)
             if(date.status == 200 ){
                 this.$message({
@@ -132,6 +187,9 @@ export default {
         back () {
             this.$router.go(-1)
         },
+    },
+    watch:{
+
     },
     mounted () {
         this.getsddr()

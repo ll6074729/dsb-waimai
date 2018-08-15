@@ -23,7 +23,7 @@
                 提交投诉
             </div>
         </div>
-        <tab-bar></tab-bar>
+        <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
 </template>
 <script>
@@ -43,7 +43,7 @@ export default {
     },
     data () {
         return {
-
+            defaulttab:2,
         }
     }
 }

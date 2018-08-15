@@ -25,7 +25,7 @@
                     </div>
                     <ul>
                         <li class="list-item"
-                            v-on:click="handClickSchool(item.address,item.area_id)"
+                            v-on:click="handClickSchool(item.address,item.area_id,item.delivery_cost)"
                             v-for="(item,index) in allSchool" 
                             :key="index">
                             {{item.address}}
@@ -51,25 +51,28 @@ export default {
         }
     },
     mounted (){
-        this.scroll = new BScroll(this.$refs.list)
+        this.scroll = new BScroll(this.$refs.list,{
+            click:true
+        })
     },
     methods:{
-        handClickSchool (school,area_id) {
+        handClickSchool (school,area_id,delivery_cost) {
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
+            this.$store.dispatch("changedelivery",delivery_cost)
             this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                data: {
-                    url:'http://api.dqvip.cc/buyer/user_locator',
-                    area_id:area_id,
-                    q_type:'post'
-                },
-            })
-                .then(this.$router.push({path:"/"}))
-                .catch(function (error) {
-                    console.log(error);
+                    method: 'post',
+                    url: 'mobile/api/q',
+                    data: {
+                        url:'http://api.dqvip.cc/buyer/user_locator',
+                        area_id:area_id,
+                        q_type:'post'
+                    },
                 })
+                    .then(this.$router.push({path:"/"}))
+                    .catch(function (error) {
+                        console.log(error);
+                    })
         },
     }
 }

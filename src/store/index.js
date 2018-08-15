@@ -7,7 +7,10 @@ let defaultSchool = "获取中..."
 let area_id = 4
 let SchoolList 
 let cart
-
+let defaultHead = 'this.src="' + require('../assets/img/shopHead.png') + '"'
+let defaultShop = 'this.src="' + require('../assets/img/defaultshop.png') + '"'
+let addressList
+let delivery_cost
 /**
  * 登录接口需要的参数
  * 
@@ -42,7 +45,11 @@ export default new Vuex.Store({
         defaultSchool,
         area_id,
         SchoolList,
-        cart
+        cart,
+        defaultHead,
+        defaultShop,
+        addressList,
+        delivery_cost
     },
     actions:{
         changeCity (ctx ,city ){
@@ -56,12 +63,24 @@ export default new Vuex.Store({
         },
         changeSchoolList (ctx , SchoolList){
             ctx.commit('changeSchoolList',SchoolList)
+        },
+        addressList(ctx,addressList){
+            ctx.commit('addressList',addressList)
+        },
+        changedelivery(ctx,delivery_cost){
+            ctx.commit('changedelivery',delivery_cost)
         }
     },
     mutations:{
-        cart(state,cart){
-            state.cart = cart
+        changedelivery(state,delivery_cost){
+            state.delivery_cost = delivery_cost
         },
+        addressList(state,addressList){
+            state.addressList = addressList
+        },
+        // cart(state,cart){
+        //     state.cart = cart
+        // },
         changeSchoolList (state,SchoolList){
             state.SchoolList = SchoolList
             try {

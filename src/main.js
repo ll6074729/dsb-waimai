@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import ElementUI from 'element-ui'
-import {Rate,Input,Badge,Form,Loading,MessageBox} from 'element-ui'
+import {Rate,Input,Badge,Loading,MessageBox,Radio} from 'element-ui'
 import BaiduMap from 'vue-baidu-map'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'css/reset.css'
@@ -28,6 +28,7 @@ Vue.use(Input)
 Vue.use(Badge)
 Vue.use(Loading)
 // Vue.use(MessageBox)
+Vue.use(Radio)
 
 Vue.use(BaiduMap, {
   ak: 'ySYb24WsXpbFzl80OKpgeb2xN2CFKdmB'
