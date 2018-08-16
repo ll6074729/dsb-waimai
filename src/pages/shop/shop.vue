@@ -59,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <shop-recommend :food = "shop.recommend_goods" @upup="changeBuy" @AglinCart="AglinCart"></shop-recommend>
+        <shop-recommend :food = "shop.recommend_goods" :cart="cart" @upup="changeBuy" @AglinCart="AglinCart" @buygoodsinfo="buygoodsinfo" ></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box">
             <div class="tab" :class="{ishead:ishead}" ref="tabTop">
@@ -86,6 +86,9 @@
                     ></shop-foot>
                 <shop-buy 
                 :isBuy="isBuy" 
+                :goodsinfo="goodsinfo"
+                :cart="cart"
+                @AglinCart="AglinCart"
                 @closeGoodsInfo="changeGoodsInfo"
                 ></shop-buy>
             </div>
@@ -121,13 +124,16 @@ export default {
             costPrice:0, //原价
             rulingPrice:0, //折扣价
             addressList:[],
+            goodsinfo:[],
         }
     },
     methods:{
         // 再次请求购物车
-        AglinCart (msg) {
-            // this.isBuy = msg
+        AglinCart () {
             this.getCart()
+        },
+        buygoodsinfo (msg) {
+            this.goodsinfo = msg
         },
         // 更改显示 立即购买 还是规格选择
         changeBuy (msg) {
@@ -262,7 +268,6 @@ export default {
         },
         // 清空购物车
         cleanCart (msg){
-            console.log(msg,555)
             this.cart = msg
         },
         // 固定在顶部
@@ -278,13 +283,11 @@ export default {
     },
     watch : {
         cart () {
-            // console.log(this.cart)
             let cart = this.cart
             let total = 0
             for(let i in cart){
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
             }
-            console.log(total.toFixed(2),123)
             this.costPrice = total.toFixed(2)
             this.rulingPrice = total.toFixed(2)
         }

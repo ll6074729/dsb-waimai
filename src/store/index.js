@@ -11,6 +11,7 @@ let defaultHead = 'this.src="' + require('../assets/img/shopHead.png') + '"'
 let defaultShop = 'this.src="' + require('../assets/img/defaultshop.png') + '"'
 let addressList
 let delivery_cost
+let food //推荐商品
 /**
  * 登录接口需要的参数
  * 
