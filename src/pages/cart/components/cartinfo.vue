@@ -2,52 +2,32 @@
     <div>
         <div class="shop-head">
             <div class="shop-head-img">
-                <img src="../../../assets/img/组17@3x.png" alt="">
+                <img src="shopinfo.logo" alt="" :onerror="this.$store.state.defaultHead">
             </div>
-            <div class="shop-head-name">土耳其烤肉饭（长职）</div>
+            <div class="shop-head-name">{{shopinfo.shop_name}}</div>
             <div class="takeout-img">
-                <a href="tel:13398499055">
+                <a href="tel:shopinfo.mobile">
                     <img src="../../../assets/img/call.png" alt="">
                 </a>
             </div>
         </div>
         <div class="goods-list">
-            <div class="goods-list-item">
+            <div class="goods-list-item" v-for="item in cart" :key="item.cart_id">
                 <div class="goods-img">
                     <img src="../../../assets/img/food.jpg" alt="">
+                    <!-- :src="item.goods.details_figure" -->
                 </div>
                 <div class="goods-info">
-                    <div class="goods-name">土豆肉丝盖浇饭</div>
+                    <div class="goods-name">{{item.goods.title}}</div>
                     <div class="goods-type">
-                        <span>大份</span>
-                        <span>微辣</span>
-                        <span>加饭</span>
+                        <span>{{item.spec_key_name}}</span>
                     </div>
                 </div>
                 <div class="goods-num">
-                    x4
+                    x{{item.goods_num}}
                 </div>
                 <div class="goods-price">
-                    ￥40.00
-                </div>
-            </div>
-            <div class="goods-list-item">
-                <div class="goods-img">
-                    <img src="../../../assets/img/food.jpg" alt="">
-                </div>
-                <div class="goods-info">
-                    <div class="goods-name">土豆肉丝盖浇饭</div>
-                    <div class="goods-type">
-                        <span>大份</span>
-                        <span>微辣</span>
-                        <span>加饭</span>
-                    </div>
-                </div>
-                <div class="goods-num">
-                    x4
-                </div>
-                <div class="goods-price">
-                    ￥400.00
+                    ￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}
                 </div>
             </div>
         </div>
@@ -56,6 +36,10 @@
 <script>
 export default {
     name:"CartInfo",
+    props:{
+        cart:Array,
+        shopinfo:Object
+    },
     return () {
 
     }

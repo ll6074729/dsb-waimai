@@ -1,6 +1,6 @@
 <template>
     <div>
-        <expen-ses></expen-ses>
+        <expen-ses :delivery_cost="delivery_cost"></expen-ses>
         <hr class="hr20">
         <aciti-vity></aciti-vity>
         <div class="cost-item df">
@@ -13,8 +13,8 @@
         <hr class="hr20">
         <div class="cost-item pr">
             <div class="cost-type">订单备注</div>
-            <textarea name="" id="remarks" cols="10" rows="5" placeholder="请输入备注文字（可不填）"></textarea>
-            <span class="textarea-num">0/50</span>
+            <textarea name="" id="remarks" cols="10" rows="5" placeholder="请输入备注文字（可不填）" v-model="desc" maxlength="50"></textarea>
+            <span class="textarea-num">{{desc.length}}/50</span>
         </div>
     </div>
 </template>
@@ -23,9 +23,17 @@ import AcitiVity from "./activity"
 import ExpenSes from "./expenses"
 export default {
     name:"Cost",
+    props:{
+        delivery_cost:Array,
+    },
     components:{
         AcitiVity,
-        ExpenSes
+        ExpenSes,
+    },
+    data () {
+        return {
+            desc:"" //描述
+        }
     }
 }
 </script>

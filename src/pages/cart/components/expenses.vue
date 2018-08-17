@@ -1,18 +1,17 @@
 <template>
     <div>
-        <div class="cost-item df">
-            <div class="cost-type">配送费</div>
-            <div class="cost-price">￥2</div>
-        </div>
-        <div class="cost-item df">
-            <div class="cost-type">餐盒费</div>
-            <div class="cost-price">￥1</div>
+        <div class="cost-item df" v-for="item in delivery_cost" :key="item.id" v-if="item.name != 'delivery_duration'">
+            <div class="cost-type">{{item.desc}}</div>
+            <div class="cost-price">￥{{item.value}}.00</div>
         </div>
     </div>
 </template>
 <script>
 export default {
     name:"expenses",
+    props:{
+        delivery_cost:Array
+    },
     data () {
         return {
 

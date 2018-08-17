@@ -58,6 +58,14 @@ export default {
         }
     },
     methods: {
+        defaultAddress () {
+            for(let i in  this.list){
+                if(this.list[i].is_default == 1){
+                    // this.$store.state.defaultAddress = this.addressList[i]
+                    this.$store.dispatch("defaultAddress",JSON.stringify(this.list[i]))
+                }
+            }
+        },
         // 修改默认地址
         setDefault (address_id){
             this.$http({
@@ -81,6 +89,7 @@ export default {
         setDefaultfuc (res) {
             console.log(res)
             this.list = res.data.data
+            this.defaultAddress()
         },
         getsddr () {
             // this.$http({
@@ -122,6 +131,7 @@ export default {
                 // 把列表传给其他子组件
                 
             }
+            this.defaultAddress()
         },
         open2(msg) {
             this.$confirm('确认删除该地址?', '提示', {

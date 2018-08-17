@@ -14,16 +14,16 @@
             </div>
             <div class="address-content db">
                 <div class="address-top">
-                    <strong>小理哥</strong>
-                    <strong>15233215411</strong>
+                    <strong>{{defaultAddress.consignee}}</strong>
+                    <strong>{{defaultAddress.mobile}}</strong>
                 </div>
                 <div class="address-info">
-                    长江职业学院男生宿舍2栋3楼305长江职业学院男生宿舍2栋3楼305
+                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}楼
                 </div>
             </div>
-            <div class="address-right fr">
+            <router-link class="address-right fr" tag="div" to="/sitelist">
                 <img src="../../../assets/img/right_f7.png" alt="">
-            </div>
+            </router-link>
         </div>
         <div class="delivery">
             <div class="fl delivery-left">
@@ -35,21 +35,46 @@
                 </strong>
                 <span class="fr">尽快送达，预计30分钟</span>    
             </div>
-            <div class="delivery-right fr">
+            <!-- <div class="delivery-right fr">
                 <img src="../../../assets/img/right_f7.png" alt="">
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
 <script>
 export default {
     name:"cartheader",
-    return () {
-        
+    data () {
+        return {
+            defaultAddress:[]
+        } 
+    },
+    mounted () {
+        this.initAddress()
+        this.init()
     },
     methods:{
         back () {
             this.$router.go(-1)
+        },
+        // 初始化页面
+        init () {
+            if(!this.defaultAddress)
+                this.$confirm('请先设置默认收货地址', '提示', {
+                    confirmButtonText: '确定',
+                    type: 'warning',
+                    center: true,
+                    showCancelButton:false,
+                    showClose:false,
+                    closeOnClickModal:false
+                }).then(() => {
+                    this.$router.push({path:'/sitelist'})
+                })
+        },
+
+        // 获取默认地址
+        initAddress () {
+            this.defaultAddress = eval('('+this.$store.state.defaultAddress+')')
         }
     }
 }

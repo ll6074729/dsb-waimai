@@ -71,7 +71,7 @@ export default new Router({
       }
     },
     {
-      path:'/cart',
+      path:'/cart/:id',
       name:'Cart',
       component:Cart,
       meta:{

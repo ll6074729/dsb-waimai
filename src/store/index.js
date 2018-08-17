@@ -12,6 +12,7 @@ let defaultShop = 'this.src="' + require('../assets/img/defaultshop.png') + '"'
 let addressList
 let delivery_cost
 let food //推荐商品
+let defaultAddress
 /**
  * 登录接口需要的参数
  * 
@@ -39,7 +40,12 @@ try{
         SchoolList = localStorage.SchoolList
     }
 }catch (e){}
-
+// 默认地址
+try{
+    if(localStorage.defaultAddress){
+        defaultAddress = localStorage.defaultAddress
+    }
+}catch (e){}
 export default new Vuex.Store({
     state:{
         defaultCity,
@@ -50,7 +56,8 @@ export default new Vuex.Store({
         defaultHead,
         defaultShop,
         addressList,
-        delivery_cost
+        delivery_cost,
+        defaultAddress
     },
     actions:{
         changeCity (ctx ,city ){
@@ -70,9 +77,19 @@ export default new Vuex.Store({
         },
         changedelivery(ctx,delivery_cost){
             ctx.commit('changedelivery',delivery_cost)
+        },
+        defaultAddress(ctx,defaultAddress){
+            ctx.commit('defaultAddress',defaultAddress)
         }
     },
     mutations:{
+        defaultAddress(state,defaultAddress){
+            state.defaultAddress = defaultAddress
+            try {
+                localStorage.defaultAddress = defaultAddress
+            }catch (e){
+            }
+        },
         changedelivery(state,delivery_cost){
             state.delivery_cost = delivery_cost
         },

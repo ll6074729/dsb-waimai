@@ -18,7 +18,7 @@
                 请先设置默认收货地址
             </router-link>
         </div>
-        <router-link tag="div" class="buybtn" to="/cart">
+        <router-link tag="div" class="buybtn" :to="{name:'Cart',params:{shop_id:this.$route.params.id}}">
             立即下单
         </router-link>
     </div>

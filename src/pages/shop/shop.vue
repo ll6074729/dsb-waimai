@@ -69,7 +69,7 @@
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
                     <shop-menu :cate="shop.cate"></shop-menu>
-                    <shop-product :goods="shop.cate"></shop-product>
+                    <shop-product :goods="shop.cate" :cart="cart"></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
                     <shop-comment ></shop-comment>
@@ -125,6 +125,7 @@ export default {
             rulingPrice:0, //折扣价
             addressList:[],
             goodsinfo:[],
+            shopprom:[]
         }
     },
     methods:{
@@ -147,7 +148,6 @@ export default {
         },
         isCollectA () {
             this.isCollect = !this.isCollect
-            console.log(this.isCollect,333)
             this.getCollect()
         },
         // 获取地址
@@ -173,6 +173,12 @@ export default {
             // const date = eval('('+res.data+')')
             let date = res.data
             this.addressList = date.data
+            for(let i in  this.addressList){
+                if(this.addressList[i].is_default == 1){
+                    // this.$store.state.defaultAddress = this.addressList[i]
+                    this.$store.dispatch("defaultAddress",JSON.stringify(this.addressList[i]))
+                }
+            }
         },
         getCollect () {
             // 更改收藏状态
@@ -290,11 +296,26 @@ export default {
             }
             this.costPrice = total.toFixed(2)
             this.rulingPrice = total.toFixed(2)
+        },
+        shop () {
+            let shopprom = []
+            for(var i = 0;i < this.shop.prom.length;i++){
+                shopprom[i] = new Array()
+                for(var j = 0;j < this.shop.prom.length;j++){
+                    if(this.shop.prom[i].type == this.shop.prom[j].type){
+                        shopprom[i][j] = this.shop.prom[i]
+                    }    
+                }
+                
+            }
+            console.log(shopprom,988989)
+            // this.shopprom = shopprom
+            // console.log(shopprom,9989)
         }
     },
-    computed : {
-        // costPrice () {
-        //     console.log(this.cart)
+    computed :{
+        // shopprom () {
+        //     return shop.prom
         // }
     },
     mounted () {
