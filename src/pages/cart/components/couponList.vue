@@ -1,10 +1,10 @@
 <template>
-    <div class="coupon-list" ref="coupon" v-if="coupon.length > 1">
-        <div class="coupon-title">
+    <div class="coupon-list" ref="coupon" v-if="iscoupon">
+        <div class="coupon-title" @click="setcoupon">
             我的优惠券
         </div>
         <ul>
-            <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)">
+            <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)" v-if="item.condition > costPrice">
                 <div class="coupon-money">
                     ￥<span>{{item.money}}</span>
                 </div>
@@ -20,6 +20,9 @@
                     </div>
                 </div>
             </li>
+            <li>
+                暂无可用优惠券
+            </li>
         </ul>
        
     </div>
@@ -30,7 +33,9 @@ import BScroll from 'better-scroll'
 export default {
     name:"couponList",
     props:{
-        couponList:Array
+        couponList:Array,
+        iscoupon:Boolean,
+        costPrice:Number,
     },
     mounted () {
         this.scroll = new BScroll(this.$refs.coupon,{
@@ -46,6 +51,10 @@ export default {
         couponchange (coupon) {
             this.coupon = coupon
             this.$emit('changecoupon',coupon)
+            this.setcoupon()
+        },
+        setcoupon () {
+            this.$emit('setcoupon',false)
         }
     },
     filters :{

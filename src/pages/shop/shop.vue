@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="activity">
-                <div v-for="item in shop.prom" :key="item.prom_id">
+                <div v-for="item in shop.prom" :key="item.id">
                     <div class="list-item">
                         <span class="list-item-left">
                             <div class="shop-label-activity shop-label-type1"  v-if="item.type == 0">
@@ -125,7 +125,8 @@ export default {
             rulingPrice:0, //折扣价
             addressList:[],
             goodsinfo:[],
-            shopprom:[]
+            shopprom:[],
+            shoptitle:[],
         }
     },
     methods:{
@@ -299,18 +300,30 @@ export default {
         },
         shop () {
             let shopprom = []
-            for(var i = 0;i < this.shop.prom.length;i++){
-                shopprom[i] = new Array()
-                for(var j = 0;j < this.shop.prom.length;j++){
-                    if(this.shop.prom[i].type == this.shop.prom[j].type){
-                        shopprom[i][j] = this.shop.prom[i]
-                    }    
+            let shoptitle = []
+            let shopprontitle = {}
+            for(var k =0; k<3;k++ ){
+                shopprom[k] = new Array()
+                shoptitle[k] = {}
+                for(var i = 0;i < this.shop.prom.length;i++){ 
+                    if(k == this.shop.prom[i].type){
+                        shopprom[k][i] = this.shop.prom[k]
+                        shoptitle[k][i] = this.shop.prom[k].title
+                    }   
                 }
-                
+                // shoptitle[k].join(';')
             }
-            console.log(shopprom,988989)
-            // this.shopprom = shopprom
-            // console.log(shopprom,9989)
+            console.log(shoptitle,999)
+            for(var j = 0;j<shoptitle.length;j++){
+                shopprontitle[j].type = j
+                // shopprontitle[j].name = 
+                // for(var n = 0;n <shoptitle[j].length;n++){
+                //     shopprontitle[j].name += shoptitle[j]
+                // }
+            }
+            console.log(shopprontitle,8899)
+            // this.shoptitle = shoptitle
+            this.shopprom = shopprom
         }
     },
     computed :{

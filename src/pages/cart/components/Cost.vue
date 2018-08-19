@@ -3,9 +3,9 @@
         <expen-ses :delivery_cost="delivery_cost"></expen-ses>
         <hr class="hr20">
         <aciti-vity></aciti-vity>
-        <div class="cost-item df">
+        <div class="cost-item df" @click="iscoupon">
             <div class="cost-type">优惠券</div>
-            <div class="cost-coupon">3张可用</div>
+            <div class="cost-coupon">{{coupontetx}}</div>
             <div class="cost-right">
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
@@ -25,6 +25,8 @@ export default {
     name:"Cost",
     props:{
         delivery_cost:Array,
+        coupon:Object,
+        couponList:Array,
     },
     components:{
         AcitiVity,
@@ -32,8 +34,25 @@ export default {
     },
     data () {
         return {
-            desc:"" //描述
+            desc:"", //描述
+            coupontetx:'',
         }
+    },
+    watch:{
+        coupon (){
+            this.coupontetx = this.coupon.name
+        }
+    },
+    computed:{
+        // coupontetx () {
+        //     return this.couponList.length +"张可用"
+        // }
+    },
+    methods :{
+        iscoupon () {
+            this.$emit('setcoupon',true)
+        }
+
     }
 }
 </script>

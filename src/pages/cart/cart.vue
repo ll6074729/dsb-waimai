@@ -3,10 +3,10 @@
         <cart-header></cart-header>
         <hr class="hr20">
         <cart-info :cart="cart" :shopinfo="shopinfo"></cart-info>
-        <cost :delivery_cost="delivery_cost"></cost>
+        <cost :delivery_cost="delivery_cost" @setcoupon="setcoupon" :coupon="coupon" :couponList="couponList"></cost>
         <hr class="hr20">
         <pay-type></pay-type>
-        <coupon-list :couponList="couponList" @changecoupon="changecoupon"></coupon-list>
+        <coupon-list :couponList="couponList" @changecoupon="changecoupon" :iscoupon="iscoupon" @setcoupon="setcoupon" :costPrice="costPrice"></coupon-list>
         <div class="buy-now">
             <div class="paytype db">待支付</div>
             <div class="payprice db">
@@ -47,6 +47,7 @@ export default {
             rulingPrice:0, //折扣价
             couponList:[],
             coupon:{},
+            iscoupon:false,
         }
     },
     mounted () {
@@ -56,8 +57,12 @@ export default {
         this.coupon_list()
     },
     methods:{
+        setcoupon (msg) {
+            this.iscoupon = msg
+        },
         changecoupon (msg) {
-            console.log(msg)
+            // console.log(msg)
+            this.coupon = msg
         },
         // 计算价钱
         money () {
