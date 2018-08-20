@@ -1,5 +1,5 @@
 <template>
-    <div class="order-btn-box">
+    <div class="order-btn-box" :class="page">
         <router-link tag="div" to="/" class="order-btn-item">
             超时赔付
         </router-link>
@@ -17,18 +17,28 @@
 <script>
 export default {
     name:"orderbtn",
+    props:{
+        page:String
+    },
     data () {
         return {
            
+        }
+    },
+    methods:{
+        pagestyle () {
+
         }
     }
 }
 </script>
 <style lang="stylus" scoped>
+    .center
+        justify-content center
+    .end 
+        justify-content flex-end
     .order-btn-box
         display flex
-        // justify-content flex-end
-        justify-content center
         padding 2.66vw
         .order-btn-item
             padding 2.26vw 3.33vw

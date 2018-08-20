@@ -58,7 +58,7 @@ export default {
     data () {
         return {
             addCart (GoodId) {
-                console.log(GoodId)
+                console.log(GoodId,159357)
                 const that = this
                 var goods_num = 1
                 var cart_id 

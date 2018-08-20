@@ -4,7 +4,8 @@
             我的优惠券
         </div>
         <ul>
-            <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)" v-if="item.condition > costPrice">
+            <!-- v-if="item.condition > costPrice" -->
+            <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)" >
                 <div class="coupon-money">
                     ￥<span>{{item.money}}</span>
                 </div>
@@ -35,6 +36,7 @@ export default {
     props:{
         couponList:Array,
         iscoupon:Boolean,
+        rulingPrice:Number,
         costPrice:Number,
     },
     mounted () {

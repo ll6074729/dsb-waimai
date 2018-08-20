@@ -19,7 +19,7 @@
                 <div class="shop-right">
                     <div class="shop-title">
                         <div class="shop-name">{{shop.shop_name}}</div>
-                        <div class="shop-status" v-if="shop.status == 1">休息中</div>
+                        <div class="shop-status" v-if="shop.status == 0">休息中</div>
                     </div>
                     <div class="shop-content">
                         <div class="shop-score">
@@ -41,20 +41,30 @@
                 </div>
             </div>
             <div class="activity">
-                <div v-for="item in shop.prom" :key="item.id">
-                    <div class="list-item">
+                <div>
+                    <div class="list-item" v-if="shoptitle[0]">
                         <span class="list-item-left">
-                            <div class="shop-label-activity shop-label-type1"  v-if="item.type == 0">
+                            <div class="shop-label-activity shop-label-type1">
                                 满减
                             </div>
-                            <div class="shop-label-activity shop-label-type2"  v-else-if="item.type == 2">
-                                首单
-                            </div>
-                            <div class="shop-label-activity shop-label-type3"  v-else-if="item.type == 1">
+                        </span>
+                        <span class="list-item-right">{{shoptitle[0]}}</span>
+                    </div>
+                    <div class="list-item" v-if="shoptitle[1]">
+                        <span class="list-item-left">
+                            <div class="shop-label-activity shop-label-type3">
                                 赠品
                             </div>
                         </span>
-                        <span class="list-item-right">{{item.title}}</span>
+                        <span class="list-item-right">{{shoptitle[1]}}</span>
+                    </div>
+                    <div class="list-item" v-if="shoptitle[2]">
+                        <span class="list-item-left">
+                            <div class="shop-label-activity shop-label-type2">
+                                首单
+                            </div>
+                        </span>
+                        <span class="list-item-right">{{shoptitle[2]}}</span>
                     </div>
                 </div>
             </div>
@@ -130,6 +140,52 @@ export default {
         }
     },
     methods:{
+        // getshop () {
+        //     let title = []
+        //     let typetitle0 = ''
+        //     let typetitle1 = ''
+        //     let typetitle2 = ''
+        //     let type = []
+        //     let type0 = []
+        //     let type1 = []
+        //     let type2 = []
+        //     // 满减
+        //     for(var i = 0;i < this.shop.prom.length;i++){ 
+        //         if(this.shop.prom[i].type == 0){
+        //             type0.push(this.shop.prom[i])
+        //         }
+        //     }
+        //     for(var i in type0){
+        //         typetitle0 += (type0[i].title + ";")
+        //     }
+        //     title.push(typetitle0)
+        //     type.push(type0)
+        //     // 赠品
+        //     for(var i = 0;i < this.shop.prom.length;i++){ 
+        //         if(this.shop.prom[i].type == 1){
+        //             type1.push(this.shop.prom[i])
+        //         }
+        //     }
+        //     for(var i in type1){
+        //         typetitle1 += (type1[i].title + ";")
+        //     }
+        //     title.push(typetitle1)
+        //     type.push(type1)
+        //     for(var i = 0;i < this.shop.prom.length;i++){ 
+        //         if(this.shop.prom[i].type == 2){
+        //             type2.push(this.shop.prom[i])
+        //         }
+        //     }
+        //     if(!type2){
+        //         typetitle2 = (type2[0].title)
+        //         title.push(typetitle2)
+        //     }
+        //     type.push(type2)
+        //     this.shopprom = type
+        //     console.log(this.shopprom,999555)
+        //     this.$store.dispatch("changeProm",this.shopprom)
+        //     this.shoptitle = title
+        // },
         // 再次请求购物车
         AglinCart () {
             this.getCart()
@@ -289,52 +345,91 @@ export default {
         }
     },
     watch : {
+        shop () {
+            let title = []
+            let typetitle0 = ''
+            let typetitle1 = ''
+            let typetitle2 = ''
+            let type = []
+            let type0 = []
+            let type1 = []
+            let type2 = []
+            // 满减
+            for(var i = 0;i < this.shop.prom.length;i++){ 
+                if(this.shop.prom[i].type == 0){
+                    type0.push(this.shop.prom[i])
+                }
+            }
+            for(var i in type0){
+                typetitle0 += (type0[i].title + ";")
+            }
+            title.push(typetitle0)
+            type.push(type0)
+            // 赠品
+            for(var i = 0;i < this.shop.prom.length;i++){ 
+                if(this.shop.prom[i].type == 1){
+                    type1.push(this.shop.prom[i])
+                }
+            }
+            for(var i in type1){
+                typetitle1 += (type1[i].title + ";")
+            }
+            title.push(typetitle1)
+            type.push(type1)
+            for(var i = 0;i < this.shop.prom.length;i++){ 
+                if(this.shop.prom[i].type == 2){
+                    type2.push(this.shop.prom[i])
+                }
+            }
+            if(!type2){
+                typetitle2 = (type2[0].title)
+                title.push(typetitle2)
+            }
+            type.push(type2)
+            this.shopprom = type
+            console.log(this.shopprom,99955566)
+            this.$store.dispatch("changeProm",JSON.stringify(this.shopprom))
+            this.shoptitle = title
+        },
         cart () {
+            
             let cart = this.cart
             let total = 0
             for(let i in cart){
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
             }
-            this.costPrice = total.toFixed(2)
+            
+            this.costPrice = total.toFixed(2) //原价
             this.rulingPrice = total.toFixed(2)
-        },
-        shop () {
-            let shopprom = []
-            let shoptitle = []
-            let shopprontitle = {}
-            for(var k =0; k<3;k++ ){
-                shopprom[k] = new Array()
-                shoptitle[k] = {}
-                for(var i = 0;i < this.shop.prom.length;i++){ 
-                    if(k == this.shop.prom[i].type){
-                        shopprom[k][i] = this.shop.prom[k]
-                        shoptitle[k][i] = this.shop.prom[k].title
-                    }   
+            console.log('liuli1')
+            console.log(this.shopprom[0])
+            if(this.shopprom[0]){
+                for(let i in this.shopprom[0]){
+                    if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
+                        let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
+                        this.rulingPrice = Rprice.toFixed(2)
+                        return
+                    }
                 }
-                // shoptitle[k].join(';')
+            }else{
+                console.log(123)
             }
-            console.log(shoptitle,999)
-            for(var j = 0;j<shoptitle.length;j++){
-                shopprontitle[j].type = j
-                // shopprontitle[j].name = 
-                // for(var n = 0;n <shoptitle[j].length;n++){
-                //     shopprontitle[j].name += shoptitle[j]
-                // }
-            }
-            console.log(shopprontitle,8899)
-            // this.shoptitle = shoptitle
-            this.shopprom = shopprom
-        }
+            
+            console.log('liuli2')
+        },
     },
     computed :{
         // shopprom () {
         //     return shop.prom
         // }
     },
-    mounted () {
+    created () {
         this.getlist()
-        this.getCart()
         this.getaddressList()
+        this.getCart()
+    },
+    mounted () {
+        // this.getshop()
         window.addEventListener('scroll',this.handleTop)
     }
 }

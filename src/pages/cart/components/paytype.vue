@@ -1,19 +1,20 @@
 <template>
     <div>
         <div class="pay-list">
-            <div class="pay-item">
+            <div class="pay-item" @click="paycode('aliy')">
                 <div class="pay-img db">
                     <img src="../../../assets/img/Alibaba@3x.png" alt="">
                 </div>
                 <div class="pay-name db">
                     支付宝支付
                 </div>
-                <div class="checkout fr">
-                    <img src="../../../assets/img/check.png" alt="">
+                <div class="checkout fr" >
+                    <img src="../../../assets/img/check.png" alt=""  v-if="paytype == 'aliy'">
+                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'aliy'">
                 </div>
             </div>
 
-            <div class="pay-item">
+            <div class="pay-item"  @click="paycode('wechat')">
                 <div class="pay-img db">
                     <img src="../../../assets/img/Tencent@3x(1).png" alt="">
                 </div>
@@ -21,7 +22,8 @@
                     微信支付
                 </div>
                 <div class="checkout fr">
-                    <img src="../../../assets/img/uncheck.png" alt="">
+                    <img src="../../../assets/img/check.png" alt="" v-if="paytype == 'wechat'">
+                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'wechat'">
                 </div>
             </div>
         </div>
@@ -32,7 +34,14 @@ export default {
     name:"paytype",
     data () {
         return {
-
+            paytype:'wechat',
+        }
+    },
+    methods:{
+        paycode (type) {
+            console.log(type,16)
+            this.paytype = type
+            this.$emit('payCode',type)
         }
     }
 }

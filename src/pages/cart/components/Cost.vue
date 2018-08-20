@@ -2,13 +2,21 @@
     <div>
         <expen-ses :delivery_cost="delivery_cost"></expen-ses>
         <hr class="hr20">
-        <aciti-vity></aciti-vity>
+        <aciti-vity :cartprom="cartprom"></aciti-vity>
         <div class="cost-item df" @click="iscoupon">
             <div class="cost-type">优惠券</div>
             <div class="cost-coupon">{{coupontetx}}</div>
             <div class="cost-right">
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
+        </div>
+        <div class="cost-item df">
+            <div class="cost-type">使用余额</div>
+            <input type="number" :placeholder="balance +'元可用'" v-model="balance_money" maxlength="4">
+        </div>
+        <div class="cost-item df">
+            <div class="cost-type">积分抵扣</div>
+            <input type="text" :placeholder=" '可用积分'+integral + ',100积分=1元'" v-model="integral_num" maxlength="6">
         </div>
         <hr class="hr20">
         <div class="cost-item pr">
@@ -27,6 +35,13 @@ export default {
         delivery_cost:Array,
         coupon:Object,
         couponList:Array,
+        cartprom:Array,
+        rulingPrice:Number,
+        desc:String,
+        integral:String,
+        balance:String,
+        balance_money:Number,
+        integral_num:Number
     },
     components:{
         AcitiVity,
@@ -34,13 +49,56 @@ export default {
     },
     data () {
         return {
-            desc:"", //描述
             coupontetx:'',
+            // balance_money:'',
+            // integral_num:'',
         }
     },
     watch:{
         coupon (){
+            console.log('coupon')
             this.coupontetx = this.coupon.name
+        },
+        integral_num () {
+            // var integral_num = this.integral_num || 0
+            // var balance_money = this.balance_money || 0
+            // var constmoney = parseFloat(balance_money) + parseFloat(parseFloat(integral_num)/100)
+            // // 积分大于支付价钱
+            // if(parseFloat(integral_num)/100 > parseFloat(this.rulingPrice)){
+            //     this.integral_num = this.rulingPrice * 100
+            //     this.balance_money = 0
+            // }
+            // //总价大于支付价钱
+            // if(constmoney > parseFloat(this.rulingPrice)){
+            //     this.balance_money = (parseFloat(this.rulingPrice) - parseFloat(integral_num)/100).toFixed(2)
+            // }
+            // this.$emit('getbalance_money', parseFloat(this.balance_money))
+            this.$emit('getintegral_num',this.integral_num)
+        },
+        desc (){
+            this.$emit('getdesc',this.desc)
+        },
+        balance_money () {
+            // var integral_num = this.integral_num || 0
+            // var balance_money = this.balance_money || 0
+            // var constmoney = parseFloat(balance_money) + parseFloat(parseFloat(integral_num)/100)
+            // // 余额大于支付价钱
+            // if(balance_money > parseFloat(this.rulingPrice)){
+            //     this.balance_money = parseFloat(this.rulingPrice)
+            //     this.integral_num = 0
+            // }
+            // //总价大于支付价钱
+            // if(constmoney > parseFloat(this.rulingPrice)){
+            //     this.integral_num = (parseFloat(this.rulingPrice) - this.balance_money)*100
+            // }
+            this.$emit('getbalance_money', parseFloat(this.balance_money))
+            // this.$emit('getintegral_num',this.integral_num)
+        },
+        balance () {
+            this.$emit('getbalance',this.balance)
+        },
+        integral () {
+            this.$emit('getintegral',this.integral)
         }
     },
     computed:{
@@ -51,8 +109,11 @@ export default {
     methods :{
         iscoupon () {
             this.$emit('setcoupon',true)
-        }
+        },
+        // 判断积分余额是否大于待支付金额
+        handmoney () {
 
+        }
     }
 }
 </script>
@@ -61,6 +122,11 @@ export default {
         padding 4.56vw 5.33vw
         border-bottom 1px solid #f7f7f7
         font-size 4.266vw
+        .cost-type
+            margin-top 1vw
+        input 
+            width 75%
+            vertical-align middle
         .cost-right
             margin-right -2vw
             img 

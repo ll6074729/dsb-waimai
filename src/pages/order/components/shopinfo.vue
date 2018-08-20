@@ -16,7 +16,7 @@
                 </div>
                 <order-info :list="item.foodList"></order-info>
             </router-link>
-            <order-btn></order-btn>
+            <order-btn :page="page"></order-btn>
             <hr class="hr20">
         </div>
     </div>
@@ -36,7 +36,7 @@ export default {
     },
     data () {
         return {
-
+            page:'end'
         }
     },
     methods:{

@@ -35,7 +35,6 @@ export default {
     },
     methods:{
         tablist (index){
-            console.log(1,index)
             this.num = index
         }
     }

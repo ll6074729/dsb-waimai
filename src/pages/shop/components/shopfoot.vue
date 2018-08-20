@@ -96,7 +96,6 @@ export default {
             }
             // 判断数量是否大于0
             if(goods_num < 1){
-                // console.log(11231)
                 this.cleanCart(cart_id)
             }else{
                 // 判断是否是多选规格的商品
@@ -162,7 +161,6 @@ export default {
         // 公共配置
         getDeliveryList (res) {
             let date = res.data
-            console.log(date.data)
             let Distribution = parseFloat(date.data[0].value)
             this.delivery_cost = Distribution.toFixed(2)
         },
@@ -219,7 +217,6 @@ export default {
     },
     watch:{
         cart () {
-            console.log('cart')
            
         }
     }

@@ -13,10 +13,16 @@ let addressList
 let delivery_cost
 let food //推荐商品
 let defaultAddress
+let shopprom //店铺的优惠活动
 /**
  * 登录接口需要的参数
  * 
  */
+try{
+    if(localStorage.shopprom){
+        shopprom = localStorage.shopprom
+    }
+}catch (e){}
 try{
     if(localStorage.defaultCity){
         defaultCity = localStorage.defaultCity
@@ -57,9 +63,13 @@ export default new Vuex.Store({
         defaultShop,
         addressList,
         delivery_cost,
-        defaultAddress
+        defaultAddress,
+        shopprom,
     },
     actions:{
+        changeProm (ctx ,prom ){
+            ctx.commit('changeProm',prom)
+        },
         changeCity (ctx ,city ){
             ctx.commit('changeCity',city)
         },
@@ -83,6 +93,13 @@ export default new Vuex.Store({
         }
     },
     mutations:{
+        changeProm(state,prom){
+            state.shopprom = prom
+            try {
+                localStorage.shopprom = prom
+            }catch (e){
+            }
+        },
         defaultAddress(state,defaultAddress){
             state.defaultAddress = defaultAddress
             try {
