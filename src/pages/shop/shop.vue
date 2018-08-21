@@ -93,6 +93,7 @@
                     :costPrice="costPrice" 
                     :rulingPrice="rulingPrice" 
                     :addressList="addressList"
+                    :delivery_price="delivery_price"
                     ></shop-foot>
                 <shop-buy 
                 :isBuy="isBuy" 
@@ -102,7 +103,6 @@
                 @closeGoodsInfo="changeGoodsInfo"
                 ></shop-buy>
             </div>
-            
         </div>
     </div>
 </template>
@@ -137,55 +137,10 @@ export default {
             goodsinfo:[],
             shopprom:[],
             shoptitle:[],
+            delivery_price:0,
         }
     },
     methods:{
-        // getshop () {
-        //     let title = []
-        //     let typetitle0 = ''
-        //     let typetitle1 = ''
-        //     let typetitle2 = ''
-        //     let type = []
-        //     let type0 = []
-        //     let type1 = []
-        //     let type2 = []
-        //     // 满减
-        //     for(var i = 0;i < this.shop.prom.length;i++){ 
-        //         if(this.shop.prom[i].type == 0){
-        //             type0.push(this.shop.prom[i])
-        //         }
-        //     }
-        //     for(var i in type0){
-        //         typetitle0 += (type0[i].title + ";")
-        //     }
-        //     title.push(typetitle0)
-        //     type.push(type0)
-        //     // 赠品
-        //     for(var i = 0;i < this.shop.prom.length;i++){ 
-        //         if(this.shop.prom[i].type == 1){
-        //             type1.push(this.shop.prom[i])
-        //         }
-        //     }
-        //     for(var i in type1){
-        //         typetitle1 += (type1[i].title + ";")
-        //     }
-        //     title.push(typetitle1)
-        //     type.push(type1)
-        //     for(var i = 0;i < this.shop.prom.length;i++){ 
-        //         if(this.shop.prom[i].type == 2){
-        //             type2.push(this.shop.prom[i])
-        //         }
-        //     }
-        //     if(!type2){
-        //         typetitle2 = (type2[0].title)
-        //         title.push(typetitle2)
-        //     }
-        //     type.push(type2)
-        //     this.shopprom = type
-        //     console.log(this.shopprom,999555)
-        //     this.$store.dispatch("changeProm",this.shopprom)
-        //     this.shoptitle = title
-        // },
         // 再次请求购物车
         AglinCart () {
             this.getCart()
@@ -230,10 +185,15 @@ export default {
             // const date = eval('('+res.data+')')
             let date = res.data
             this.addressList = date.data
+            let area_price = this.$store.state.delivery_cost
+            let delivery_price
             for(let i in  this.addressList){
                 if(this.addressList[i].is_default == 1){
                     // this.$store.state.defaultAddress = this.addressList[i]
                     this.$store.dispatch("defaultAddress",JSON.stringify(this.addressList[i]))
+                    delivery_price = this.addressList[i].delivery.delivery_price
+                    this.$store.dispatch("changedelivery", (parseFloat(area_price) + parseFloat(delivery_price)).toFixed(2))
+                    
                 }
             }
         },
@@ -401,21 +361,19 @@ export default {
             
             this.costPrice = total.toFixed(2) //原价
             this.rulingPrice = total.toFixed(2)
-            console.log('liuli1')
-            console.log(this.shopprom[0])
+            if(!this.shopprom[0]){
+                this.getCart()
+            }
             if(this.shopprom[0]){
+                let newmoney
                 for(let i in this.shopprom[0]){
                     if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
-                        this.rulingPrice = Rprice.toFixed(2)
-                        return
+                        newmoney = Rprice.toFixed(2)
                     }
                 }
-            }else{
-                console.log(123)
+                this.rulingPrice = newmoney
             }
-            
-            console.log('liuli2')
         },
     },
     computed :{

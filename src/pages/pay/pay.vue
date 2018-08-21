@@ -4,9 +4,10 @@
         <pay-success></pay-success>
         <div class="btn df">
             <router-link tag="div" to="/">继续点餐</router-link>
-            <router-link tag="div" to="/orderdetails">订单详情</router-link>
+            <div @click="order">订单详情 </div>
+            <!-- <router-link tag="div" to="/orderdetails">订单详情</router-link> -->
         </div>
-        <pay-share></pay-share>
+        <!-- <pay-share></pay-share> -->
         <recom-mend></recom-mend>
     </div>
 </template>
@@ -26,6 +27,12 @@ export default {
     data () {
         return {
 
+        }
+    },
+    methods:{
+        order () {
+            // console.log(this.$route.query.order_sn)
+            this.$router.push({path:'/orderdetails',query:{order_sn:this.$route.query.order_sn,order_id:this.$route.query.order_id}})
         }
     }
 }

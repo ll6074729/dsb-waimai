@@ -3,10 +3,10 @@
         <div class="list"  v-for="item in list" :key="item.id">
             <router-link tag="div" to="/OrderDetails">
                 <div class="order-head">
-                    <img :src="item.shopimg" alt="">
+                    <img :src="item.shopimg" alt="" :onerror="defaultImg">
                     <div class="shop-box">
                         <div class="shop-name">{{item.shopname}}</div>
-                        <div class="shop-timer">{{item.shoptime}}</div>
+                        <div class="shop-timer">{{item.created_at}}</div>
                     </div>
                     <div class="order-status">
                         <span v-if="item.shopstatus == 1">等待商家接单</span>
@@ -14,9 +14,10 @@
                         <span v-else-if="item.shopstatus == 3">等待送达</span>
                     </div>
                 </div>
-                <order-info :list="item.foodList"></order-info>
+                <order-info :list="item.order_goods" :price="item.order_amount"></order-info>
+                <order-btn :page="page"></order-btn>
             </router-link>
-            <order-btn :page="page"></order-btn>
+            
             <hr class="hr20">
         </div>
     </div>
@@ -36,7 +37,9 @@ export default {
     },
     data () {
         return {
-            page:'end'
+            page:'end',
+            defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
+            price:"123"
         }
     },
     methods:{

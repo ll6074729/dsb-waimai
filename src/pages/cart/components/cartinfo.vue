@@ -12,13 +12,14 @@
             </div>
         </div>
         <div class="goods-list">
-            <div class="goods-list-item" v-for="item in cart" :key="item.cart_id">
+            <div class="goods-list-item" v-for="(item,index) in cart" :key="index">
                 <div class="goods-img">
                     <img src="../../../assets/img/food.jpg" alt="">
                     <!-- :src="item.goods.details_figure" -->
                 </div>
                 <div class="goods-info">
-                    <div class="goods-name">{{item.goods.title}}</div>
+                    <div class="goods-name" v-if="page != 'center'">{{item.goods.title}}</div>
+                    <div class="goods-name" v-if="page == 'center'">{{item.goods_name}}</div>
                     <div class="goods-type">
                         <span>{{item.spec_key_name}}</span>
                     </div>
@@ -26,8 +27,11 @@
                 <div class="goods-num">
                     x{{item.goods_num}}
                 </div>
-                <div class="goods-price">
+                <div class="goods-price"  v-if="page != 'center'">
                     ￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}
+                </div>
+                <div class="goods-price"  v-if="page == 'center'">
+                    ￥{{parseFloat(item.goods_price)}}
                 </div>
             </div>
         </div>
@@ -37,6 +41,7 @@
 export default {
     name:"CartInfo",
     props:{
+        page:String,
         cart:Array,
         shopinfo:Object
     },

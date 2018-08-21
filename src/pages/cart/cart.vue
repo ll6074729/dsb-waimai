@@ -90,6 +90,7 @@ export default {
     watch:{
         integral_num () {
             var integral_num = this.integral_num || 0
+            this.shopprom = []
             this.money()
             //判断是否已经使用其他支付
             if(this.balance_money > 0){
@@ -107,6 +108,7 @@ export default {
         },
         balance_money (){
             var balance_money = this.balance_money || 0
+            this.shopprom = []
             this.money()
             //判断是否已经使用其他支付
             if(this.integral_num > 0){
@@ -152,6 +154,8 @@ export default {
         // 结算
         buybtn(){
             this.fullscreenLoading = true;
+            var balance_money = this.balance_money || 0
+            var integral_num = this.integral_num || 0
             this.$http({
                 method: 'post',
                 // url: 'mobile/api/q',
@@ -163,7 +167,9 @@ export default {
                     pay_code:this.paycode,
                     delivery_type:"0",
                     user_note:this.desc,
-                    cart_id:this.cart_id
+                    cart_id:this.cart_id,
+                    user_money:balance_money,
+                    integral:integral_num
                     // q_type:'post'
                 },
                 headers :{
@@ -177,8 +183,11 @@ export default {
             })
         },
         buybtnafter (res) {
-            console.log(res)
             this.fullscreenLoading = false;
+            let date = res.data
+            console.log(date)
+            if(date.status == 200)
+                this.$router.push({path:'/pay',query:{order_sn:date.data.order_sn,order_id:date.data.order_id}})
         },
         // 选择支付方式
         payCode(type){
@@ -210,15 +219,13 @@ export default {
             // console.log(total,1691)
             // 满减
             for(let i in this.shopprom[0]){
-                console.log(this.costPrice,i)
                 if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
                     // console.log(this.shopprom[0][i].condition,i)
                     let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
-                    this.cartprom.push(this.shopprom[0][i])
-                    break 
-                }else{
-                    // console.log(i)
+                    this.cartprom[0] = this.shopprom[0][i]
+                    // this.cartprom.push(this.shopprom[0][i])
+                    // break 
                 }
             }
             // console.log(this.rulingPrice,1691)
@@ -336,15 +343,18 @@ export default {
         getuserinfo (res) {
             // console.log(res,1993)
             let date = res.data
-            console.log(date,1993)
             this.balance = date.data.moeny
             this.integral = date.data.points
         },
         getDeliveryList (res) {
             let date = res.data
-            console.log(date)
             this.delivery_cost = date.data
+            let freight = this.$store.state.delivery_cost
             let Distribution = parseFloat(date.data[0].value)
+            // 判断是否有默认的收费
+            if(freight){
+                this.delivery_cost[0].value = freight
+            }
             // this.delivery_cost = Distribution.toFixed(2)
         },
         coupon_list () {

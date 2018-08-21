@@ -138,7 +138,7 @@ export default {
                 data: {
                     // url:'http://api.dqvip.cc/buyer/shop_info',
                     // q_type:'post'
-                    area_id:4,
+                    area_id:this.$store.state.area_id,
                     consignee:this.consignee,
                     mobile:this.mobile,
                     floor:this.floor,
@@ -204,7 +204,7 @@ export default {
                 url: '/api/buyer/delivery',
                 data: {
                     // url:'http://api.dqvip.cc/buyer/delivery',
-                    area_id:4,
+                    area_id:this.$store.state.area_id,
                     // q_type:'post'
                 },
                  headers :{

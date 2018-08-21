@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 let defaultCity = "获取中..."
 let defaultSchool = "获取中..."
-let area_id = 4
+let area_id 
 let SchoolList 
 let cart
 let defaultHead = 'this.src="' + require('../assets/img/shopHead.png') + '"'
@@ -21,6 +21,11 @@ let shopprom //店铺的优惠活动
 try{
     if(localStorage.shopprom){
         shopprom = localStorage.shopprom
+    }
+}catch (e){}
+try{
+    if(localStorage.delivery_cost){
+        delivery_cost = localStorage.delivery_cost
     }
 }catch (e){}
 try{
@@ -109,6 +114,10 @@ export default new Vuex.Store({
         },
         changedelivery(state,delivery_cost){
             state.delivery_cost = delivery_cost
+            try {
+                localStorage.delivery_cost = delivery_cost
+            }catch (e){
+            }
         },
         addressList(state,addressList){
             state.addressList = addressList

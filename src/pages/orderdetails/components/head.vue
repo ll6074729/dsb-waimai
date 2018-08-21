@@ -12,7 +12,7 @@ export default {
     name:"headtop",
     methods:{
         back () {
-            this.$router.go(-1)
+            this.$router.push({path:'/order'})
         }
     }
 }

@@ -7,48 +7,51 @@
             <div class="item-tab">热门新店</div>
         </div>
         <div ref="shopList" class="shop">
-                <!-- <router-link class="shop-list" tag="div" v-for="(item,index) in shopList.data" :key="index" > -->
-                    <!-- {{index}} -->
-                    <!-- <div class="shop-list-item">
-                        <div class="shop-left">
-                            <img :src="item.logo" alt="" class="shop-img">
-                            <span class="tag new" v-if="item.is_new == 1">new</span>
-                            <span class="tag hot" v-if="item.is_hot == 1">hot</span>
-                        </div>
-                        <div class="shop-right">
-                            <div class="shop-title">
-                                <div class="shop-name">{{item.shop_name}}</div>
-                                <div class="shop-status" v-if="item.status == 1">休息中</div>
+            <ul>
+                <li v-for="item in shopList" :key="item.shop_id" class="shop-list">
+                    <router-link :to="'/shop/'+item.shop_id">
+                        <div class="shop-list-item">
+                            <div class="shop-left">
+                                <img :src="item.logo" alt="" class="shop-img" :onerror="defaultImg">
+                                <span class="tag new" v-if="item.is_new == 1">new</span>
+                                <span class="tag hot" v-if="item.is_hot == 1">hot</span>
                             </div>
-                            <div class="shop-content">
-                                <div class="shop-score">
-                                    <el-rate
-                                        v-model="item.store_ratings"
-                                        disabled
-                                        allow-half
-                                        show-score
-                                        void-color="#ff3800"
-                                        text-color="#333"
-                                        score-template="{value}">
-                                    </el-rate>
+                            <div class="shop-right">
+                                <div class="shop-title">
+                                    <div class="shop-name">{{item.shop_name}}</div>
+                                    <div class="shop-status" v-if="item.status == 0">休息中</div>
+                                </div>
+                                <div class="shop-content">
+                                    <div class="shop-score">
+                                        <el-rate
+                                            v-model="item.store_ratings"
+                                            disabled
+                                            allow-half
+                                            show-score
+                                            void-color="#ff3800"
+                                            text-color="#333"
+                                            score-template="{value}">
+                                        </el-rate>
 
+                                    </div>
+                                    <div class="shop-sale">{{item.sale}}m | 销量 {{item.sale}}</div>
                                 </div>
-                                <div class="shop-sale">{{item.sale}}m | 销量 {{item.sale}}</div>
-                            </div>
-                            <div class="shop-foot">
-                                <div class="shop-label-left">
-                                    
-                                    <span  v-for="label in item.tags" :key="label">{{label}}</span>
-                                </div>
-                                <div class="shop-label-right">
-                                    <span class="label-status">
-                                        送到寝室
-                                    </span>
+                                <div class="shop-foot">
+                                    <div class="shop-label-left">
+                                        
+                                        <span  v-for="label in item.tags" :key="label">{{label}}</span>
+                                    </div>
+                                    <div class="shop-label-right">
+                                        <span class="label-status">
+                                            送到寝室
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div> -->
-                <!-- </router-link> -->
+                    </router-link>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -61,17 +64,13 @@ export default {
     },
     data () {
         return {
-
+            defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"'
         }
     },
     methods : {
-        showshopList () {
-            console.log(this.shopList,444)
-        }
     },
     mounted (){
-        // this.scroll = new BScroll(this.$refs.shopList)
-        this.showshopList()
+
     },
 }
 </script>
@@ -94,26 +93,30 @@ export default {
             color #469afe
             font-weight bold
     .shop
-        position absolute
-        top 24vw
-        left 0
-        right 0
-        bottom 0
-        overflow hidden
-        z-index 1
+        // position absolute
+        // top 24vw
+        // left 0
+        // right 0
+        // bottom 0
+        // overflow hidden
+        // z-index 1
         .shop-list
             .shop-list-item
                 border-top 1px solid #f7f7f7
                 display flex
                 padding 5.3vw 2.66vw
                 .shop-left 
-                    flex 0 18.66vw
+                    // flex 0 18.66vw
                     height 100%;
+                    margin-right 2.66vw
+                    box-sizing border-box
                     position relative
+                    width 16vw
+                    height 16vw
                     .shop-img
-                        width 16vw
-                        height 16vw
-                        padding-right 2.66vw
+                        width 100%
+                        height 100%
+                        // padding-right 2.66vw
                     .tag
                         position absolute
                         right 0
@@ -130,7 +133,6 @@ export default {
                         background-color #dd3131    
                 .shop-right 
                     flex 1 auto    
-                    overflow-x hidden
                     .shop-title
                         width 100%
                         display flex

@@ -2,15 +2,15 @@
 <div>
     <div class="order-info">
         <div class="order-info-item"  v-for="item in list" :key="item.id">
-            <div class="food-name">{{item.name}}</div>
+            <div class="food-name">{{item.goods_name}}</div>
             <div class="food-attr">
-                <span  v-for="(itemlist,index) in item.attr" :key="index">{{itemlist.attrname}}/</span>
+                <span>{{item.spec_key_name}}</span>
             </div>
-            <div class="food-num">X{{item.num}}</div>
+            <div class="food-num">X{{item.goods_num}}</div>
         </div>
     </div>
     <div class="order-price" >
-        <span>共 2 件商品 </span> <span class="const-price">￥35.00</span>
+        <span>共 {{list.length}} 件商品 </span> <span class="const-price">￥{{price}}</span>
     </div>
 </div>
     
@@ -20,6 +20,7 @@ export default {
     name:"orderinfo",
     props:{
         list:Array,
+        price:String,
     }
 }
 </script>

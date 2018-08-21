@@ -2,7 +2,7 @@
     <div>
         <div class="cost-item df" v-for="item in delivery_cost" :key="item.id" v-if="item.name != 'delivery_duration'">
             <div class="cost-type">{{item.desc}}</div>
-            <div class="cost-price">￥{{item.value}}.00</div>
+            <div class="cost-price">￥{{item.value}}</div>
         </div>
     </div>
 </template>

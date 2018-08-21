@@ -11,7 +11,7 @@ export default {
   name: 'App',
   data () {
     return {
-
+      defaultImg: 'this.src="' + require('./assets/img/defaultshop.png') + '"'
     }
   },
   mounted () {

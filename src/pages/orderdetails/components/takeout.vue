@@ -1,5 +1,5 @@
 <template>
-    <div class="takeout pd20">
+    <div class="takeout pd20" v-if="order_status == 2">
         <div class="takeout-img">
             <img src="../../../assets/img/组17@3x.png" alt="">
         </div>
@@ -17,7 +17,9 @@
 <script>
 export default {
     name:"Takeout",
-
+    props:{
+        order_status:Number
+    }
 }
 </script>
 <style lang="stylus" scoped>

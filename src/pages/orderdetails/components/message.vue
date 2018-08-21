@@ -14,11 +14,11 @@
             </div>
             <div class="message-text">
                 <div class="message-info">
-                    <span class="message-name">刘理</span>
-                    <span class="message-phone">13398499055</span>
+                    <span class="message-name">{{consignee}}</span>
+                    <span class="message-phone">{{user_mobile}}</span>
                 </div>
                 <div class="message-address">
-                    长江职业学院学院路男生宿舍2栋3单元3楼308
+                    {{address}}
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 订单号
             </div>
             <div class="list-text">
-                15643137132132
+                {{order_sn}}
             </div>
         </div>
     </div>
@@ -35,6 +35,12 @@
 <script>
 export default {
     name:"message",
+    props:{
+        order_sn:String,
+        address:String,
+        consignee:String,
+        user_mobile:String,
+    },
     data () {
         return {
 

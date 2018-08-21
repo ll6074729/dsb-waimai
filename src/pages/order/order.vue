@@ -1,9 +1,9 @@
 <template>
     <div>
-        <shop-info :list="shophead" ></shop-info>
-        <div class="history">
+        <shop-info :list="latestOrder" ></shop-info>
+        <div class="history" v-if="historyOrder.length != 0">
             <div class="title">历史记录</div>
-            <shop-info :list="shophead" ></shop-info>
+            <shop-info :list="historyOrder" ></shop-info>
         </div>
         <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
@@ -24,31 +24,24 @@ export default {
     data () {
         return{
             defaulttab:1,
-            // shophead:[{id:1,shopname:"德克士",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-30  12:33",shopstatus:"1"},
-            //     {id:2,shopname:"肯不起",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-01  12:33",shopstatus:"2"},
-            //     {id:3,shopname:"麦得就是贵",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-06  12:33",shopstatus:"3"}
-            // ],
-            // orderfood:[{id:1,name:"扣肉饭",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:4},{id:2,name:"我得最爱除了你没有其他得",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],money:35.40}
-            // ],
-            shophead:[{id:1,shopname:"德克士",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-30  12:33",shopstatus:"1",money:35.40,foodList:[{id:1,name:"1扣肉饭",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:4},{id:2,name:"我得最爱除了你没有其他得",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:6}]},
-            {id:2,shopname:"肯不起",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-01  12:33",shopstatus:"2",money:95.40,foodList:[{id:1,name:"2扣肉饭",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:4},{id:2,name:"我得最爱除了你没有其他得",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:6}]},
-            {id:3,shopname:"麦得就是贵",shopimg:require("../../assets/img/组17@3x.png"),shoptime:"2018-07-06  12:33",shopstatus:"3",money:135.40,foodList:[{id:1,name:"3扣肉饭",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:4},{id:2,name:"我得最爱除了你没有其他得",attr:[{id:1,attrname:"大份"},{id:2,attrname:"中杯"},{id:3,attrname:"小杯"}],num:6}]}]
-        }
+            latestOrder:[],
+            historyOrder:[],
+                   }
     },
     mounted () {
-        this.latestOrder()
-        this.historyOrder()
+        this.newlatestOrder()
+        this.newhistoryOrder()
     },
     methods:{
         // 新订单
-        latestOrder () {
+        newlatestOrder () {
             this.$http({
                 method: 'post',
                 // url: 'mobile/api/q',
                 url:"/api/buyer/latest_order",
                 data: {
                     // url:'http://api.dqvip.cc/buyer/shop_info',
-                    page_size:1
+                    page_size:50
                     // q_type:'post'
                 },
                 headers :{
@@ -62,17 +55,18 @@ export default {
                 })
         },
         getlatestOrder (res) {
-            console.log(res)
+            console.log(res.data)
+            this.latestOrder = res.data.data.data
         },
         // 历史订单
-        historyOrder () {
+        newhistoryOrder () {
             this.$http({
                 method: 'post',
                 // url: 'mobile/api/q',
                 url:"/api/buyer/history_order",
                 data: {
                     // url:'http://api.dqvip.cc/buyer/shop_info',
-                    page_size:1
+                    page_size:300
                     // q_type:'post'
                 },
                 headers :{
