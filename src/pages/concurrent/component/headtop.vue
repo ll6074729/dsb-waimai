@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="headbg">
-            <div class="back">
+            <div class="back" @click="back">
                 <img src="../../../assets/img/back_white.png" alt="">
             </div>
             <img src="../../../assets/img/concurrent.png" alt="" class="headbg-img">
@@ -14,6 +14,11 @@ export default {
     data () {
         return {
 
+        }
+    },
+    methods:{
+        back () {
+            this.$router.go(-1)
         }
     }
 }

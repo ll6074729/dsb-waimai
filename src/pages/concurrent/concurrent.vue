@@ -2,7 +2,7 @@
     <div>
         <head-top></head-top>
         <div class="formlist">
-            <form-list></form-list>
+            <form-list :page="page"></form-list>
         </div>
     </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     },
     data () {
         return {
-
+            page:0
         }
     }
 }

@@ -3,7 +3,7 @@
         <router-link tag="div" to="/" class="order-btn-item" v-if="order_status == 4 ">
             超时赔付
         </router-link>
-        <router-link tag="div" to="/evaluate" class="order-btn-item bg" v-if="order_status == 4 ">
+        <router-link tag="div" :to="{path:'evaluate',query:{order_id:order_id,order_sn:order_sn,shop_id:shop_id}}" class="order-btn-item bg" v-if="order_status == 2">
             评价订单
         </router-link>
         <router-link tag="div" to="/" class="order-btn-item bg" v-if="order_status == 4 || order_status == 3">
@@ -12,7 +12,7 @@
         <router-link tag="div" to="/" class="order-btn-item" v-if="order_status == 0">
             取消订单
         </router-link>
-        <p v-if="order_status == 2 || order_status == 1">超时可申请最高十元赔付</p>
+        <p v-if="order_status == 1">超时可申请最高十元赔付</p>
         <p v-if="order_status == 5">余额已退回支付账户</p>
     </div>
 </template>
@@ -22,6 +22,9 @@ export default {
     props:{
         page:String,
         order_status:Number,
+        shop_id:Number,
+        order_id:Number,
+        order_sn:Number
     },
     data () {
         return {

@@ -1,7 +1,7 @@
 <template>
     <div class="df const">
         <div>
-            <p class="fs40">23.50</p>
+            <p class="fs40">{{userinfo.moeny}}</p>
             <p class="fs24">余额</p>
         </div>
         <div class="const-border">
@@ -9,7 +9,7 @@
             <p class="fs24">优惠卷</p>
         </div>
         <router-link tag="div" to="/integral">
-            <p class="fs40">564</p>
+            <p class="fs40">{{userinfo.points}}</p>
             <p class="fs24">积分</p>
         </router-link>
     </div>
@@ -17,6 +17,9 @@
 <script>
 export default {
     name:"const",
+    props:{
+        userinfo:Object
+    },
     data () {
         return {
 

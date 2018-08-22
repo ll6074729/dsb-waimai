@@ -18,7 +18,7 @@
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
         </router-link>
-        <router-link to="/site" tag="div" class="list-item">
+        <!-- <router-link to="/site" tag="div" class="list-item">
             <div class="list-icon">
                 <img src="../../../assets/img/ts-souji.png" alt="">
             </div>
@@ -26,7 +26,7 @@
             <div class="list-right">
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
-        </router-link>
+        </router-link> -->
     </div>
 </template>
 <script>
@@ -58,6 +58,6 @@ export default {
                 img 
                     width 2.13vw
                     height 4.13vw
-            &:nth-of-type(even)
-                background #f7f7f7
+            // &:nth-of-type(even)
+            //     background #f7f7f7
 </style>

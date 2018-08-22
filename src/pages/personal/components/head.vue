@@ -1,18 +1,21 @@
 <template>
     <div class="myhead">
         <div class="head-img">
-            <img src="../../../assets/img/food.jpg" alt="">
+            <img :src="userinfo.headimgurl" alt="" :onerror="defaultImg">
         </div>
-        <p>邓克豪是我得小可爱</p>
+        <p>{{userinfo.nickname}}</p>
         <img src="../../../assets/img/border-bottom.png" alt="" class="border-btm">
     </div>
 </template>
 <script>
 export default {
     name:"MyHead",
+    props:{
+        userinfo:Object
+    },
     data () {
         return {
-
+            defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
         }
     }
 }

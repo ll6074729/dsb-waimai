@@ -16,6 +16,9 @@
                 <span v-if="shipping_status == 1">
                     骑手配送中
                 </span>
+                <span v-if="shipping_status == 2">
+                    订单已收货
+                </span>
             </p>
             <p v-if="order_status == 3">订单已取消</p>
             <p v-if="order_status == 4">订单已完成</p>

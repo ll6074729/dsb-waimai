@@ -1,9 +1,12 @@
 <template>
-    <div>
-        <shop-info :list="latestOrder" ></shop-info>
+    <div v-loading.fullscreen.lock="fullscreenLoading">
+        <div v-if="latestOrder.length != 0">   
+            <div class="title">当前订单</div>
+            <shop-info :list="latestOrder" ></shop-info>
+        </div>
         <div class="history" v-if="historyOrder.length != 0">
             <div class="title">历史记录</div>
-            <shop-info :list="historyOrder" ></shop-info>
+            <shop-info :list="historyOrder"></shop-info>
         </div>
         <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
@@ -26,11 +29,15 @@ export default {
             defaulttab:1,
             latestOrder:[],
             historyOrder:[],
-                   }
+            fullscreenLoading: true
+        }
     },
     mounted () {
         this.newlatestOrder()
         this.newhistoryOrder()
+    },
+    watch:{
+       
     },
     methods:{
         // 新订单
@@ -55,8 +62,8 @@ export default {
                 })
         },
         getlatestOrder (res) {
-            console.log(res.data)
             this.latestOrder = res.data.data.data
+            this.fullscreenLoading = false
         },
         // 历史订单
         newhistoryOrder () {
@@ -81,6 +88,7 @@ export default {
         },
         gethistoryOrder (res) {
             console.log(res)
+            this.historyOrder = res.data.data.data
         }
     }
 }

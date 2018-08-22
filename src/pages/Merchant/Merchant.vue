@@ -1,21 +1,21 @@
 <template>
     <div>
         <head-bg></head-bg>
-        <form-list></form-list>
+        <form-list :page="page"></form-list>
     </div>
 </template>
 <script>
 import HeadBg from "./components/headbg"
 import FormList from "../../componentss/formlist" 
 export default {
-    name:"checkin",
+    name:"merchant",
     components:{
         HeadBg,
         FormList,
     },
     data () {
         return {
-
+            page:2
         }
     }
 }

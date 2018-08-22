@@ -7,7 +7,7 @@
                     查看合伙人计划
                 </div>
             </div>
-            <form-list></form-list>
+            <form-list :page="page"></form-list>
         </div>
     </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     },
     data () {
         return {
-
+            page:1
         }
     }
 }

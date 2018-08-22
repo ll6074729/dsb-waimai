@@ -1,24 +1,11 @@
 <template>
     <div>
-        <div class="laud df">
+        <div class="laud df" v-for="item in orderinfo" :key="item.goods_id">
             <div class="foodname">
-                尖椒卤肉盖浇饭 尖椒卤肉盖浇饭尖椒卤肉盖浇饭  尖椒卤肉盖浇饭 
+                {{item.goods_name}}
             </div>
             <div class="islaud df">
-                <div class="laud-yes">
-                    <img src="../../../assets/img/good_gray@3x.png" alt="">
-                </div>
-                <div class="laud-no">
-                    <img src="../../../assets/img/bad_gray@3x.png" alt="">
-                </div>
-            </div>
-        </div>
-        <div class="laud df">
-            <div class="foodname">
-                尖椒卤肉盖浇饭 尖  尖椒卤肉盖浇饭 
-            </div>
-            <div class="islaud df">
-                <div class="laud-yes">
+                <div class="laud-yes" >
                     <img src="../../../assets/img/good_gray@3x.png" alt="">
                 </div>
                 <div class="laud-no">
@@ -31,6 +18,9 @@
 <script>
 export default {
     name:"laud",
+    props:{
+        orderinfo:Array
+    },
     data () {
         return {
 

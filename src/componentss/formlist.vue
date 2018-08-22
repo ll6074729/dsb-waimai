@@ -1,11 +1,11 @@
 <template>
-    <div class="box">
+    <div class="box" :class="{merchant:page == 2}">
         <div class="df pd20 box-item">
             <div class="list-name">
                 姓名
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的真实姓名" >
+                <input type="text" placeholder="请输入您的真实姓名" v-model="username" minlength="2" maxlength="15">
             </div>
         </div>
         <div class="df pd20 box-item">
@@ -13,7 +13,7 @@
                 手机
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的联系方式" >
+                <input type="text" placeholder="请输入您的联系方式" v-model="mobile" maxlength="11" minlength="6">
             </div>
         </div>
         <div class="df pd20 box-item">
@@ -21,21 +21,24 @@
                 微信
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的微信账号" >
+                <input type="text" placeholder="请输入您的微信账号" v-model="wechat_number" minlength="3" maxlength="26">
             </div>
         </div>
         <div class="df pd20 box-item">
             <div class="list-name">
-                校区
+                <span v-if="page != 2">校区</span> 
+                <span v-if="page == 2">店铺地址</span>
             </div>
             <awesome-picker
                 ref="picker"
                 :data="picker.data"
+                @confirm="PickerConfirm"
                 >
             </awesome-picker>
             <div class="list-school df" @click="show()">
                 <div class="school-name">
-                    请选择兼职校区
+                    <span v-if="page != 2">{{area_name}}</span> 
+                    <span v-if="page == 2">{{area_name}}</span>
                 </div>
                 <div class="school-right">
                     <img src="../assets/img/right_f7.png" alt="">
@@ -44,7 +47,7 @@
         </div>
 
         <div class="submit">
-            <div class="submit-btn">
+            <div class="submit-btn" @click="submitBtn">
                 提交申请
             </div>
         </div>
@@ -56,17 +59,66 @@
 <script>
 export default {
     name:"formlist",
+    props:{
+        page:Number
+    },
     data () {
         return {
             picker: {
                 textConfirm:"确定",
-                data: [
-                    ['四川长江职业技术学院','四川电影电视学院(安仁校区)'],
-                ],
+                data: [['请选择校区']],
             },
+            username:'',
+            mobile:'',
+            wechat_number:'',
+            area_id:1,
+            area_name:'请选择校区'
+
         }
     },
-     methods:{
+    mounted () {
+        this.AllSchool()
+    },
+    methods:{
+        PickerConfirm(index) {      
+            if(index[0].index == 0){
+                this.$message({
+                    type: 'warning',
+                    message:'请选择正确的校区'
+                })
+            }else{
+                this.area_name = index[0].value
+                this.area_id = index[0].index
+            }
+        },
+         // 所有学校
+        AllSchool () {
+            this.$http({
+                method: 'post',
+                // url: 'mobile/api/q',
+                url:'/api/buyer/area_list',
+                data: {
+                    search_name:'',
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+            .then(this.getAllSchool)
+            .catch(function (error) {
+                console.log(error);
+            });
+        },
+        getAllSchool (res) {
+            // const res1 = eval('(' + res.data + ')')
+            const date = res.data
+            console.log(date,300)
+            for(let i in  date.data){
+                this.picker.data[0][date.data[i].area_id] = date.data[i].address
+            }
+            
+        },
         back () {
             this.$router.go(-1)
         },
@@ -75,12 +127,61 @@ export default {
         },
         handlePickerConfirm (index,value) {
             console.log(index)
+        },
+        // 提交数据
+        submitBtn () {
+            this.$http({
+                method: 'post',
+                url:"/api/hiring",
+                data: {
+                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    // q_type:'post'
+                    username:this.username,
+                    mobile:this.mobile,
+                    wechat_number:this.wechat_number,
+                    area_id:this.area_id,
+                    type:this.page
+                },
+                headers :{
+                    'Accept':'application/json',
+                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
+                }
+            })
+                .then(this.submitinfo)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        submitinfo (res) {
+            console.log(res)
+            let date = res.data
+            if(date.status == 200){
+                 this.$confirm('成功加入,请等待客服与您联系', {
+                        confirmButtonText: '确定',
+                        showCancelButton:false,
+                        type: 'success',
+                        center: true
+                    }).then(() => {
+                        this.$router.push('/Personal')
+                    }).catch(() => {
+                        this.$router.push('/Personal')
+                    });
+            }else{
+                this.$message({
+                    type: 'warning',
+                    message: date.message
+                })
+            }
         }
         
     }   
 }
 </script>
 <style lang="stylus" scoped>
+.merchant
+    background-color #f7f7f7
+    .ps
+        color #333!important
 .box
     padding-top 7vw
     padding-bottom 8vw
@@ -108,6 +209,8 @@ export default {
                 img 
                     width 2.13vw
                     height 4.13vw
+            .school-name
+                color #999  
     .submit 
         text-align center
         .submit-btn

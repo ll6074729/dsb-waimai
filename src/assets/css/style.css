@@ -109,3 +109,7 @@ html,body{
 .el-message-box{
     width: auto
 }
+.el-upload-list--picture-card .el-upload-list__item{
+    width: 16vw;
+    height: 16vw;
+}
