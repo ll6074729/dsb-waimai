@@ -63,9 +63,9 @@ export default {
             width 22.66vw
             text-align center
             img 
-                margin 2vw auto
-                width 5vw
-                height 5vw
+                margin 1vw auto
+                width 6vw
+                height 6vw
             // .home
             //     width 5.6vw
             //     height 5.2vw

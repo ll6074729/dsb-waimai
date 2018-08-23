@@ -17,6 +17,8 @@ import Location from '@/pages/location/location'
 import Sitelist from '@/pages/sitelist/sitelist'
 import Integral from '@/pages/personal/integral'
 import Merchant from '@/pages/Merchant/Merchant'
+import Coupon from '@/pages/personal/coupon'
+import Collect from '@/pages/personal/collect'
 Vue.use(Router)
 
 export default new Router({
@@ -29,6 +31,16 @@ export default new Router({
       meta:{
         title:'首页'
       }
+    },
+    {
+      path:'/collect',
+      name:'Collect',
+      component:Collect,
+    },
+    {
+      path:'/coupon',
+      name:'Coupon',
+      component:Coupon,
     },
     {
       path:'/integral',

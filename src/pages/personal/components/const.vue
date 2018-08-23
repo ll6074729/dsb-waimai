@@ -4,10 +4,10 @@
             <p class="fs40">{{userinfo.moeny}}</p>
             <p class="fs24">余额</p>
         </div>
-        <div class="const-border">
-            <p class="fs40">0</p>
+        <router-link tag="div" to="/coupon" class="const-border">
+            <p class="fs40">{{couponList.length}}</p>
             <p class="fs24">优惠卷</p>
-        </div>
+        </router-link>
         <router-link tag="div" to="/integral">
             <p class="fs40">{{userinfo.points}}</p>
             <p class="fs24">积分</p>
@@ -18,7 +18,8 @@
 export default {
     name:"const",
     props:{
-        userinfo:Object
+        userinfo:Object,
+        couponList:Array
     },
     data () {
         return {

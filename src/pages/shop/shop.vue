@@ -79,17 +79,16 @@
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
                     <shop-menu :cate="shop.cate"></shop-menu>
-                    <shop-product :goods="shop.cate" :cart="cart"></shop-product>
+                    <shop-product :goods="shop.cate" :cart="cart" @AglinCart="AglinCart"></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
-                    <shop-comment ></shop-comment>
+                    <shop-comment :shop="shop"></shop-comment>
                 </div>
             </div>
             <div class="shop-cart">
                 <shop-foot 
                     :isBuy="!isBuy" 
                     :cart="cart"
-                    @cleanCart ="cleanCart" 
                     :costPrice="costPrice" 
                     :rulingPrice="rulingPrice" 
                     :addressList="addressList"
@@ -143,6 +142,7 @@ export default {
     methods:{
         // 再次请求购物车
         AglinCart () {
+            console.log('liuli')
             this.getCart()
         },
         buygoodsinfo (msg) {
@@ -286,13 +286,12 @@ export default {
         },
         getCartList (res) {
             let date = res.data
-            // console.log(date,888)
             this.cart = date.data
         },
         // 清空购物车
-        cleanCart (msg){
-            this.cart = msg
-        },
+        // cleanCart (msg){
+        //     this.cart = msg
+        // },
         // 固定在顶部
         handleTop () {
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
@@ -352,7 +351,6 @@ export default {
             this.shoptitle = title
         },
         cart () {
-            
             let cart = this.cart
             let total = 0
             for(let i in cart){
@@ -365,13 +363,14 @@ export default {
                 this.getCart()
             }
             if(this.shopprom[0]){
-                let newmoney
+                let newmoney = this.rulingPrice
                 for(let i in this.shopprom[0]){
                     if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                         newmoney = Rprice.toFixed(2)
                     }
                 }
+
                 this.rulingPrice = newmoney
             }
         },

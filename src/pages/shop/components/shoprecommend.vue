@@ -4,7 +4,7 @@
             <swiper-slide v-for="item in food" :key="item.goods_id">
                 <div class="box">
                     <div class="box-left">
-                        <img :src="item.img" alt="" >
+                        <img :src="item.details_figure" alt="" >
                     </div>
                     <div class="box-right">
                         <div class="box-right-title">

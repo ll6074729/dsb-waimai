@@ -1,0 +1,110 @@
+<template>
+    <div class="order" v-if="ordershow">
+        <div class="order-title" @click="changeshow">
+            选择投诉订单
+        </div>
+        <div class="order-list" ref="orderlist">
+            <ul>
+                <li class="order-item" v-for="item in historyOrder" :key="item.order_id" @click="chooesorder(item.order_id)">
+                    <div class="order-head">
+                        <img :src="item.order_shop.logo" alt="" :onerror="defaultImg">
+                        <div class="shop-box">
+                            <div class="shop-name">{{item.order_shop.addr}}</div>
+                            <div class="shop-timer">{{item.created_at}}</div>
+                        </div>
+                    </div>
+                    <div class="goods">
+                        <div class="goodsinfo">
+                            {{item.order_goods[0].goods_name}}等{{item.order_goods.length}}件商品
+                        </div>
+                        <div class="goods-money">
+                            ￥{{item.order_amount}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+<script>
+import BScroll from 'better-scroll'
+export default {
+    name:"orderlist",
+    props:{
+        historyOrder:Array,
+        ordershow:Boolean
+    },
+    mounted () {
+        // this.scroll = new BScroll(this.$refs.orderlist,{
+        //     click:true
+        // })
+    },
+    methods:{
+        changeshow () {
+            // this.ordershow = !this.ordershow 
+            this.$emit('changeshow',!this.ordershow )
+        },
+        chooesorder (order_id) {
+            // console.log(order_id)
+            this.changeshow()
+            this.$emit('changeorder',order_id)
+        }
+    },
+    data () {
+        return {
+
+        }
+    }
+}
+</script>
+<style lang="stylus" scoped>
+    .order
+        position fixed
+        bottom 0
+        left 0
+        right 0
+        top 25%
+        background #fff
+        .order-title
+            text-align center
+            padding 5vw 0
+            border-bottom 1px solid #f7f7f7 
+        .order-list
+            position absolute
+            top 13.32vw
+            left 0
+            right 0
+            .order-item
+                padding 3vw 0
+                border-bottom 1px solid #eee
+                .order-head
+                    display flex
+                    padding 2.66vw
+                    img 
+                        width 8vw
+                        height 8vw
+                    .shop-box
+                        margin-left 2.66vw
+                        margin-right auto  
+                        .shop-name
+                            font-size 3.73vw
+                            font-weight bolder
+                        .shop-timer
+                            font-size 3.2vw
+                            color #999
+                            margin-top 2vw
+                    .order-status
+                        line-height 9.66vw   
+                        font-size 3.73vw
+                        color #469afe   
+            .goods     
+                display flex
+                padding-left 13.32vw
+                padding-right 8vw
+                justify-content space-between
+                .goodsinfo
+                    font-size 3.73vw
+                    color #999
+
+</style>
+

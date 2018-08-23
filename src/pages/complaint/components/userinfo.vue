@@ -5,7 +5,7 @@
                 姓名
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的姓名" maxlength="20">
+                <input type="text" placeholder="请输入您的姓名" maxlength="20" v-model="username">
             </div>
         </div>
         <div class="df pd20">
@@ -13,7 +13,7 @@
                 手机号
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的联系方式" maxlength="11">
+                <input type="text" placeholder="请输入您的联系方式" maxlength="11" v-model="mobile">
             </div>
         </div>
     </div>
@@ -21,9 +21,21 @@
 <script>
 export default {
     name:"userinfo",
+    props:{
+        mobile:String,
+        username:String
+    },
+    watch :{
+        mobile () {
+            this.$emit('changemobile',this.mobile)
+        },
+        username () {
+            this.$emit('changeusername',this.username)
+        }
+    },
     data () {
         return {
-
+            
         }
     }
 }

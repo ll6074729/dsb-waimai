@@ -5,7 +5,7 @@
                 <img src="../assets/img/back.png" alt="">
             </div>
             <div class="cart-head-text">
-                订单评价
+                {{title}}
             </div>
         </div>
     </div>
@@ -13,6 +13,9 @@
 <script>
 export default {
     name:"headback",
+    props:{
+        title:String
+    },
     data () {
         return {
 

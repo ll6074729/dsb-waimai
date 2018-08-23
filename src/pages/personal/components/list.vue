@@ -9,7 +9,7 @@
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
         </router-link>
-        <router-link to="/site" tag="div" class="list-item">
+        <router-link to="/collect" tag="div" class="list-item">
             <div class="list-icon">
                 <img src="../../../assets/img/ts-star-2@3x.png" alt="">
             </div>
@@ -18,15 +18,15 @@
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
         </router-link>
-        <!-- <router-link to="/site" tag="div" class="list-item">
+        <router-link to="/site" tag="div" class="list-item">
             <div class="list-icon">
-                <img src="../../../assets/img/ts-souji.png" alt="">
+                <img src="../../../assets/img/ts-complain.png" alt="">
             </div>
-            <div class="list-name">反馈意见</div>
+            <div class="list-name">投诉列表</div>
             <div class="list-right">
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
-        </router-link> -->
+        </router-link>
     </div>
 </template>
 <script>

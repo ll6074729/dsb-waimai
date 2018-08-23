@@ -12,7 +12,7 @@
                 list-type="picture-card"
                 :data="this.data"
                 :multiple="true"
-                :limit=6
+                :limit='6'
                 :on-success="handimg"
                >
             <i class="el-icon-plus"></i>

@@ -4,13 +4,21 @@
             内容描述
         </div>
         <div class="desc-text">
-            <textarea name="desc" id="" placeholder="请输入您的投诉内容，200字以内"></textarea>
+            <textarea name="desc" id="" placeholder="请输入您的投诉内容，200字以内" v-model="content"></textarea>
         </div>
     </div>
 </template>
 <script>
 export default {
     name:"describe",
+    props:{
+        content:String
+    },
+    watch :{
+        content () {
+            this.$emit('changecontent',this.content)
+        }
+    },
     data () {
         return {
 
