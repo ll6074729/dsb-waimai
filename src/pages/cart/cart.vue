@@ -158,10 +158,9 @@ export default {
             var integral_num = this.integral_num || 0
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/submit_order",
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    url:'http://api.dqvip.cc/buyer/submit_order',
                     shop_id:this.$route.params.id,
                     address_id:JSON.parse(this.$store.state.defaultAddress).address_id,
                     pay_code:this.paycode,
@@ -169,13 +168,9 @@ export default {
                     user_note:this.desc,
                     cart_id:this.cart_id,
                     user_money:balance_money,
-                    integral:integral_num
-                    // q_type:'post'
+                    integral:integral_num,
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
             .then(this.buybtnafter)
             .catch(function (error) {
@@ -184,8 +179,8 @@ export default {
         },
         buybtnafter (res) {
             this.fullscreenLoading = false;
-            let date = res.data
-            console.log(date)
+            let date = eval('(' + res.data + ')')
+            console.log(date,1)
             if(date.status == 200)
                 this.$router.push({path:'/pay',query:{order_sn:date.data.order_sn,order_id:date.data.order_id}})
         },
@@ -208,7 +203,6 @@ export default {
             for(let i in cart){
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
             }
-            
             // 加配送费
             for(let i =0;i<2;i++){
                 total += parseFloat(this.delivery_cost[i].value)
@@ -216,11 +210,9 @@ export default {
             
             this.costPrice = total.toFixed(2)
             this.rulingPrice = total.toFixed(2)
-            // console.log(total,1691)
             // 满减
             for(let i in this.shopprom[0]){
                 if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
-                    // console.log(this.shopprom[0][i].condition,i)
                     let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
                     this.cartprom[0] = this.shopprom[0][i]
@@ -228,13 +220,9 @@ export default {
                     // break 
                 }
             }
-            // console.log(this.rulingPrice,1691)
-            // console.log(this.rulingPrice,993)
             // 赠品
             for(let i in this.shopprom[1]){
-                // console.log(this.shopprom[1],993)
                 if(this.costPrice > parseFloat(this.shopprom[1][i].condition)){
-                    // console.log(this.shopprom[1][i],887744)
                     this.cartprom.push(this.shopprom[1][i])
                     break
                 }
@@ -251,17 +239,12 @@ export default {
         init () {
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/cart_list",
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
-                    // q_type:'post'
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.initCart)
                 .catch(function (error) {
@@ -269,29 +252,25 @@ export default {
                 })
         },
         initCart (res) {
-            console.log(res)
-            this.cart = res.data.data
+            let date = eval('('+res.data+')')
+            this.cart = date.data
+            // console.log(date,2)
             var cart_id = []
             for(let i in this.cart){
                 cart_id.push(this.cart[i].cart_id)
             }
             this.cart_id = cart_id
-            this.money()
+            // this.money()
         },
         pushshopinfo () {
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/shop_info",
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
-                    // q_type:'post'
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
             .then(this.getshopinfo)
             .catch(function (error) {
@@ -299,22 +278,19 @@ export default {
             })
         },
         getshopinfo (res) {
-            this.shopinfo = res.data.data
+            let date = eval('('+res.data+')')
+            console.log(date,3)
+            this.shopinfo = date.data
         },
         // 获取配置文件
         DeliveryList () {
             this.$http({
-                method: 'get',
-                // url: 'mobile/api/q',
-                url:"/api/init",
+                method: 'post',
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
-                    // q_type:'post'
+                    url:'http://api.dqvip.cc/init',
+                    q_type:'get'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getDeliveryList)
                 .catch(function (error) {
@@ -323,17 +299,12 @@ export default {
         },
         userinfo () {
             this.$http({
-                method: 'get',
-                // url: 'mobile/api/q',
-                url:"/api/user_info",
+                method: 'post',
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
-                    // q_type:'post'
+                    url:'http://api.dqvip.cc/user_info',
+                    q_type:'get'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getuserinfo)
                 .catch(function (error) {
@@ -341,13 +312,14 @@ export default {
                 })
         },
         getuserinfo (res) {
-            // console.log(res,1993)
-            let date = res.data
+            let date = eval('(' + res.data + ')')
+            console.log(date,4)
             this.balance = date.data.moeny
             this.integral = date.data.points
         },
         getDeliveryList (res) {
-            let date = res.data
+            let date = eval('(' + res.data + ')')
+            console.log(date,5)
             this.delivery_cost = date.data
             let freight = this.$store.state.delivery_cost
             let Distribution = parseFloat(date.data[0].value)
@@ -355,21 +327,17 @@ export default {
             if(freight){
                 this.delivery_cost[0].value = freight
             }
+            this.money()
             // this.delivery_cost = Distribution.toFixed(2)
         },
         coupon_list () {
             this.$http({
                 method: 'get',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/coupon_list",
+                url: '/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
-                    // q_type:'post'
+                    url:'http://api.dqvip.cc/buyer/coupon_list',
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getcouponList)
                 .catch(function (error) {
@@ -377,7 +345,10 @@ export default {
                 })
         },
         getcouponList (res) {
-            this.couponList = res.data.data
+            let date = eval('('+res.date+')')
+            if(date){
+                this.couponList = date.data
+            }
         }
         
     },

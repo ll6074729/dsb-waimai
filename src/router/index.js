@@ -19,6 +19,7 @@ import Integral from '@/pages/personal/integral'
 import Merchant from '@/pages/Merchant/Merchant'
 import Coupon from '@/pages/personal/coupon'
 import Collect from '@/pages/personal/collect'
+import complaintList from '@/pages/personal/complaintList'
 Vue.use(Router)
 
 export default new Router({
@@ -31,6 +32,11 @@ export default new Router({
       meta:{
         title:'首页'
       }
+    },
+    {
+      path:'/complaintList',
+      name:'complaintList',
+      component:complaintList,
     },
     {
       path:'/collect',

@@ -53,9 +53,6 @@ export default {
     data () {
         return {
             chooes:'0',
-            comment:[{id:1,name:"一直下雨",userImg:"https://bpic.588ku.com/element_water_img/18/07/03/32ba65ec9c2ed72759a09e287caa26ab.jpg",time:"2017-08-12 12:15",rate:4,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"感谢您对小店的认可，祝您用餐愉快，我们会继续努力！用餐过程中如有任何问题，您可随时联系我们。我们会第一时间为您服务，谢谢！",commodity:["小计面包","烤肉饭"]},
-            {id:2,name:"干死小菠菜",userImg:"https://bpic.588ku.com/element_water_img/18/07/14/77926eb9de021e758a0448d618d06ff6.jpg",time:"2017-08-12 12:15",rate:4.6,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"你好啊",commodity:["小计面包"]},
-            {id:3,name:"干死高波波",userImg:"https://bpic.588ku.com/element_water_img/18/07/14/77926eb9de021e758a0448d618d06ff6.jpg",time:"2017-08-12 12:15",rate:4.6,content:"这家店的味道不错，这几天一直在这里吃，室友都说好这家店的味道不错，这几天一直在这里吃，室友都说好",images:["https://bpic.588ku.com/element_water_img/18/06/12/cd6ca398b1888c04effaa03663de9881.jpg","https://bpic.588ku.com/element_water_img/18/06/12/b5206ed1949f294ef52fe10701e55cd3.jpg"],reply:"冲啊，干死高波波 ，为了全世界，为了我们的小孩子",commodity:["小计面包"]}],
             evaluation:[],
         }
     },
@@ -75,14 +72,13 @@ export default {
             if(!type == ''){
                 date.type = type
             }
+            date.url = 'http://api.dqvip.cc/buyer/evaluation'
+            date.q_type = 'post'
             this.$http({
                 method: 'post',
-                url:"/api/buyer/evaluation",
-                data: date,
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
+                // url:"/api/buyer/evaluation",
+                url: '/mobile/api/q',
+                data: date
             })
                 .then(this.getevaluation)
                 .catch(function (error) {
@@ -90,8 +86,9 @@ export default {
                 })
         },
         getevaluation (res) {
-            console.log(res)
-            this.evaluation = res.data.data.data
+            // console.log(res)
+            let date = eval('('+res.data+')') 
+            this.evaluation = date.data.data
         }
     }
 }

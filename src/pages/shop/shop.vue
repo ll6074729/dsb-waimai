@@ -6,8 +6,8 @@
                 <img src="../../assets/img/back_white.png" alt="">
             </router-link>
             <div class="shop-head-right">
-                <img src="../../assets/img/favorite.png" alt="" v-show="isCollect" @click="isCollectA">
-                <img src="../../assets/img/favorite_white.png" alt="" v-show="!isCollect" @click="isCollectA">
+                <img src="../../assets/img/favorite.png" alt="" v-show="!isCollect" @click="isCollectA">
+                <img src="../../assets/img/favorite_white.png" alt="" v-show="isCollect" @click="isCollectA">
             </div>
         </div>
         <!-- 商家信息 -->
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div class="activity">
+            <div class="activity" v-if="shop.prom.length > 1">
                 <div>
                     <div class="list-item" v-if="shoptitle[0]">
                         <span class="list-item-left">
@@ -69,7 +69,14 @@
                 </div>
             </div>
         </div>
-        <shop-recommend :food = "shop.recommend_goods" :cart="cart" @upup="changeBuy" @AglinCart="AglinCart" @buygoodsinfo="buygoodsinfo" ></shop-recommend>
+        <shop-recommend 
+            :food="shop.recommend_goods" 
+            :cart="cart" 
+            :recommendImg="recommendImg"
+            @upup="changeBuy" 
+            @AglinCart="AglinCart" 
+            @buygoodsinfo="buygoodsinfo" 
+        ></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box">
             <div class="tab" :class="{ishead:ishead}" ref="tabTop">
@@ -79,7 +86,12 @@
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
                     <shop-menu :cate="shop.cate"></shop-menu>
-                    <shop-product :goods="shop.cate" :cart="cart" @AglinCart="AglinCart"></shop-product>
+                    <shop-product 
+                        :goods="shop.cate" 
+                        :cart="cart" 
+                        :productImg="productImg"
+                        @AglinCart="AglinCart"
+                        ></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
                     <shop-comment :shop="shop"></shop-comment>
@@ -137,12 +149,13 @@ export default {
             shopprom:[],
             shoptitle:[],
             delivery_price:0,
+            recommendImg:[],
+            productImg:[],
         }
     },
     methods:{
         // 再次请求购物车
         AglinCart () {
-            console.log('liuli')
             this.getCart()
         },
         buygoodsinfo (msg) {
@@ -165,16 +178,12 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                method: 'get',
-                url:"/api/buyer/list_address",
+                method: 'post',
+                url:'/mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
-                    // q_type:'post'
+                    url:'http://api.dqvip.cc/buyer/list_address',
+                    q_type:'get'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getaddrList)
                 .catch(function (error) {
@@ -182,8 +191,7 @@ export default {
                 })
         },
         getaddrList (res){
-            // const date = eval('('+res.data+')')
-            let date = res.data
+            const date = eval('('+res.data+')')
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -198,6 +206,13 @@ export default {
             }
         },
         getCollect () {
+            let type
+            if(!this.isCollect){
+                type = 'false'
+            }else{
+                type = 'true'
+            }
+            console.log(type)
             // 更改收藏状态
             this.$http({
                 method: 'post',
@@ -205,8 +220,8 @@ export default {
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
-                    collect_type:this.isCollect,
-                    q_type:'get'
+                    collect_type:type,
+                    q_type:'post'
                 },
             })
                 .then(this.collect)
@@ -216,37 +231,43 @@ export default {
         },
         collect (res) {
             let date = eval('('+res.data+')')
-            console.log(eval(date))
+            // console.log(eval(date))
+            // let date = res.data
             // this.isCollect = eval(res.data.message)
-            if(date.message  == false){
-                this.$message({
-                    message: '收藏成功',
-                    type: 'success',
-                    // duration:0
-                });
+            console.log(date.message)
+            if(date.status == 200){
+                if(date.message  != 'false'){
+                    this.$message({
+                        message: '收藏成功',
+                        type: 'success',
+                        // duration:0
+                    });
+                }else{
+                    this.$message({
+                        message: '取消收藏',
+                        type: 'warning',
+                        // duration:0
+                    });
+                }
             }else{
                 this.$message({
-                    message: '取消收藏',
-                    type: 'warning',
+                    message: '发生不可预料的错误,请联系客服',
+                    type: 'error',
                     // duration:0
                 });
             }
+            
         },
         getlist () {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/shop_info",
+                url: 'mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
-                    // q_type:'post'
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
@@ -254,30 +275,46 @@ export default {
                 })
         },
         getlistbox(res){
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
             this.shop = date.data
-            if(this.shop.is_collect == 0){
-                this.isCollect = false
-            }else{
+            if(this.shop.is_collect == 1){
                 this.isCollect = true
+            }else{
+                this.isCollect = false
             }
+            // 推荐商品的图片
+            for(let i in this.shop.recommend_goods){
+                this.recommendImg[i] = new Array()
+                for(let j in this.shop.recommend_goods[i]){
+                    this.recommendImg[i] = this.shop.recommend_goods[i].details_figure.split(',')
+                }
+            }
+            // 列表商品的图片
+            for(let i in this.shop.cate){
+                this.productImg[i] = new Array()
+                for(let j = 0;j <this.shop.cate[i].goods.length;j++){
+                    // if(this.shop.cate[i].goods[j]){
+                        // console.log(this.shop.cate[i].goods[j].details_figure,j)
+                        let imgx = this.shop.cate[i].goods[j].details_figure.split(',')
+                        // console.log(imgx,i)
+                        this.productImg[i].push(imgx[0])
+                    // }
+                }
+            }
+            console.log(this.shop,1993)
+            console.log(this.recommendImg,1993)
+            console.log(this.productImg,1993)
         },
         getCart () {
             // 获取购物车信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:"/api/buyer/cart_list",
+                url: 'mobile/api/q',
                 data: {
-                    // url:'http://api.dqvip.cc/buyer/shop_info',
+                    url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
-                    // q_type:'post'
+                    q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjNkYThhNDYyM2UxN2FlMmMzMTZiYzdlMTYxZWQzYzFlYzJkOTdhYWMyODI2NmY0ZjQ0MDJkNTYzMmE4Zjk0NmRhMTg5MWZlZGQ5Njg3Yjc0In0.eyJhdWQiOiIyIiwianRpIjoiM2RhOGE0NjIzZTE3YWUyYzMxNmJjN2UxNjFlZDNjMWVjMmQ5N2FhYzI4MjY2ZjRmNDQwMmQ1NjMyYThmOTQ2ZGExODkxZmVkZDk2ODdiNzQiLCJpYXQiOjE1MzM3OTc5NTAsIm5iZiI6MTUzMzc5Nzk1MCwiZXhwIjoxNTM2Mzg5OTUwLCJzdWIiOiIyMyIsInNjb3BlcyI6WyIqIl19.nf0LL13XkxrqXYfMJKs2cffU13FSvI4tpzR0Im2n8yKWH1pmShSYz0C2en7G3uGaQ6R4kOQAmuNGtWz11jkTAy7xFyGr9KwRMaxorHG6ajgLjMV8X5f3pzgUhdvH9pSwO2z4yRPi7oE3y40lzfS-itiPgvsMKjpoczPPcg1-KHb1to6KrzNC7ljVQxR9YWy4p3yyO3ylfLBgMSUdRQ21ONBMbsNd-hxQ6_MyKrSsagygwPGqenWKonRlZjG_M-E6ey5sNSAkVBCtLJqt0HCnwEAmhkRCBDw52s0bOYjpd263dM46yIUW1cILOWX-pKjG30zPNBlyO0xEZVpRy0Q47_QGOZtsjGecWu7sqqF6isyUVHfFvPaF_FrhKmVfv8EHOAqBMcBl3KsFEuHQtukzxNY7XuWn9FuWTr4o0udptfpMUcPTTn4MRpgsVBhBIGaUJligDmS-AMzygvjP0l4ljUpA7j92xSewGUbsoR3kgPdPQx7JJPhMlsVy69gepbzAHt2DPSi7uZG5jEbCT-wg2Zs2ybmXQzkH89CPeY7oCbDoOUIVzYrTQkoC75TmOKwHWLe5u4BkAi8rfye8ZhTAm5CcEGamg2LbQl2C1kHfH9E1y5qwR2VM0JYca9VuZGY4wlaPPB_j4WYmYQ_LeXY7NBmii_ag2-td6JgSU9FgYKQ'
-                }
             })
                 .then(this.getCartList)
                 .catch(function (error) {
@@ -285,7 +322,7 @@ export default {
                 })
         },
         getCartList (res) {
-            let date = res.data
+            let date = eval('('+res.data+')') 
             this.cart = date.data
         },
         // 清空购物车
@@ -346,7 +383,7 @@ export default {
             }
             type.push(type2)
             this.shopprom = type
-            console.log(this.shopprom,99955566)
+            // console.log(this.shopprom,99955566)
             this.$store.dispatch("changeProm",JSON.stringify(this.shopprom))
             this.shoptitle = title
         },
@@ -381,12 +418,13 @@ export default {
         // }
     },
     created () {
-        this.getlist()
-        this.getaddressList()
-        this.getCart()
+        
     },
     mounted () {
         // this.getshop()
+        this.getlist()
+        this.getaddressList()
+        this.getCart()
         window.addEventListener('scroll',this.handleTop)
     }
 }

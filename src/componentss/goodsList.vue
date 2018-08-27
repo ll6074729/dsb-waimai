@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-        <slot></slot>
+        <slot ref="homeTitle"></slot>
         <div class="tab">
             <div class="item-tab active">销量优先</div>
             <div class="item-tab">评分优先</div>
@@ -68,9 +68,18 @@ export default {
         }
     },
     methods : {
+         handleTop () {
+            var scrollTop = this.styleIndex.handleScroll()
+            // if(scrollTop >= 180){
+            //     this.ishead = true
+            // }else{
+            //     this.ishead = false
+            // }
+            console.log(scrollTop,123)
+        },
     },
     mounted (){
-
+        window.addEventListener("scroll",this.handleTop)
     },
 }
 </script>
@@ -125,8 +134,9 @@ export default {
                         height 3.2vw
                         text-align center
                         color #fff
-                        line-height 3.2vw
+                        line-height 2.4vw
                         font-style italic
+                        font-size 1.6vw
                     .new
                         background-color #31dd7a
                     .hot

@@ -54,7 +54,7 @@ export default {
             this.$store.dispatch("changearea",area_id)
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
+                url: '/mobile/api/q',
                 data: {
                     url:'http://api.dqvip.cc/buyer/user_locator',
                     area_id:area_id,

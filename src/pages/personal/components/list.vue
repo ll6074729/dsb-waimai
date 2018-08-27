@@ -18,7 +18,7 @@
                 <img src="../../../assets/img/right_f7.png" alt="">
             </div>
         </router-link>
-        <router-link to="/site" tag="div" class="list-item">
+        <router-link to="/complaintList" tag="div" class="list-item">
             <div class="list-icon">
                 <img src="../../../assets/img/ts-complain.png" alt="">
             </div>

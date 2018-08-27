@@ -2,7 +2,7 @@
     <div>
         <div class="shop-head">
             <div class="shop-head-img">
-                <img src="shopinfo.logo" alt="" :onerror="this.$store.state.defaultHead">
+                <img :src="shopinfo.logo" alt="" :onerror="this.$store.state.defaultHead">
             </div>
             <div class="shop-head-name">{{shopinfo.shop_name}}</div>
             <div class="takeout-img">

@@ -30,6 +30,25 @@ export default {
         }
     },
     methods:{
+        // coupon_list () {
+        //     this.$http({
+        //         method: 'get',
+        //         url: 'mobile/api/q',
+        //         data: {
+        //             url:'http://api.dqvip.cc/buyer/recommend',
+        //             q_type:'post',
+        //             // order_id:this.
+        //         },
+        //     })
+        //         .then(this.getcouponList)
+        //         .catch(function (error) {
+        //             console.log(error);
+        //         })
+        // },
+        // getcouponList (res) {
+        //     let date = eval('('+res.date+')')
+        //     this.couponList = date.data
+        // },
         order () {
             // console.log(this.$route.query.order_sn)
             this.$router.push({path:'/orderdetails',query:{order_sn:this.$route.query.order_sn,order_id:this.$route.query.order_id}})
