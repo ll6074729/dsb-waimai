@@ -8,7 +8,7 @@
             <!-- <router-link tag="div" to="/orderdetails">订单详情</router-link> -->
         </div>
         <!-- <pay-share></pay-share> -->
-        <recom-mend :regood="regood"></recom-mend>
+        <recom-mend :regood="regood" v-if="regood.length > 0"></recom-mend>
     </div>
 </template>
 <script>

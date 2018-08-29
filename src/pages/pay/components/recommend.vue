@@ -6,7 +6,7 @@
             </div>
             <div class="goods-list">
                 <router-link tag="div" :to="'/shop/'+item.shop_id" class="goods-item" v-for="item in regood" :key="item.goods_id">
-                    <img :src="item.details_figure" :alt="item.title">
+                    <img :src="item.details_figure" :alt="item.title" :onerror="defaultImg">
                     <div class="goods-info">
                         <p>{{item.title}}</p>
                         <p class="goods-price">￥{{item.price}}</p>
@@ -24,7 +24,7 @@ export default {
     },
     data () {
         return {
-            
+            defaultImg:'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
         }
     }
 }

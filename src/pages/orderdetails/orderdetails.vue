@@ -94,21 +94,20 @@ export default {
                 })
         },
         getorder_info (res) {
-            console.log(res.data.data)
-            let date = eval('('+res.data.data+')') 
-            this.consignee = date.consignee
-            this.address = date.address
-            this.user_mobile = date.mobile
-            this.cart = date.order_goods
-            this.cartprom = date.order_shop_prom
-            this.coupon = parseFloat(date.coupon_price)
-            this.order_amount = parseFloat(date.order_amount)
-            this.user_money = parseFloat(date.user_money)
-            this.integral = parseFloat(date.integral)
-            this.order_status = date.order_status
-            this.pay_status = date.pay_status
-            this.shipping_status = date.shipping_status
-            this.shop_info(date.shop_id)
+            let date = eval('('+res.data+')')
+            this.consignee = date.data.consignee
+            this.address = date.data.address
+            this.user_mobile = date.data.mobile
+            this.cart = date.data.order_goods
+            this.cartprom = date.data.order_shop_prom
+            this.coupon = parseFloat(date.data.coupon_price)
+            this.order_amount = parseFloat(date.data.order_amount)
+            this.user_money = parseFloat(date.data.user_money)
+            this.integral = parseFloat(date.data.integral)
+            this.order_status = date.data.order_status
+            this.pay_status = date.data.pay_status
+            this.shipping_status = date.data.shipping_status
+            this.shop_info(date.data.shop_id)
         },
         shop_info (shop_id){
             this.$http({
@@ -128,7 +127,8 @@ export default {
         },
         getshop_info (res) {
             // console.log(res.data.data)
-            this.shop = eval('('+res.data.data+')') 
+            let date = eval('('+res.data+')')
+            this.shop = date.data
         }
     },
 }

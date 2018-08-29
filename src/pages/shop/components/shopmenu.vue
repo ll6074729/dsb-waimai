@@ -45,11 +45,12 @@ export default {
     .ishead
         position fixed
         top 10.33vw
+        bottom 13.33vw
     .menu-list
         width 26.66vw
         height 100%
         background-color #f7f7f7
-        padding-bottom 13.33vw
+        // padding-bottom 13.33vw
         overflow scroll
         // position absolute
         // top 0

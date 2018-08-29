@@ -3,9 +3,9 @@
         <div class="list"  v-for="item in list" :key="item.id">
             <div @click="order(item.order_id,item.order_sn)">
                 <div class="order-head">
-                    <img :src="item.order_shop.logo" alt="" :onerror="defaultImg">
+                    <img :src="item.shop.logo" alt="" :onerror="defaultImg">
                     <div class="shop-box">
-                        <div class="shop-name">{{item.order_shop.addr}}</div>
+                        <div class="shop-name">{{item.shop.addr}}</div>
                         <div class="shop-timer">{{item.created_at}}</div>
                     </div>
                     <div class="order-status">
