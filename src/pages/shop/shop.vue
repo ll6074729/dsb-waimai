@@ -1,5 +1,6 @@
 <template>
     <div style="position: relative">
+        <div class="backg"></div>
         <!-- 头部 -->
         <div class="shop-head">
             <router-link class="shop-head-left" tag="div" to="/">
@@ -78,19 +79,22 @@
             @buygoodsinfo="buygoodsinfo" 
         ></shop-recommend>
         <!-- tab列表 -->
-        <div class="shop-box">
-            <div class="tab" :class="{ishead:ishead}" ref="tabTop">
-                <div class="tab-btn" :class="{'active':isShowA}" @click="tab()">商品</div>
-                <div class="tab-btn" :class="{'active':!isShowA} " @click="tab()">评论</div>
+        <div class="shop-box"  ref="tabTop">
+            <div class="tab" :class="{ishead:ishead}">
+                <div class="tab-btn" :class="{'active':isshowtab == 0}" @click="tab(0)">商品</div>
+                <div class="tab-btn" :class="{'active':isshowtab == 1} " @click="tab(1)">评论</div>
             </div>
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isShowA">
-                    <shop-menu :cate="shop.cate"></shop-menu>
+                    <shop-menu :cate="shop.cate" :ishead="ishead"></shop-menu>
                     <shop-product 
                         :goods="shop.cate" 
                         :cart="cart" 
                         :productImg="productImg"
+                        :ishead="ishead"
                         @AglinCart="AglinCart"
+                        @upup="changeBuy"
+                        @buygoodsinfo="buygoodsinfo"
                         ></shop-product>
                 </div>
                 <div class="shop-comment" v-show="!isShowA">
@@ -138,6 +142,7 @@ export default {
         return {
             shop:[], //店铺信息
             cart:[], //购物车
+            isshowtab:0,
             isShowA:true,
             isCollect: false,  //是否收藏
             ishead:false,
@@ -168,7 +173,8 @@ export default {
         changeGoodsInfo (msg){
             this.isBuy = msg
         },
-        tab () {
+        tab (tab) {
+            this.isshowtab = tab
             this.isShowA = !this.isShowA
         },
         isCollectA () {
@@ -179,11 +185,17 @@ export default {
         getaddressList () {
             this.$http({
                 method: 'post',
-                url:'/mobile/api/q',
+                // method:'get',
+                url:'mobile/api/q',
+                // url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getaddrList)
                 .catch(function (error) {
@@ -192,6 +204,7 @@ export default {
         },
         getaddrList (res){
             const date = eval('('+res.data+')')
+            // let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -217,12 +230,17 @@ export default {
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
+                // url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
                     collect_type:type,
                     q_type:'post'
                 },
+                //  headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.collect)
                 .catch(function (error) {
@@ -231,7 +249,6 @@ export default {
         },
         collect (res) {
             let date = eval('('+res.data+')')
-            // console.log(eval(date))
             // let date = res.data
             // this.isCollect = eval(res.data.message)
             console.log(date.message)
@@ -263,11 +280,16 @@ export default {
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
+                // url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
@@ -276,6 +298,7 @@ export default {
         },
         getlistbox(res){
             let date = eval('('+res.data+')')
+            // let date = res.data
             this.shop = date.data
             if(this.shop.is_collect == 1){
                 this.isCollect = true
@@ -286,35 +309,38 @@ export default {
             for(let i in this.shop.recommend_goods){
                 this.recommendImg[i] = new Array()
                 for(let j in this.shop.recommend_goods[i]){
-                    this.recommendImg[i] = this.shop.recommend_goods[i].details_figure.split(',')
+                    if(this.shop.recommend_goods[i].details_figure)
+                        this.recommendImg[i] = this.shop.recommend_goods[i].details_figure.split(',')
                 }
             }
             // 列表商品的图片
+            console.log(this.shop.cate,5656)
             for(let i in this.shop.cate){
-                this.productImg[i] = new Array()
                 for(let j = 0;j <this.shop.cate[i].goods.length;j++){
-                    // if(this.shop.cate[i].goods[j]){
-                        // console.log(this.shop.cate[i].goods[j].details_figure,j)
-                        let imgx = this.shop.cate[i].goods[j].details_figure.split(',')
-                        // console.log(imgx,i)
-                        this.productImg[i].push(imgx[0])
-                    // }
+                    if(this.shop.cate[i].goods[j].details_figure){
+                        this.productImg[this.shop.cate[i].goods[j].goods_id] = this.shop.cate[i].goods[j].details_figure.split(',')
+                    }
                 }
             }
-            console.log(this.shop,1993)
-            console.log(this.recommendImg,1993)
             console.log(this.productImg,1993)
         },
         getCart () {
+            this.$store.dispatch("changeOrderId",'')
+            this.$store.dispatch("changeOrderSn",'')
             // 获取购物车信息 传一个店铺ID
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
+                // url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getCartList)
                 .catch(function (error) {
@@ -323,6 +349,8 @@ export default {
         },
         getCartList (res) {
             let date = eval('('+res.data+')') 
+            
+            // let date = res.data
             this.cart = date.data
         },
         // 清空购物车
@@ -331,9 +359,11 @@ export default {
         // },
         // 固定在顶部
         handleTop () {
+            // var tabtop = this.styleIndex.handleScroll()
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
             var tabTop1 = tabTop.top
-            if(tabTop1 >= 0 ){
+            console.log(tabTop1)
+            if(tabTop1 > 1 ){
                 this.ishead = false
             }else{
                 this.ishead = true
@@ -350,6 +380,7 @@ export default {
             let type0 = []
             let type1 = []
             let type2 = []
+
             // 满减
             for(var i = 0;i < this.shop.prom.length;i++){ 
                 if(this.shop.prom[i].type == 0){
@@ -383,7 +414,7 @@ export default {
             }
             type.push(type2)
             this.shopprom = type
-            // console.log(this.shopprom,99955566)
+            console.log(this.shopprom,99955566)
             this.$store.dispatch("changeProm",JSON.stringify(this.shopprom))
             this.shoptitle = title
         },
@@ -410,6 +441,7 @@ export default {
 
                 this.rulingPrice = newmoney
             }
+
         },
     },
     computed :{
@@ -434,7 +466,7 @@ export default {
         font-size 2.13vw
         color rgb(255,255,255)!important
     .shop-score >>> .el-rate
-        height 2.13vw 
+        height 2.13vw    
     .shop-head
         display flex
         justify-content space-between
@@ -575,12 +607,17 @@ export default {
             .shop-buy
                 display flex
                 position relative
+            .shop-comment
+                background-color #fff    
         .tab-box-ab
-            padding-top 10.66vw        
+            // position fixed   
+            top 10.66vw     
+            // width 100%
         .shop-cart
             position fixed
             bottom 0
             background-color #fff
             width 100%
+            z-index 15
             box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.05)
 </style>

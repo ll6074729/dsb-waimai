@@ -14,10 +14,22 @@ let delivery_cost
 let food //推荐商品
 let defaultAddress
 let shopprom //店铺的优惠活动
+let order_id //当前订单id
+let order_sn //当前订单编号
 /**
  * 登录接口需要的参数
  * 
  */
+try{
+    if(localStorage.order_id){
+        order_id = localStorage.order_id
+    }
+}catch (e){}
+try{
+    if(localStorage.order_sn){
+        order_sn = localStorage.order_sn
+    }
+}catch (e){}
 try{
     if(localStorage.shopprom){
         shopprom = localStorage.shopprom
@@ -70,8 +82,16 @@ export default new Vuex.Store({
         delivery_cost,
         defaultAddress,
         shopprom,
+        order_sn,
+        order_id,
     },
     actions:{
+        changeOrderSn (ctx,order_sn) {
+            ctx.commit('changeOrderSn',order_sn)
+        },
+        changeOrderId (ctx,order_id){
+            ctx.commit('changeOrderId',order_id)
+        },
         changeProm (ctx ,prom ){
             ctx.commit('changeProm',prom)
         },
@@ -98,6 +118,20 @@ export default new Vuex.Store({
         }
     },
     mutations:{
+        changeOrderId(state,order_id){
+            state.order_id = order_id
+            try {
+                localStorage.order_id = order_id
+            }catch (e){
+            }
+        },
+        changeOrderSn(state,order_sn){
+            state.order_sn = order_sn
+            try {
+                localStorage.order_sn = order_sn
+            }catch (e){
+            }
+        },
         changeProm(state,prom){
             state.shopprom = prom
             try {

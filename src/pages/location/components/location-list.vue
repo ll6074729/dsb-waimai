@@ -13,7 +13,7 @@
                         </p>
                     </div>
                     <div class="list-item" 
-                        @click="handClickSchool(item.address,item.area_id)"
+                        @click="handClickSchool(item.address,item.area_id,item.delivery_cost)"
                         v-for="(item,index) in nearbySchool" 
                         :key="index">
                         {{item.address}}

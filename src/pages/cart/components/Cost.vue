@@ -74,6 +74,9 @@ export default {
             //     this.balance_money = (parseFloat(this.rulingPrice) - parseFloat(integral_num)/100).toFixed(2)
             // }
             // this.$emit('getbalance_money', parseFloat(this.balance_money))
+            if(this.integral_num  > parseFloat(this.integral)){
+                this.integral_num = parseFloat(this.integral)
+            }
             this.$emit('getintegral_num',this.integral_num)
         },
         desc (){
@@ -92,6 +95,9 @@ export default {
             // if(constmoney > parseFloat(this.rulingPrice)){
             //     this.integral_num = (parseFloat(this.rulingPrice) - this.balance_money)*100
             // }
+            if(this.balance_money > parseFloat(this.balance)){
+                this.balance_money = parseFloat(this.balance)
+            }
             this.$emit('getbalance_money', parseFloat(this.balance_money))
             // this.$emit('getintegral_num',this.integral_num)
         },

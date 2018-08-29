@@ -5,13 +5,13 @@
                 为你推荐
             </div>
             <div class="goods-list">
-                <div class="goods-item" v-for="item in list" :key="item.id">
-                    <img :src="item.imgurl" alt="item.name">
+                <router-link tag="div" :to="'/shop/'+item.shop_id" class="goods-item" v-for="item in regood" :key="item.goods_id">
+                    <img :src="item.details_figure" :alt="item.title">
                     <div class="goods-info">
-                        <p>{{item.name}}</p>
-                        <p class="goods-price">￥{{item.money}}</p>
+                        <p>{{item.title}}</p>
+                        <p class="goods-price">￥{{item.price}}</p>
                     </div>
-                </div>
+                </router-link>
             </div>
         </div>
     </div>
@@ -19,9 +19,12 @@
 <script>
 export default {
     name:"recommend",
+    props:{
+        regood:Array
+    },
     data () {
         return {
-            list:[{id:1,name:"北京烤鸭北京烤鸭北京烤鸭北京烤鸭北京烤鸭",money:"20.00",imgurl:require("../../../assets/img/food.jpg")},{id:2,name:"凉白肉",money:"2230.00",imgurl:require("../../../assets/img/food.jpg")},{id:3,name:"红烧肉",money:"220.00",imgurl:require("../../../assets/img/food.jpg")},{id:4,name:"卤肉饭",money:"30.00",imgurl:require("../../../assets/img/food.jpg")}]
+            
         }
     }
 }

@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/mobile/api/q':{
+      '/api':{
         target:'http://api.dqvip.cc',
         secure:false,
         changeOrigin: true,
         pathRewrite:{
-          '^/mobile/api/q':''
+          '^/api':''
         }
       }
     },

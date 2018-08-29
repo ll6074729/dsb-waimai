@@ -1,14 +1,14 @@
 <template>
     <div>
-        <!-- <pay-fail></pay-fail> -->
-        <pay-success></pay-success>
+        <pay-fail v-if="!ispay"></pay-fail>
+        <pay-success v-if="ispay"></pay-success>
         <div class="btn df">
             <router-link tag="div" to="/">继续点餐</router-link>
             <div @click="order">订单详情 </div>
             <!-- <router-link tag="div" to="/orderdetails">订单详情</router-link> -->
         </div>
         <!-- <pay-share></pay-share> -->
-        <recom-mend></recom-mend>
+        <recom-mend :regood="regood"></recom-mend>
     </div>
 </template>
 <script>
@@ -26,10 +26,38 @@ export default {
     },
     data () {
         return {
-
+            ispay:JSON.parse(this.$route.params.status),
+            order_id:this.$store.state.order_id,
+            order_sn:this.$store.state.order_sn,
+            regood:[],
         }
     },
+    mounted () {
+        this.recommend()
+    },
     methods:{
+        recommend () {
+            console.log(this.$route.params,6)
+            this.$http({
+                method: 'post',
+                url: 'mobile/api/q',
+                data: {
+                    url:'http://api.dqvip.cc/buyer/recommend',
+                    q_type:'post',
+                    order_id:this.order_id,
+                    order_sn:this.order_sn
+                },
+            })
+                .then(this._recommend)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        _recommend (res) {
+            let date = eval ('('+res.data+')')
+            console.log(date,955959)
+            this.regood = date.data
+        },
         // coupon_list () {
         //     this.$http({
         //         method: 'get',
@@ -51,7 +79,7 @@ export default {
         // },
         order () {
             // console.log(this.$route.query.order_sn)
-            this.$router.push({path:'/orderdetails',query:{order_sn:this.$route.query.order_sn,order_id:this.$route.query.order_id}})
+            this.$router.push({path:'/orderdetails',query:{order_sn:this.order_sn,order_id:this.order_id}})
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="menu-list" ref="cate">
+        <div class="menu-list" ref="cate" :class="{ishead:ishead}">
             <ul>
                 <li class="menu-item" 
                     v-for="(item,index) in cate" 
@@ -17,16 +17,17 @@
     </div>
 </template>
 <script>
-import BScroll from 'better-scroll'
+// import BScroll from 'better-scroll'
 export default {
     name:"ShopMenu",
     mounted(){
-        this.scroll = new BScroll(this.$refs.cate,{
-            click:true
-        })
+        // this.scroll = new BScroll(this.$refs.cate,{
+        //     click:true
+        // })
     },
     props:{
-        cate:Array
+        cate:Array,
+        ishead:Boolean,
     },
     data () {
         return {
@@ -41,12 +42,15 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+    .ishead
+        position fixed
+        top 10.33vw
     .menu-list
         width 26.66vw
         height 100%
         background-color #f7f7f7
         padding-bottom 13.33vw
-        overflow hidden
+        overflow scroll
         // position absolute
         // top 0
         // left 0

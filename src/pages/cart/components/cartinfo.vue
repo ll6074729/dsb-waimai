@@ -6,7 +6,7 @@
             </div>
             <div class="shop-head-name">{{shopinfo.shop_name}}</div>
             <div class="takeout-img">
-                <a href="tel:shopinfo.mobile">
+                <a :href="'tel:' + shopinfo.mobile">
                     <img src="../../../assets/img/call.png" alt="">
                 </a>
             </div>

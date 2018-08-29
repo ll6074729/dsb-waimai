@@ -79,7 +79,7 @@ export default {
             }
             this.timer = setTimeout(() =>{
                 const result = []
-                for(let i in this.allSchool){
+                for(var i in this.allSchool){
                     if(this.allSchool[i].address.indexOf(this.keyword) > -1){
                         result.push(this.allSchool[i])
                     }

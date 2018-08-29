@@ -68,7 +68,7 @@ export default {
             couponList:[],
             coupon:{},
             iscoupon:false,
-            paycode:'wechat',
+            paycode:'weixin',
             shopprom:JSON.parse(this.$store.state.shopprom),
             cartprom:[],
             cart_id:[],
@@ -90,8 +90,8 @@ export default {
     watch:{
         integral_num () {
             var integral_num = this.integral_num || 0
-            this.shopprom = []
-            this.money()
+            // this.shopprom = []
+           this.money()
             //判断是否已经使用其他支付
             if(this.balance_money > 0){
                 this.rulingPrice = this.rulingPrice - this.balance_money
@@ -105,24 +105,25 @@ export default {
             }else if(integral_num/100 == parseFloat(this.rulingPrice)){
                 this.rulingPrice = 0
             }
+            
         },
         balance_money (){
             var balance_money = this.balance_money || 0
-            this.shopprom = []
+            // this.shopprom = []
             this.money()
             //判断是否已经使用其他支付
             if(this.integral_num > 0){
                 this.rulingPrice = this.rulingPrice - this.integral_num/100
             }
             // 判断余额是否超过支付金额 或者小于支付金额
-            if(balance_money > parseFloat(this.rulingPrice)){
-                this.balance_money = this.rulingPrice
-                
-            }else if(balance_money < parseFloat(this.rulingPrice)){
-                this.rulingPrice = (parseFloat(this.rulingPrice) - balance_money).toFixed(2)
-            }else if(balance_money == parseFloat(this.rulingPrice)){
+            if(parseFloat(balance_money) > parseFloat(this.rulingPrice)){
+                this.balance_money = parseFloat(this.rulingPrice)
+            }else if(parseFloat(balance_money) < parseFloat(this.rulingPrice)){
+                this.rulingPrice = (parseFloat(this.rulingPrice) - parseFloat(balance_money)).toFixed(2)
+            }else if(parseFloat(balance_money) == parseFloat(this.rulingPrice)){
                 this.rulingPrice = 0
             }
+            
         },
         coupon () {
             // 判断原价是否满足优惠券的金额
@@ -159,6 +160,7 @@ export default {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/buyer/submit_order',
                 data: {
                     url:'http://api.dqvip.cc/buyer/submit_order',
                     shop_id:this.$route.params.id,
@@ -171,6 +173,10 @@ export default {
                     integral:integral_num,
                     q_type:'post'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
             .then(this.buybtnafter)
             .catch(function (error) {
@@ -180,9 +186,30 @@ export default {
         buybtnafter (res) {
             this.fullscreenLoading = false;
             let date = eval('(' + res.data + ')')
-            console.log(date,1)
-            if(date.status == 200)
-                this.$router.push({path:'/pay',query:{order_sn:date.data.order_sn,order_id:date.data.order_id}})
+            // let date = res.data
+            // 把订单存在本地
+            this.$store.dispatch("changeOrderId",date.data.order_id)
+            this.$store.dispatch("changeOrderSn",date.data.order_sn)
+            let _this = this
+            this.$http({
+                method:'post',
+                url:'http://wm.dqvip.cc/Mobile/Payment/getpayCode',
+                data:{
+                    order_id:date.data.order_id,
+                    pay_radio:'pay_code='+ date.data.pay_code
+                },
+            })
+                .then(function(response){
+                    _this.styleIndex.callpay(response.data)
+                })
+                .catch(function(error){
+                    console.log(error)
+                })
+            // if(date.status == 200){
+            //     this.styleIndex.wxpay()
+            // }
+
+                // this.$router.push({path:'/pay',query:{order_sn:date.data.order_sn,order_id:date.data.order_id}})
         },
         // 选择支付方式
         payCode(type){
@@ -200,6 +227,7 @@ export default {
         money () {
             let cart = this.cart
             let total = 0
+            let shopprom = JSON.parse(this.$store.state.shopprom)
             for(let i in cart){
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
             }
@@ -211,20 +239,22 @@ export default {
             this.costPrice = total.toFixed(2)
             this.rulingPrice = total.toFixed(2)
             // 满减
-            for(let i in this.shopprom[0]){
-                if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
-                    let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
+            console.log(shopprom,9993)
+            console.log(shopprom[0],999333)
+            for(let i in shopprom[0]){
+                if(this.costPrice > parseFloat(shopprom[0][i].condition)){
+                    let Rprice = parseFloat(this.costPrice) - parseFloat(shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
-                    this.cartprom[0] = this.shopprom[0][i]
+                    this.cartprom[0] = shopprom[0][i]
                     // this.cartprom.push(this.shopprom[0][i])
                     // break 
                 }
             }
             // 赠品
-            for(let i in this.shopprom[1]){
-                if(this.costPrice > parseFloat(this.shopprom[1][i].condition)){
-                    this.cartprom.push(this.shopprom[1][i])
-                    break
+            for(let i in shopprom[1]){
+                if(this.costPrice > parseFloat(shopprom[1][i].condition)){
+                    this.cartprom.push(shopprom[1][i])
+                    // break
                 }
             }
             // 首单
@@ -240,11 +270,16 @@ export default {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.initCart)
                 .catch(function (error) {
@@ -253,6 +288,7 @@ export default {
         },
         initCart (res) {
             let date = eval('('+res.data+')')
+            // let date = res.data
             this.cart = date.data
             // console.log(date,2)
             var cart_id = []
@@ -260,17 +296,22 @@ export default {
                 cart_id.push(this.cart[i].cart_id)
             }
             this.cart_id = cart_id
-            // this.money()
+            this.money()
         },
         pushshopinfo () {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
             .then(this.getshopinfo)
             .catch(function (error) {
@@ -279,7 +320,7 @@ export default {
         },
         getshopinfo (res) {
             let date = eval('('+res.data+')')
-            console.log(date,3)
+            // let date = res.data
             this.shopinfo = date.data
         },
         // 获取配置文件
@@ -287,10 +328,15 @@ export default {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/init',
                 data: {
                     url:'http://api.dqvip.cc/init',
                     q_type:'get'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getDeliveryList)
                 .catch(function (error) {
@@ -301,10 +347,15 @@ export default {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/user_info',
                 data: {
                     url:'http://api.dqvip.cc/user_info',
                     q_type:'get'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getuserinfo)
                 .catch(function (error) {
@@ -313,11 +364,13 @@ export default {
         },
         getuserinfo (res) {
             let date = eval('(' + res.data + ')')
+            // let date = res.data
             console.log(date,4)
             this.balance = date.data.moeny
             this.integral = date.data.points
         },
         getDeliveryList (res) {
+            // let date = res.data
             let date = eval('(' + res.data + ')')
             console.log(date,5)
             this.delivery_cost = date.data
@@ -332,12 +385,17 @@ export default {
         },
         coupon_list () {
             this.$http({
-                method: 'get',
+                method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/buyer/coupon_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/coupon_list',
-                    q_type:'post'
+                    q_type:'get'
                 },
+                // headers :{
+                //     'Accept':'application/json',
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                // }
             })
                 .then(this.getcouponList)
                 .catch(function (error) {
@@ -346,6 +404,7 @@ export default {
         },
         getcouponList (res) {
             let date = eval('('+res.date+')')
+            // let date =res.data
             if(date){
                 this.couponList = date.data
             }

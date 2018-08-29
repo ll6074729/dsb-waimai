@@ -97,7 +97,7 @@ export default new Router({
       }
     },
     {
-      path:'/pay',
+      path:'/pay/:status',
       name:'Pay',
       component:Pay,
       meta:{

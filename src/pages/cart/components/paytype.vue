@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="pay-list">
-            <div class="pay-item" @click="paycode('aliy')">
+            <div class="pay-item" @click="paycode('alipaymobile')">
                 <div class="pay-img db">
                     <img src="../../../assets/img/Alibaba@3x.png" alt="">
                 </div>
@@ -9,12 +9,12 @@
                     支付宝支付
                 </div>
                 <div class="checkout fr" >
-                    <img src="../../../assets/img/check.png" alt=""  v-if="paytype == 'aliy'">
-                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'aliy'">
+                    <img src="../../../assets/img/check.png" alt=""  v-if="paytype == 'alipaymobile'">
+                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'alipaymobile'">
                 </div>
             </div>
 
-            <div class="pay-item"  @click="paycode('wechat')">
+            <div class="pay-item"  @click="paycode('weixin')">
                 <div class="pay-img db">
                     <img src="../../../assets/img/Tencent@3x(1).png" alt="">
                 </div>
@@ -22,8 +22,8 @@
                     微信支付
                 </div>
                 <div class="checkout fr">
-                    <img src="../../../assets/img/check.png" alt="" v-if="paytype == 'wechat'">
-                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'wechat'">
+                    <img src="../../../assets/img/check.png" alt="" v-if="paytype == 'weixin'">
+                    <img src="../../../assets/img/uncheck.png" alt="" v-if="paytype != 'weixin'">
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@ export default {
     name:"paytype",
     data () {
         return {
-            paytype:'wechat',
+            paytype:'weixin',
         }
     },
     methods:{

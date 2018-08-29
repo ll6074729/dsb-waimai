@@ -30,7 +30,7 @@
 </template>
 <script>
 import {formatDate} from 'st/time.js'
-import BScroll from 'better-scroll'
+// import BScroll from 'better-scroll'
 export default {
     name:"couponList",
     props:{
@@ -40,9 +40,9 @@ export default {
         costPrice:Number,
     },
     mounted () {
-        this.scroll = new BScroll(this.$refs.coupon,{
-            click:true
-        })
+        // this.scroll = new BScroll(this.$refs.coupon,{
+        //     click:true
+        // })
     },
     data () {
         return {
@@ -72,7 +72,7 @@ export default {
         background-color #f7f7f7
         position fixed
         width 100%
-        bottom 0
+        bottom 13.33vw
         top 60%
         .coupon-title
             text-align center
@@ -82,39 +82,41 @@ export default {
             padding 4vw 0
             background-color #fff
             box-shadow 0px 5px 20px 0px rgba(0, 0, 0, 0.05)
-        .active
-            background-image url(../../../assets/img/coupon_bg_blue.png)!important
-            box-shadow 0px 0px 20px 0px rgba(70, 154, 254, 0.3)
-            .coupon-money
-                color #fff!important
-            .coupon-info
-                .coupon-name
-                    color #fff !important
-                .fs20
-                    color rgba(255, 255, 255, 0.5)!important
-        .item
-            margin 2.66vw
-            background-color #f7f7f7
-            height 26.66vw
-            background-image url(../../../assets/img/coupon_bg_white.png)
-            background-size 100% 100%
-            background-repeat no-repeat
-            display flex
-            justify-content center
-            align-items center
-            .coupon-money
-                flex 1
-                text-align center
-                color #469afe
-                span 
-                    font-size 8vw
-                    font-weight bold
-                    vertical-align middle
-            .coupon-info
-                flex 2    
-                .coupon-name
-                    font-weight bold
-                .fs20
-                    color #999    
+        ul
+            overflow scroll   
+            .active
+                background-image url(../../../assets/img/coupon_bg_blue.png)!important
+                box-shadow 0px 0px 20px 0px rgba(70, 154, 254, 0.3)
+                .coupon-money
+                    color #fff!important
+                .coupon-info
+                    .coupon-name
+                        color #fff !important
+                    .fs20
+                        color rgba(255, 255, 255, 0.5)!important
+            .item
+                margin 2.66vw
+                background-color #f7f7f7
+                height 26.66vw
+                background-image url(../../../assets/img/coupon_bg_white.png)
+                background-size 100% 100%
+                background-repeat no-repeat
+                display flex
+                justify-content center
+                align-items center
+                .coupon-money
+                    flex 1
+                    text-align center
+                    color #469afe
+                    span 
+                        font-size 8vw
+                        font-weight bold
+                        vertical-align middle
+                .coupon-info
+                    flex 2    
+                    .coupon-name
+                        font-weight bold
+                    .fs20
+                        color #999    
 
 </style>

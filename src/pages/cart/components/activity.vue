@@ -24,11 +24,11 @@
             <div class="activity-name" v-if="page != 'center'" >{{cartprom[1].title}}</div>
             <div class="activity-name" v-if="page == 'center'" >{{cartprom[1].prom_title}}</div>
         </div>
-        <div class="cost-activity df" v-if="cartprom[2]">
+        <!-- <div class="cost-activity df" v-if="cartprom[2]">
             <div class="activity-type type2">首单</div>
             <div class="activity-name" v-if="page != 'center'" >{{cartprom[2].title}}</div>
             <div class="activity-name" v-if="page == 'center'" >-{{cartprom[2].deduction_money}}</div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

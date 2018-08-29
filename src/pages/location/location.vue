@@ -52,6 +52,7 @@ export default {
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
+                // url:'api/buyer/area_list',
                 data: {
                     long_and_lat:msg,
                     url:'http://api.dqvip.cc/buyer/area_list',
