@@ -5,12 +5,13 @@
                 <div class="order-head">
                     <img :src="item.shop.logo" alt="" :onerror="defaultImg">
                     <div class="shop-box">
-                        <div class="shop-name">{{item.shop.addr}}</div>
+                        <div class="shop-name">{{item.shop.shop_name}}</div>
                         <div class="shop-timer">{{item.created_at}}</div>
                     </div>
                     <div class="order-status">
                         <diV v-if="item.pay_status == 0">
-                            <p style="color:#469afe">订单待支付</p>
+                            <p v-if="item.order_status != 3" style="color:#469afe">订单待支付</p>
+                            <p v-if="item.order_status == 3" style="color:#469afe">订单已取消</p>
                         </diV>
                         <div v-if="item.pay_status ==1">
                             <p v-if="item.order_status == 0">等待商家接单中</p>
@@ -40,6 +41,8 @@
                 :order_id="item.order_id" 
                 :order_sn="item.order_sn"
                 :shop_id="item.shop_id"
+                :pay_status="item.pay_status"
+                @orderlist="orderlist"
             >
             </order-btn>
             <hr class="hr20">
@@ -67,6 +70,9 @@ export default {
         }
     },
     methods:{
+        orderlist () {
+            this.$emit('orderlist','0')
+        },
         order (order_id,order_sn) {
             console.log(order_sn,order_id)
             this.$router.push({path:'/orderdetails',query:{order_sn:order_sn,order_id:order_id}})

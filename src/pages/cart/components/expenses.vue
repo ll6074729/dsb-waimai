@@ -1,8 +1,16 @@
 <template>
     <div>
-        <div class="cost-item df" v-for="item in delivery_cost" :key="item.id" v-if="item.name != 'delivery_duration'">
+        <div class="cost-item df" v-for="(item,index) in delivery_cost" :key="index" v-if="delivery_cost.length >0">
             <div class="cost-type">{{item.desc}}</div>
             <div class="cost-price">￥{{item.value}}</div>
+        </div>
+        <div class="cost-item df" v-if="delivery_cost1">
+            <div class="cost-type">{{delivery_cost1.desc}}</div>
+            <div class="cost-price">￥{{delivery_cost1.value}}</div>
+        </div>
+        <div class="cost-item df" v-if="delivery_cost2">
+            <div class="cost-type">{{delivery_cost2.desc}}</div>
+            <div class="cost-price">￥{{delivery_cost2.value}}</div>
         </div>
     </div>
 </template>
@@ -10,13 +18,23 @@
 export default {
     name:"expenses",
     props:{
-        delivery_cost:Array
+        delivery_cost:Array,
+        delivery_cost1:Object,
+        delivery_cost2:Object,
+    },
+    mounted () {
+        this.aa()
     },
     data () {
         return {
 
         }
-    }
+    },
+    methods : {
+        aa () {
+            console.log(this.delivery_cost,66)
+        }
+    },
 }
 </script>
 <style lang="stylus" scoped>

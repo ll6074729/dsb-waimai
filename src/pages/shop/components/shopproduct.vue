@@ -51,6 +51,8 @@ export default {
         // this.scroll = new BScroll(this.$refs.shop,{
         //     click:true
         // })
+        window.addEventListener("scroll",this.handleTop)
+        // this.handleoffset()
     },
     props:{
         goods:Array,
@@ -65,6 +67,19 @@ export default {
         }
     },
     methods:{
+        // handleoffset () {
+        //     console.log(6666666)
+        //     let element = this.$refs[0][0]
+        //     this.scrollTop = 200
+        // },
+        handleTop () {
+            console.log(this.$refs[0][0]) 
+            // var tabTop = this.$refs[0].getBoundingClientRect()
+            // var tabTop1 = tabTop.top
+            // console.log(tabTop1,666)
+            console.log(this.styleIndex.handleScroll(),777)
+            // if()
+        },
         minus(GoodId){
             const that = this
             let goods_num
@@ -146,7 +161,7 @@ export default {
                     q_type:'post',
                     goods_id:GoodId,
                 },
-                //     headers :{
+                // headers :{
                 //     'Accept':'application/json',
                 //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
                 // }
@@ -225,7 +240,7 @@ export default {
         // position fixed
         // top 10.66vw
         // width 73.34vw   
-        padding-left 26.66vw 
+        // margin-left 26.66vw 
         padding-bottom 13.33vw
     .shop-product 
         background-color #fff
@@ -236,7 +251,7 @@ export default {
         // left 26.66vw
         // right 0
         // bottom 0
-        // overflow scroll
+        // overflow hidden
         .area 
             .cate-title
                 width 95%

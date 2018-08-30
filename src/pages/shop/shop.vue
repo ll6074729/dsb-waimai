@@ -362,7 +362,7 @@ export default {
             // var tabtop = this.styleIndex.handleScroll()
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
             var tabTop1 = tabTop.top
-            console.log(tabTop1)
+            // console.log(tabTop1)
             if(tabTop1 > 1 ){
                 this.ishead = false
             }else{

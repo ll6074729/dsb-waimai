@@ -1,13 +1,13 @@
 <template>
     <div v-loading.fullscreen.lock="fullscreenLoading">
-        <div v-if="latestOrder.length ==0 && historyOrder.length == 0" >暂无订单,请您快去购买哟~！</div>
+        <div v-if="latestOrder.length ==0 && historyOrder.length == 0">暂无订单,请您快去购买哟~！</div>
         <div v-if="latestOrder.length != 0">   
             <div class="title">当前订单</div>
-            <shop-info :list="latestOrder" ></shop-info>
+            <shop-info :list="latestOrder" @orderlist="orderlist"></shop-info>
         </div>
         <div class="history" v-if="historyOrder.length != 0">
             <div class="title">历史记录</div>
-            <shop-info :list="historyOrder"></shop-info>
+            <shop-info :list="historyOrder" @orderlist="orderlist"></shop-info>
         </div>
         <tab-bar :defaulttab="defaulttab"></tab-bar>
     </div>
@@ -41,6 +41,10 @@ export default {
        
     },
     methods:{
+        orderlist () {
+            this.newlatestOrder()
+            this.newhistoryOrder()
+        },
         // 新订单
         newlatestOrder () {
             this.$http({
@@ -63,8 +67,8 @@ export default {
                 })
         },
         getlatestOrder (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             console.log(date,100)
             this.latestOrder = date.data.data
             this.fullscreenLoading = false

@@ -370,15 +370,19 @@ export default {
             this.integral = date.data.points
         },
         getDeliveryList (res) {
-            // let date = res.data
-            let date = eval('(' + res.data + ')')
+            let date = res.data
+            // let date = eval('(' + res.data + ')')
             console.log(date,5)
             this.delivery_cost = date.data
             let freight = this.$store.state.delivery_cost
+            let packing_expense = this.$store.state.packing_expense
             let Distribution = parseFloat(date.data[0].value)
             // 判断是否有默认的收费
             if(freight){
                 this.delivery_cost[0].value = freight
+            }
+            if(packing_expense){
+                this.delivery_cost[1].value = packing_expense
             }
             this.money()
             // this.delivery_cost = Distribution.toFixed(2)

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="menu-list" ref="cate" :class="{ishead:ishead}">
-            <ul>
+        <div class="menu-list" ref="cate" >
+            <ul :class="{ishead:ishead}">
                 <li class="menu-item" 
                     v-for="(item,index) in cate" 
                     :key="index" 
@@ -21,6 +21,7 @@
 export default {
     name:"ShopMenu",
     mounted(){
+        // window.addEventListener("scroll",this.handleTop)
         // this.scroll = new BScroll(this.$refs.cate,{
         //     click:true
         // })
@@ -35,6 +36,7 @@ export default {
         }
     },
     methods:{
+       
         tablist (index){
             this.num = index
         }
@@ -46,12 +48,14 @@ export default {
         position fixed
         top 10.33vw
         bottom 13.33vw
+        overflow scroll
+        width 26.66vw
     .menu-list
         width 26.66vw
         height 100%
         background-color #f7f7f7
         // padding-bottom 13.33vw
-        overflow scroll
+        // overflow scroll
         // position absolute
         // top 0
         // left 0

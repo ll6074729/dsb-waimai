@@ -11,6 +11,7 @@ let defaultHead = 'this.src="' + require('../assets/img/shopHead.png') + '"'
 let defaultShop = 'this.src="' + require('../assets/img/defaultshop.png') + '"'
 let addressList
 let delivery_cost
+let packing_expense
 let food //推荐商品
 let defaultAddress
 let shopprom //店铺的优惠活动
@@ -38,6 +39,11 @@ try{
 try{
     if(localStorage.delivery_cost){
         delivery_cost = localStorage.delivery_cost
+    }
+}catch (e){}
+try{
+    if(localStorage.packing_expense){
+        packing_expense = localStorage.packing_expense
     }
 }catch (e){}
 try{
@@ -80,6 +86,7 @@ export default new Vuex.Store({
         defaultShop,
         addressList,
         delivery_cost,
+        packing_expense,
         defaultAddress,
         shopprom,
         order_sn,
@@ -109,6 +116,9 @@ export default new Vuex.Store({
         },
         addressList(ctx,addressList){
             ctx.commit('addressList',addressList)
+        },
+        changepacking(ctx,packing_expense){
+            ctx.commit('changepacking',packing_expense)
         },
         changedelivery(ctx,delivery_cost){
             ctx.commit('changedelivery',delivery_cost)
@@ -150,6 +160,13 @@ export default new Vuex.Store({
             state.delivery_cost = delivery_cost
             try {
                 localStorage.delivery_cost = delivery_cost
+            }catch (e){
+            }
+        },
+        changepacking(state,packing_expense){
+            state.packing_expense = packing_expense
+            try {
+                localStorage.packing_expense = packing_expense
             }catch (e){
             }
         },

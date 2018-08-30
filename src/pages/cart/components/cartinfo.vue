@@ -31,7 +31,7 @@
                     ￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}
                 </div>
                 <div class="goods-price"  v-if="page == 'center'">
-                    ￥{{parseFloat(item.goods_price)}}
+                    ￥{{parseFloat(item.goods_price) +  parseFloat(item.spec_price)}}
                 </div>
             </div>
         </div>

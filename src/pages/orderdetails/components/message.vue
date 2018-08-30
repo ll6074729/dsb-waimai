@@ -1,11 +1,11 @@
 <template>
     <div class="message">
-        <div class="message-item df">
+        <div class="message-item df" v-if="timer">
             <div class="list-name">
                 送达时间
             </div>
             <div class="list-text">
-                到店自提 (13:55)
+                {{timer}}
             </div>
         </div>
         <div class="message-item df msn-add">
@@ -40,6 +40,8 @@ export default {
         address:String,
         consignee:String,
         user_mobile:String,
+        timer:String,
+        ensure_time:String,
     },
     data () {
         return {

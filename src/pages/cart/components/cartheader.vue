@@ -130,6 +130,7 @@ export default {
                 height 4.8vw
                 margin-right 4.66vw
                 margin-left 3vw
+                margin-top -1vw
         .delivery-content
             width 75vw
             strong 
