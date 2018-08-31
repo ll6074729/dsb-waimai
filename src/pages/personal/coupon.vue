@@ -5,20 +5,20 @@
             <ul>
                 <li class="item pd20" v-for="item in couponList" :key="item.id" >
                     <div class="coupon-money">
-                        ￥<span>{{item.money}}</span>
+                        ￥<span>{{item.coupon.money}}</span>
                     </div>
                     <div class="coupon-info">
                         <div class="coupon-name mgbt20 fs28">
-                            {{item.name}}
+                            {{item.coupon.name}}
                         </div>
                         <div class="coupon-desc mgbt20 fs20">
-                            {{item.name}}
+                            {{item.coupon.name}}
                         </div>
                         <div class="coupon-time fs20">
-                            有效期至 {{ item.use_start_time * 1000 | formatDate}}
+                            有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}}
                         </div>
                     </div>
-                </li>
+                </li> 
                 <li v-if="couponList.lenght == 0">
                     暂无可用优惠券
                 </li>

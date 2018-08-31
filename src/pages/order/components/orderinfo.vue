@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="order-info">
-        <div class="order-info-item"  v-for="item in list" :key="item.id">
+        <div class="order-info-item"  v-for="item in list" :key="item.id"  @click="order(item.order_id,item.order_sn)">
             <div class="food-name">{{item.goods_name}}</div>
             <div class="food-attr">
                 <span>{{item.spec_key_name}}</span>
@@ -21,6 +21,12 @@ export default {
     props:{
         list:Array,
         price:String,
+    },
+    methods:{
+        order (order_id,order_sn) {
+            console.log(order_sn,order_id)
+            this.$router.push({path:'/orderdetails',query:{order_sn:order_sn,order_id:order_id}})
+        }
     }
 }
 </script>

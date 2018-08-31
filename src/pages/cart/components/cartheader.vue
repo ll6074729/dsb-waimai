@@ -84,7 +84,11 @@ export default {
     .cart-head
         height 10.66vw
         line-height 10.66vw
+        position fixed
+        top 0
         border-bottom 1px solid #f7f7f7
+        width 100%
+        background-color #fff
         .cart-head-left 
             margin-left 2.13vw
             display inline-block
@@ -97,6 +101,7 @@ export default {
             margin-left 2.66vw     
             font-size 4.26vw
     .cart-address
+        margin-top 13.33vw
         padding 5.33vw 2.66vw    
         border-bottom 1px solid #f7f7f7
         .address-left

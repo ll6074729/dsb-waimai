@@ -55,6 +55,7 @@ export default {
         border-bottom 1px solid #f7f7f7
         .center
             margin-top 1vw
+            padding 1.33vw 2.13vw
         .activity-type
             padding 1.33vw 2.13vw
         .type0

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="cost-item df" v-for="(item,index) in delivery_cost" :key="index" v-if="delivery_cost.length >0">
+        <div class="cost-item df" v-for="(item,index) in delivery_cost" :key="index" v-if="delivery_cost.length >0 && item.name !='delivery_duration'">
             <div class="cost-type">{{item.desc}}</div>
             <div class="cost-price">￥{{item.value}}</div>
         </div>

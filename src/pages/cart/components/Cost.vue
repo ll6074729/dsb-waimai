@@ -58,7 +58,7 @@ export default {
     watch:{
         coupon (){
             console.log('coupon')
-            this.coupontetx = this.coupon.name
+            this.coupontetx = this.coupon.coupon.name
         },
         integral_num () {
             // var integral_num = this.integral_num || 0

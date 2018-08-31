@@ -1,13 +1,15 @@
 <template>
     <div>
         <div class="list"  v-for="item in list" :key="item.id">
-            <div @click="order(item.order_id,item.order_sn)">
-                <div class="order-head">
-                    <img :src="item.shop.logo" alt="" :onerror="defaultImg">
-                    <div class="shop-box">
-                        <div class="shop-name">{{item.shop.shop_name}}</div>
-                        <div class="shop-timer">{{item.created_at}}</div>
-                    </div>
+            <div>
+                <!-- <div class="order-head"> -->
+                    <router-link :to="'/shop/'+item.shop.shop_id" class="order-head">
+                        <img :src="item.shop.logo" alt="" :onerror="defaultImg">  
+                        <div class="shop-box">
+                            <div class="shop-name">{{item.shop.shop_name}}</div>
+                            <div class="shop-timer">{{item.created_at}}</div>
+                        </div>
+                    
                     <div class="order-status">
                         <diV v-if="item.pay_status == 0">
                             <p v-if="item.order_status != 3" style="color:#469afe">订单待支付</p>
@@ -32,7 +34,7 @@
                             <p v-if="item.order_status == 5">商家已取消订单,请联系商家</p>
                         </div>
                     </div>
-                </div>
+                </router-link>  
                 <order-info :list="item.order_goods" :price="item.order_amount"></order-info>
             </div>
             <order-btn 

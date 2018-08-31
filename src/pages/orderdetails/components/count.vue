@@ -15,14 +15,23 @@
             </div>
         </div>
         <diV v-if="pay_status == 0">
-            <p style="color:#469afe">订单待支付</p>
+            <!-- <p style="color:#469afe">订单待支付</p> -->
+            <p v-if="order_status == 0" style="color:#469afe">订单待支付</p>
+            <p v-if="order_status == 3" style="color:#469afe">订单已取消</p>
         </diV>
         <div v-if="pay_status ==1">
             <p v-if="order_status == 0">等待商家接单中</p>
-            <p v-if="order_status == 1">商家出餐中</p>
+            <p v-if="order_status == 1">
+                <span v-if="shipping_status == 0">
+                    商家出餐中,待骑手接单
+                </span>
+                <span v-if="shipping_status == 1">
+                    商家出餐中,骑手已接单
+                </span>
+            </p>
             <p v-if="order_status == 2">
                 <span v-if="shipping_status == 0">
-                    骑手取货中
+                    商家已出餐,骑手取货中
                 </span>
                 <span v-if="shipping_status == 1">
                     骑手配送中
@@ -31,8 +40,12 @@
                     订单已收货
                 </span>
             </p>
-            <p v-if="order_status == 3">订单已取消</p>
-            <p v-if="order_status == 4">订单已完成</p>
+            <p v-if="order_status == 3">订单已支付且已取消</p>
+            <p v-if="order_status == 4">
+                <span v-if="shipping_status == 2">
+                    订单已完成
+                </span>
+            </p>
             <p v-if="order_status == 5">商家已取消订单,请联系商家</p>
         </div>
     </div>

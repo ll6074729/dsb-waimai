@@ -1,31 +1,33 @@
 <template>
-    <div class="coupon-list" ref="coupon" v-if="iscoupon">
-        <div class="coupon-title" @click="setcoupon">
-            我的优惠券
+    <div>
+        <div class="backg" @click="setcoupon" v-if="iscoupon"></div>
+        <div class="coupon-list" ref="coupon" v-if="iscoupon">
+            <div class="coupon-title" @click="setcoupon">
+                我的优惠券
+            </div>
+            <ul>
+                <!-- v-if="item.condition > costPrice" -->
+                <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)">
+                    <div class="coupon-money">
+                        ￥<span>{{item.coupon.money}}</span>
+                    </div>
+                    <div class="coupon-info">
+                        <div class="coupon-name mgbt20 fs28">
+                            {{item.coupon.name}}
+                        </div>
+                        <div class="coupon-desc mgbt20 fs20">
+                            {{item.coupon.name}}
+                        </div>
+                        <div class="coupon-time fs20">
+                            有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}}
+                        </div>
+                    </div>
+                </li>
+                <li style="text-align:center;margin-top:3vw">
+                    暂无可用优惠券
+                </li>
+            </ul>
         </div>
-        <ul>
-            <!-- v-if="item.condition > costPrice" -->
-            <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)" >
-                <div class="coupon-money">
-                    ￥<span>{{item.money}}</span>
-                </div>
-                <div class="coupon-info">
-                    <div class="coupon-name mgbt20 fs28">
-                        {{item.name}}
-                    </div>
-                    <div class="coupon-desc mgbt20 fs20">
-                        {{item.name}}
-                    </div>
-                    <div class="coupon-time fs20">
-                        有效期至 {{ item.use_start_time * 1000 | formatDate}}
-                    </div>
-                </div>
-            </li>
-            <li>
-                暂无可用优惠券
-            </li>
-        </ul>
-       
     </div>
 </template>
 <script>
@@ -68,12 +70,20 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+    .backg
+        position fixed
+        top 0
+        left 0
+        right 0
+        bottom 0
+        background rgba(0,0,0,0.3)
     .coupon-list
         background-color #f7f7f7
         position fixed
         width 100%
         bottom 13.33vw
         top 60%
+        z-index 9
         .coupon-title
             text-align center
             font-size 4vw
@@ -84,6 +94,7 @@ export default {
             box-shadow 0px 5px 20px 0px rgba(0, 0, 0, 0.05)
         ul
             overflow scroll   
+            background-color #f7f7f7
             .active
                 background-image url(../../../assets/img/coupon_bg_blue.png)!important
                 box-shadow 0px 0px 20px 0px rgba(70, 154, 254, 0.3)
