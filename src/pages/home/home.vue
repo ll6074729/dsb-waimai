@@ -66,8 +66,8 @@ export default {
             }else{
                 this.$http({
                     method: 'post',
-                    // url: '/mobile/api/q',
-                    url:'/api/home',
+                    url: '/mobile/api/q',
+                    // url:'/api/home',
                     data: {
                         url:'http://api.dqvip.cc/home',
                         area_id:this.$store.state.area_id,
@@ -85,8 +85,8 @@ export default {
             }
         },
         getHomeInfoSucc(res){
-            // const date = eval('(' + res.data + ')')
-            let date = res.data
+            const date = eval('(' + res.data + ')')
+            // let date = res.data
             console.log(date.data)
             this.banner = date.data.banner //banner图
             this.swiperTab = date.data.shop_type // 分类按钮
@@ -96,8 +96,8 @@ export default {
         handSearch () {
             this.$http({
                 method: 'post',
-                // url: '/mobile/api/q',
-                url:'/api/buyer/shop_list',
+                url: '/mobile/api/q',
+                // url:'/api/buyer/shop_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_list',
                     q_type:'post',

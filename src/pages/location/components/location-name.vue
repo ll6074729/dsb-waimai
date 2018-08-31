@@ -48,4 +48,6 @@ export default {
                 height 4vw  
                 vertical-align inherit     
                 margin-right 1.33vw 
+            .loc-name
+                margin-top -1vw    
 </style>

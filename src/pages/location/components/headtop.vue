@@ -22,7 +22,7 @@
                     {{item.address}}
                 </li>
             </ul>
-            <div  v-show="!list.length">
+            <div  v-show="!list.length" style="text-align:center">
                 暂时没有
             </div>
         </div>

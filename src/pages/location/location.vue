@@ -70,6 +70,7 @@ export default {
         },
         // 坐标
         getSchool (res) {
+            // alert(res.data)
             const date = eval('(' + res.data + ')')
             // let date = res.data
             this.nearbySchool = date.data
@@ -96,6 +97,7 @@ export default {
             });
         },
         getAllSchool (res) {
+            // alert(res.data)
             const date = eval('(' + res.data + ')')
             // let date = res.data
             this.allSchool = date.data

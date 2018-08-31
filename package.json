@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "better-scroll": "^1.12.5",
     "element-ui": "^2.4.4",
+    "es6-promise": "^4.2.4",
     "vue": "^2.5.2",
     "vue-awesome-picker": "^1.1.0",
     "vue-awesome-swiper": "^3.1.3",
