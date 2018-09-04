@@ -1,13 +1,15 @@
 <template>
-    <div class="box" ref="goodslist" :class="{'boxfixed':isgoods}"  v-loading.fullscreen.lock="fullscreenLoading">
-        <slot ref="homeTitle"></slot>
-        <div class="tab">
-            <div class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</div>
-            <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">评分优先</div>
-            <div class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</div>
+    <div class="box" ref="goodslist"   v-loading.fullscreen.lock="fullscreenLoading">
+        <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search'}" >
+            <slot ref="homeTitle"></slot>
+            <div class="tab">
+                <div class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</div>
+                <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">评分优先</div>
+                <div class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</div>
+            </div>
         </div>
         <div ref="shopList" class="shop" :class="page">
-            <ul>
+            <ul :class="{'shop-height':isgoods}">
                 <!-- <li v-for="item in shopList" :key="item.shop_id" class="shop-list"> -->
                     <router-link tag="li" :to="'/shop/'+item.shop_id" v-for="item in shopList" :key="item.shop_id" class="shop-list">
                         <div class="shop-list-item">
@@ -34,7 +36,8 @@
                                         </el-rate>
 
                                     </div>
-                                    <div class="shop-sale">{{item.sale}}m | 销量 {{item.sale}}</div>
+                                    <!-- {{item.sale}}m |  -->
+                                    <div class="shop-sale">销量 {{item.sale}}</div>
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
@@ -98,7 +101,7 @@ export default {
                 data: data,
                 // headers :{
                 //     'Accept':'application/json',
-                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
+                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
                 // }
             })
                 .then(this.getSearch)
@@ -116,17 +119,20 @@ export default {
 
         handleTop () {
             var scrollTop = this.styleIndex.handleScroll()
-            // if(scrollTop >= 180){
-            //     this.ishead = true
-            // }else{
-            //     this.ishead = false
-            // }
-            // if(this.$refs.goodslist.offsetTop >= scrollTop){
-            //     this.isgoods = false
-            // }else{
-            //     this.isgoods = true
-            //     this.scroll = new BScroll(this.$refs.shopList)
-            // }
+            if(this.page == 'shop-search'){
+                if(scrollTop > 1 ){
+                    this.isgoods = false
+                }else{
+                    this.isgoods = true
+                }
+            }else{
+                if(scrollTop < 740){
+                    this.isgoods = false
+                }else{
+                    this.isgoods = true
+                }
+            }
+            
             // console.log(this.$refs.goodslist.getBoundingClientRect().top,93)
             // console.log(scrollTop,123)
         },
@@ -149,8 +155,17 @@ export default {
     background #ffffff
 .box
     position relative
-    padding-bottom 14vw
+    // padding-bottom 14vw
     height 100%
+    .box-head
+        position fixed
+        top 12vw
+        width 100%
+        background-color #fff
+        z-index 100
+        box-shadow 0px -5px 20px 0px rgba(0,0,0,0.1)
+    .box-head-search
+        top 0!important    
     .tab
         display flex
         padding 0 6vw
@@ -168,16 +183,19 @@ export default {
         top 10.66vw
     .shop-home
         top 23.96vw
+    
     .shop
-        position absolute
+        // position absolute
         // top 10.66vw
-        left 0
-        right 0
-        bottom 0
-        overflow scroll
-        height 155vw
+        // left 0
+        // right 0
+        // bottom 0
+        // overflow scroll
+        // height 155vw
         padding-bottom 15vw
-        z-index 1
+        // z-index 1
+        .shop-height
+            padding-top 23.96vw    
         .shop-list
             .shop-list-item
                 border-top 1px solid #f7f7f7
@@ -203,9 +221,9 @@ export default {
                         height 3.2vw
                         text-align center
                         color #fff
-                        line-height 2.4vw
+                        line-height 3vw
                         font-style italic
-                        font-size 1.6vw
+                        font-size 2.6vw
                     .new
                         background-color #31dd7a
                     .hot

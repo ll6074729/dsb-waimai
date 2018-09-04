@@ -5,7 +5,7 @@
                 <li class="menu-item" 
                     v-for="(item,index) in cate" 
                     :key="index" 
-                    :class="{active :index == num }"
+                    :class="{active :index == numList }"
                     v-if="item.goods.length>=1"
                     @click="tablist(index)"
                     >
@@ -29,16 +29,27 @@ export default {
     props:{
         cate:Array,
         ishead:Boolean,
+        num:Number,
     },
     data () {
         return {
-            num :0,
+            numList:0
+        }
+    },
+    watch :{
+        num () {
+            if(this.num < 0){
+                this.numList = 0
+            }else{
+                console.log(this.num,111111)
+                this.numList = this.num
+            }
         }
     },
     methods:{
-       
         tablist (index){
-            this.num = index
+            // this.num = index
+            this.$emit('changeNum',index)
         }
     }
 }
@@ -64,8 +75,15 @@ export default {
         // z-index 1
         .menu-item
             height 13.33vw
-            line-height 13.33vw
+            line-height 9.33vw
             text-align center
+            box-sizing border-box
+            padding 2vw
+            box-sizing border-box
+            padding 2vw
+            text-overflow ellipsis
+            white-space nowrap
+            overflow hidden
         .active
             color #1b8adb
             background-color #fff

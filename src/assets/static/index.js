@@ -78,12 +78,11 @@ export default{
     },
     // 微信支付方法
     jsApiCall(Parameters){
-        console.log(Parameters)
 		WeixinJSBridge.invoke(
             // 'getBrandWCPayRequest',$jsApiParameters,
             'getBrandWCPayRequest',Parameters,
 			function(res){
-				 WeixinJSBridge.log(res.err_msg);
+                 WeixinJSBridge.log(res.err_msg);
 				 if(res.err_msg == "get_brand_wcpay_request:ok") {
                     location.href='/#/pay/true';
 				 }else{

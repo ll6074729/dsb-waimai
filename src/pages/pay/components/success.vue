@@ -3,7 +3,7 @@
         <div class="head">
             <img src="../../../assets/img/sec@3x.png" alt="">
             <p class="paytype">支付成功</p>
-            <p class="payservice">预计12:15送达</p>
+            <!-- <p class="payservice">预计12:15送达</p> -->
         </div>
     </div>
 </template>

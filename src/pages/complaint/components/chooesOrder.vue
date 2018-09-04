@@ -1,16 +1,17 @@
 <template>
     <!-- order-no 是选择订单的样式 -->
     <div class="chooes-order" @click="isordershow">
-        <div class="choess-roder order-no" @touchmove.prevent v-if="selectArray == 0">
-            选择订单 > 
+        <div class="choess-order order-no" v-if="selectArray == 0">
+            选择订单 >
         </div>
         <div v-if="selectArray != 0" class="order-yes">
+            <!-- {{selectArray}} -->
             <div class="shop-img">
-                <img src="../../../assets/img/组17@3x.png" alt="">
+                <img :src="selectArray.shop.logo" alt="" :onerror="defaultImg">
             </div>
             <div class="order-info">
                 <p class="order-head fs28">
-                    {{selectArray.order_shop.shop_name}}
+                    {{selectArray.shop.shop_name}}
                 </p>
                 <p class="order-time fs24">
                     {{selectArray.created_at}}
@@ -21,7 +22,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 </template>
 <script>
@@ -37,9 +37,14 @@ export default {
             this.$emit('changeordershow',this.ordershow)
         }
     },
+    watch :{
+        selectArray () {
+            console.log(this.selectArray,1003)
+        }
+    },
     data () {
         return {
-
+            defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
         }
     }
 }

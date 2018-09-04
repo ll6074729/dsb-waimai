@@ -114,15 +114,20 @@ export default {
             let bugtime = parseInt(this.endtimer) - parseInt(this.currenttimer) //倒计时
             let minutes =  parseInt(bugtime / 60 % 60, 10)
             let seconds = parseInt(bugtime / 1000 % 60, 10);
-            if(currenTime <= countTime){
-                this.count = parseInt((currenTime/countTime)*100)
-                this.leftTimer()
+            if(order_status != 4){
+                if(currenTime <= countTime){
+                    this.count = parseInt((currenTime/countTime)*100)
+                    this.leftTimer()
+                }else{
+                    this.count = 100
+                    this.$refs.progress.color = "#ff7777"
+                    this.text = '订单超时'
+                }
             }else{
                 this.count = 100
-                this.$refs.progress.color = "#ff7777"
-                this.text = '订单超时'
+                // this.$refs.progress.color = "#ff7777"
+                this.text = '订单完成'
             }
-            
         }
     }
 }
@@ -151,6 +156,6 @@ export default {
         p
             font-size 4.8vw
             font-weight bolder
-            margin-top 15vw
+            margin-top 17vw
             margin-bottom 5.66vw
 </style>

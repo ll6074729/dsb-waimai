@@ -35,15 +35,28 @@
 export default {
     name:"activity",
     props:{
-        cartprom:Array,
+        cartprom:Object,
         page:String,
         coupon:Number,
         integral:Number,
         user_money:Number,
     },
+    mounted () {
+        this.liucartprom()
+    },
+    methods : {
+        liucartprom () {
+            console.log(this.cartprom,199)
+        }
+    },
     data () {
         return {
 
+        }
+    },
+    watch: {
+        cartprom () {
+            console.log(this.cartprom,199)
         }
     }
 }

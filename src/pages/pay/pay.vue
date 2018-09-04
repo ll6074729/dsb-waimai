@@ -55,7 +55,6 @@ export default {
         },
         _recommend (res) {
             let date = eval ('('+res.data+')')
-            console.log(date,955959)
             this.regood = date.data
         },
         // coupon_list () {

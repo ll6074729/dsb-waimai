@@ -5,7 +5,7 @@
                 <img :src="shopinfo.logo" alt="" :onerror="this.$store.state.defaultHead">
             </div>
             <div class="shop-head-name">{{shopinfo.shop_name}}</div>
-            <div class="takeout-img">
+            <div class="takeout-img"  v-if="page != 'cart'">
                 <a :href="'tel:' + shopinfo.mobile">
                     <img src="../../../assets/img/call.png" alt="">
                 </a>
@@ -43,7 +43,7 @@ export default {
     props:{
         page:String,
         cart:Array,
-        shopinfo:Object
+        shopinfo:Array
     },
     return () {
 

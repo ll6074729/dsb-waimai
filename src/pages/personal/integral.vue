@@ -1,6 +1,6 @@
 <template>
     <div>
-        <head-back></head-back>
+        <head-back :title="title"></head-back>
         <integral-list></integral-list>
     </div>
 </template>
@@ -12,6 +12,11 @@ export default {
     components:{
         HeadBack,
         IntegralList
+    },
+    data () {
+        return{
+            title:'积分明细'
+        }
     }
 }
 </script>

@@ -21,7 +21,7 @@
                     {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}楼
                 </div>
             </div>
-            <router-link class="address-right fr" tag="div" to="/sitelist">
+            <router-link class="address-right fr" tag="div" :to="{path:'/sitelist',query:{page:'cart',cart_id:this.$route.params.id}}">
                 <img src="../../../assets/img/right_f7.png" alt="">
             </router-link>
         </div>

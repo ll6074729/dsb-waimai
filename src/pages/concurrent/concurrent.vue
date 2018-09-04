@@ -26,5 +26,5 @@ export default {
     .formlist
         position absolute
         width 100%
-        top 85%
+        top 100%
 </style>

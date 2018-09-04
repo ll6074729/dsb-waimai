@@ -19,10 +19,10 @@
                         </div>
                     </div>
                 </li> 
-                <li v-if="couponList.lenght == 0">
-                    暂无可用优惠券
-                </li>
             </ul>
+        </div>
+        <div v-if="couponList.lenght == 0">
+            暂无可用优惠券
         </div>
     </div>
     
@@ -60,7 +60,8 @@ export default {
                 })
         },
         getcouponList (res) {
-            this.couponList = eval('('+res.data.data+')') 
+            let date = eval('('+res.data+')')
+            this.couponList = date.data
         },
     },
     filters :{

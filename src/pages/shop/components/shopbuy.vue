@@ -1,5 +1,5 @@
 <template>
-    <div class="buy_box" v-show="isBuy">
+    <div class="buy_box" v-if="isBuy">
         <div class="backg" @click="closeGoodsInfo"></div>
         <div class="shop-box">
             <div class="head">
@@ -10,7 +10,7 @@
                 </div>
                 <div class="head-right">
                     <div class="food-name">{{goodsinfo.goods_info.title}}</div>
-                    <div class="food-price">￥{{goodsinfo.goods_info.price}}</div>
+                    <div class="food-price" :ref="goodsinfo.goods_info.goods_id">￥{{goodsinfo.goods_info.price}}</div>
                 </div>
                 <div class="colse" @click="closeGoodsInfo">
                     <img src="../../../assets/img/close.png" alt="">
@@ -24,7 +24,7 @@
                             <div class="item" 
                                 v-for="(itemList,index) of item.item" 
                                 :key="itemList.item_id"
-                                @click="chooesItem(index,itemList.item_id,itemList.goods_id,itemList.spec_id)"
+                                @click="chooesItem(index,itemList.item_id,itemList.goods_id,itemList.spec_id,itemList.price)"
                                 :ref="itemList.spec_id"
                                 >
                                 {{itemList.item}} 
@@ -37,7 +37,6 @@
                 加入购物车
             </div>
         </div>
-        
     </div>
 </template>
 <script>
@@ -51,7 +50,8 @@ export default {
     },
     data () {
         return {
-            cartbox:[]
+            cartbox:[],
+            cartlist:{}
         }
     },
     updated () {
@@ -101,13 +101,13 @@ export default {
             data.q_type = 'post'
             this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
-                    // headers :{
-                    //     'Accept':'application/json',
-                    //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY2YmM0MzY4MmZhNDU0YjlmODA1Mjc4MzA0NzI4MmY0MWE3YjNjY2FiZjI1MGIyMTI0MjFkMzgwZmVmYmZmNjU5Y2JmYTI1OWJkNjZlMDEzIn0.eyJhdWQiOiIyIiwianRpIjoiZjZiYzQzNjgyZmE0NTRiOWY4MDUyNzgzMDQ3MjgyZjQxYTdiM2NjYWJmMjUwYjIxMjQyMWQzODBmZWZiZmY2NTljYmZhMjU5YmQ2NmUwMTMiLCJpYXQiOjE1MzU0MjQwMTMsIm5iZiI6MTUzNTQyNDAxMywiZXhwIjoxNTM4MDE2MDEzLCJzdWIiOiIzOCIsInNjb3BlcyI6WyIqIl19.kCp29IMkDLCJBvkbKIjZPpEL308wCI7XkEa1gRXM2jlLrxY_1D-UbvQ51JV9iycgPDykXHurNVhQB80ZexaNj9FoyaTDm6OXA-9ethmm_T2EOLBxk2J9Lg4zF7pYyRbVWmjQDthYSlPs2HXSBQnCn6IL53HhtUoyRPT0JoxmpIX6G4FriM6mbNeCW5q_r_EI4eap6QDhxQeaOvAMrukhdW3jsunmqObtkBxBKeyzfwPBGh6If8xealCnxnkpKeeg2X4sKh_qarxINU62ta85tdiarel9ctYrRCVV7e4JwggIy4-TkdL6eI1G7mYADDzvv7dHQ7FbRYGEWs7MKB7Glu7GpTYh3BCnAQFgx7IsiVIDUburT3R0V68BShuqdDsShHJO-RBQ6ybfOCw0Ejazp9FWr3fmmmH0_zbffJeNuQsKiOUeqiy6x9E3OGBzwJ7BIqCFomFv-Cv-HSL9zgHQ3YU-JNWrIRzH6zFuvd4aMBWzUMh32l5tg5ShwqEpiCPvSAZ1uIFQyw8T6sXmwQ5LViFJ9AAn0NV-dTYnt2t6jgGIZ9kBWGJp2CmIDvYL0quksCIVxnec5ZArdZcfIQqI5jkW8rMcKsGmrKxFukNX6z4MCxEzZsgyOktqeHcV10H_Yq6MdfJWch6n0INsgNAZJPFaCG1l0WrKDPStlnjZb_I'
-                    // }
+                    headers :{
+                        'Accept':'application/json',
+                        'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
+                    }
                 })
                 .then(this.emitCart)
                 .catch(function (error) {
@@ -115,9 +115,8 @@ export default {
                 })
         },
         emitCart (res) {
-            // console.log(res.data,9.3)
-            // let date = res.data
-            let date = eval('('+res.data+')')
+            let date = res.data
+            // let date = eval('('+res.data+')')
             if(date.status ==200){
                 this.cartbox = []
                 this.closeGoodsInfo()
@@ -129,24 +128,33 @@ export default {
         closeGoodsInfo (){
             this.cartbox = []
             this.$emit('closeGoodsInfo',false)
+            this.$emit('buygoodsinfo',[])
         },
         // 选择规格
-        chooesItem (index,item_id,goods_id,spec_id) {
-            var cart = {}
-            cart.goods_id = goods_id
-            cart.index = index
-            cart.item_id = item_id
-            cart.spec_id = spec_id
-            this.cartbox[spec_id] = cart
+        chooesItem (index,item_id,goods_id,spec_id,spec_price) {
+            this.cartlist = {}
+            this.cartlist.goods_id = goods_id
+            this.cartlist.index = index
+            this.cartlist.item_id = item_id
+            this.cartlist.spec_id = spec_id
+            this.cartlist.spec_price = spec_price
+            this.cartbox[spec_id] = this.cartlist
             // this.$refs[spec_id][index].
             for(let i in this.$refs[spec_id]){
                 this.$refs[spec_id][i].style.color = '#999'
                 this.$refs[spec_id][i].style.background = '#fff'
+                // 
             }
             this.$refs[spec_id][index].style.color = '#fff'
             this.$refs[spec_id][index].style.background = '#469afe'
-            console.log(this.$refs[spec_id]) 
-            // console.log(this.cartbox)
+            let foodprice = 0
+            for(let i = 0;i < this.cartbox.length;i++){
+                if(this.cartbox[i]){
+                    foodprice += parseFloat(this.cartbox[i].spec_price)
+                }
+            }
+            // console.log(this.$refs[goods_id])
+            this.$refs[goods_id].innerHTML = '￥'+ (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
         }
     },
     watch:{

@@ -47,7 +47,7 @@ export default {
     methods:{
         getcomplaint () {
              this.$http({
-                method: 'get',
+                method: 'post',
                 url: 'mobile/api/q',
                 data: {
                     url:'http://api.dqvip.cc/buyer/complaint_list',

@@ -44,6 +44,9 @@
                 :order_sn="item.order_sn"
                 :shop_id="item.shop_id"
                 :pay_status="item.pay_status"
+                :is_comment="item.is_comment"
+                :confirm_time="Number(new Date(item.confirm_time))"
+                :finish_time="Number(new Date(item.finish_time))"
                 @orderlist="orderlist"
             >
             </order-btn>

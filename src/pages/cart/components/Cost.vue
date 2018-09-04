@@ -1,8 +1,8 @@
 <template>
     <div>
-        <expen-ses :delivery_cost="delivery_cost"></expen-ses>
+        <expen-ses :delivery_cost="delivery_cost" v-if="delivery_cost"></expen-ses>
         <hr class="hr20">
-        <aciti-vity :cartprom="cartprom" :page="page"></aciti-vity>
+        <aciti-vity :cartprom="cartprom" :page="page" ></aciti-vity>
         <div class="cost-item df" @click="iscoupon">
             <div class="cost-type">优惠券</div>
             <div class="cost-coupon">{{coupontetx}}</div>
@@ -35,13 +35,13 @@ export default {
         delivery_cost:Array,
         coupon:Object,
         couponList:Array,
-        cartprom:Array,
+        cartprom:Object,
         rulingPrice:Number,
         desc:String,
         integral:String,
         balance:String,
-        balance_money:Number,
-        integral_num:Number
+        balance_money:String,
+        integral_num:String
     },
     components:{
         AcitiVity,
@@ -113,13 +113,16 @@ export default {
         //     return this.couponList.length +"张可用"
         // }
     },
+    mounted () {
+        this.handmoney()
+    },
     methods :{
         iscoupon () {
             this.$emit('setcoupon',true)
         },
         // 判断积分余额是否大于待支付金额
         handmoney () {
-
+            console.log(this.cartprom,998)
         }
     }
 }

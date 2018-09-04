@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         chooesclick () {
-            this.$router.go(0)
+            this.$router.push({path:"/Location"})
         }
     }
 }

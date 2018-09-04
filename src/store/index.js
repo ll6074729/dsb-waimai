@@ -10,17 +10,23 @@ let cart
 let defaultHead = 'this.src="' + require('../assets/img/shopHead.png') + '"'
 let defaultShop = 'this.src="' + require('../assets/img/defaultshop.png') + '"'
 let addressList
-let delivery_cost
+let delivery_cost //校区配送价
 let packing_expense
 let food //推荐商品
 let defaultAddress
 let shopprom //店铺的优惠活动
 let order_id //当前订单id
 let order_sn //当前订单编号
+let delivery_price = '0' //楼层配送送
 /**
  * 登录接口需要的参数
  * 
  */
+try{
+    if(localStorage.delivery_price){
+        delivery_price = localStorage.delivery_price
+    }
+}catch (e){}
 try{
     if(localStorage.order_id){
         order_id = localStorage.order_id
@@ -91,8 +97,12 @@ export default new Vuex.Store({
         shopprom,
         order_sn,
         order_id,
+        delivery_price,
     },
     actions:{
+        changedeliveryPrice(ctx,delivery_price){
+            ctx.commit('changedeliveryPrice',delivery_price)
+        },
         changeOrderSn (ctx,order_sn) {
             ctx.commit('changeOrderSn',order_sn)
         },
@@ -128,6 +138,13 @@ export default new Vuex.Store({
         }
     },
     mutations:{
+        changedeliveryPrice(state,delivery_price){
+            state.delivery_price = delivery_price
+            try {
+                localStorage.delivery_price = delivery_price
+            }catch (e){
+            }
+        },
         changeOrderId(state,order_id){
             state.order_id = order_id
             try {

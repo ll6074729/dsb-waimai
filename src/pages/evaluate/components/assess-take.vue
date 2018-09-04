@@ -2,11 +2,11 @@
     <div>
         <div class="box pd20">
             <div class="head-img">
-                <img src="../../../assets/img/组17@3x.png" alt="" v-if="page == 'take'" :onerror="defaultImg">
+                <img :src="takeinfo.headimgurl" alt="" v-if="page == 'take'" :onerror="defaultImg">
                 <img :src="shopinfo.logo" alt="" v-if="page == 'shop'" :onerror="defaultImg">
             </div>
             <div class="head-name">
-                <span v-if="page == 'take'">小理哥哥</span> 
+                <span v-if="page == 'take'">{{takeinfo.nickname}}</span> 
                 <span v-if="page == 'shop'">{{shopinfo.shop_name}}</span> 
             </div>
             <div class="head-info"  v-if="page == 'take'">
@@ -42,6 +42,15 @@ export default {
         return {
             value2:null,
             defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
+        }
+    },
+    watch : {
+        value2 () {
+            if(this.page == 'take'){
+                this.$emit('changetake',this.value2)
+            }else if(this.page == 'shop'){
+                this.$emit('changeshop',this.value2)
+            }
         }
     },
     methods:{
