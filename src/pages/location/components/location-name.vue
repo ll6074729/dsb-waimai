@@ -6,8 +6,10 @@
                 <span class="loc-name">{{this.$store.state.defaultCity}}</span>
             </div>
             <div class="loc-btn" @click="chooesclick">
+            <!-- <router-link to="/Location" class="loc-btn" tag="div"> -->
                 <img src="../../../assets/img/loc@3x.png" alt="">
                 <span class="loc-name">重新定位 </span>
+            <!-- </router-link> -->
             </div>
         </div>
     </div>
@@ -28,6 +30,7 @@ export default {
     methods:{
         chooesclick () {
             this.$router.push({path:"/Location"})
+            this.$router.go(0)
         }
     }
 }
@@ -46,8 +49,6 @@ export default {
             img 
                 width 4vw
                 height 4vw  
-                vertical-align inherit     
-                margin-right 1.33vw 
-            .loc-name
-                margin-top -1vw    
+                vertical-align sub     
+                margin-right 1.33vw  
 </style>

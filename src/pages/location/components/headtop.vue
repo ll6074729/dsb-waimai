@@ -69,7 +69,6 @@ export default {
     },
     watch :{
         keyword () {
-           
             if(this.timer){
                 clearTimeout(this.timer)
             }

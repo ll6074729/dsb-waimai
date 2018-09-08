@@ -6,7 +6,7 @@
             <div class="food-attr">
                 <span>{{item.spec_key_name}}</span>
             </div>
-            <div class="food-num">X{{item.goods_num}}</div>
+            <div class="food-num">x {{item.goods_num}}</div>
         </div>
     </div>
     <div class="order-price" >

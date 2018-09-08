@@ -7,19 +7,24 @@
             :pay_status="pay_status"
             :timer="timer"
             :ensure_time="ensure_time"
+            :user_note="user_note"
+            :ps_id="ps_id"
+            :is_comment="is_comment"
             ></count>
         <order-btn 
             :page="page"
             :order_status="order_status"
             :pay_status="pay_status"
+            :shop_id="this.shop_id"
             :order_id="this.$route.query.order_id"
+            :is_comment="is_comment"
             ></order-btn>
-        <hr class="hr20" v-if="order_status ==2">
-        <take-out :order_status="order_status"></take-out>
+        <hr class="hr20" v-if="order_ps">
+        <take-out :order_status="order_status" :order_ps="order_ps"></take-out>
         <hr class="hr20">
-        <cart-info :cart="cart" :page="page" :shopinfo="shop"></cart-info>
+        <cart-info :cart="cart" :page="page" :shopinfo="shop" ></cart-info>
         <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2"></expen-ses>
-        <aciti-vity :cartprom="cartprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity>
+        <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity>
         <div class="df">
             <div class="list-name">
                 实付款
@@ -36,6 +41,7 @@
             :user_mobile="user_mobile"
             :timer="timer"
             :ensure_time="ensure_time"
+            :user_note="user_note"
             ></mess-age>
     </div>
 </template>
@@ -69,6 +75,7 @@ export default {
             user_mobile:'',
             cart:[],
             shop:[],
+            shopprom:[],
             delivery_cost1:{},
             delivery_cost2:{},
             cartprom:[],
@@ -81,6 +88,11 @@ export default {
             pay_status:0, //支付状态
             timer:'', //到达时间
             ensure_time:'', //接单时间
+            user_note:'',
+            ps_id:0,
+            order_ps:null,
+            shop_id:0,
+            is_comment:0,
         }
     },
     mounted () {
@@ -121,39 +133,28 @@ export default {
             this.user_money = parseFloat(date.data.user_money)
             this.integral = parseFloat(date.data.integral)
             this.order_status = date.data.order_status
+            this.order_sn = date.data.order_sn
             this.pay_status = date.data.pay_status
             this.shipping_status = date.data.shipping_status
-            this.timer = date.data.finish_time
-            this.ensure_time = date.data.ensure_time
-
+            this.user_note = date.data.user_note
+            if(date.data.finish_time){
+                this.timer = date.data.finish_time.replace(/\-/g, "/")
+            }else{
+                this.timer = date.data.finish_time
+            }
+            if(date.data.ensure_time){
+                this.ensure_time = date.data.ensure_time.replace(/\-/g, "/")
+            }else{
+                this.ensure_time = date.data.ensure_time
+            }
+            this.ps_id = date.data.ps_id
+            this.order_ps = date.data.order_ps
+            this.shop_id = date.data.shop_id
+            this.is_comment = date.data.is_comment
+            this.shop = date.data.order_shop
             this.delivery_cost1 = {desc:'配送费',value:date.data.delivery_cost,name:"delivery_cost"}
             this.delivery_cost2 = {desc:'打包费',value:date.data.packing_expense,name:"delivery_cost"}
-            this.shop_info(date.data.shop_id)
-        },
-        shop_info (shop_id){
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:"/api/buyer/shop_info",
-                data: {
-                    url:'http://api.dqvip.cc/buyer/shop_info',
-                    q_type:'post',
-                    shop_id:shop_id
-                },
-                // headers :{
-                //     'Accept':'application/json',
-                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                // }
-            })
-                .then(this.getshop_info)
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        getshop_info (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
-            this.shop = date.data
+            this.shopprom = JSON.parse(this.$store.state.shopprom)
         }
     },
 }

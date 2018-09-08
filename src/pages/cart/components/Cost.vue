@@ -2,7 +2,7 @@
     <div>
         <expen-ses :delivery_cost="delivery_cost" v-if="delivery_cost"></expen-ses>
         <hr class="hr20">
-        <aciti-vity :cartprom="cartprom" :page="page" ></aciti-vity>
+        <aciti-vity :cartprom="cartprom" :page="page" :shopprom="shopprom"></aciti-vity>
         <div class="cost-item df" @click="iscoupon">
             <div class="cost-type">优惠券</div>
             <div class="cost-coupon">{{coupontetx}}</div>
@@ -35,13 +35,14 @@ export default {
         delivery_cost:Array,
         coupon:Object,
         couponList:Array,
+        shopprom:Array,
         cartprom:Object,
         rulingPrice:Number,
         desc:String,
         integral:String,
         balance:String,
         balance_money:String,
-        integral_num:String
+        integral_num:String,
     },
     components:{
         AcitiVity,

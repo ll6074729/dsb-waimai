@@ -22,12 +22,15 @@
         <div v-if="pay_status ==1">
             <p v-if="order_status == 0">等待商家接单中</p>
             <p v-if="order_status == 1">
-                <span v-if="shipping_status == 0">
+                <span v-if="shipping_status == 0 && ps_id == 0">
                     商家出餐中,待骑手接单
                 </span>
-                <span v-if="shipping_status == 1">
+                <span v-if="shipping_status == 1 || ps_id > 0">
                     商家出餐中,骑手已接单
                 </span>
+                <!-- <span v-if="ps_id > 0">
+                    商家出餐中,骑手已接单
+                </span> -->
             </p>
             <p v-if="order_status == 2">
                 <span v-if="shipping_status == 0">
@@ -59,6 +62,8 @@ export default {
         pay_status:Number,
         timer:String,
         ensure_time:String,
+        user_note:String,
+        ps_id:Number
     },
     data () {
         return {
@@ -114,7 +119,7 @@ export default {
             let bugtime = parseInt(this.endtimer) - parseInt(this.currenttimer) //倒计时
             let minutes =  parseInt(bugtime / 60 % 60, 10)
             let seconds = parseInt(bugtime / 1000 % 60, 10);
-            if(order_status != 4){
+            if(this.order_status != 4){
                 if(currenTime <= countTime){
                     this.count = parseInt((currenTime/countTime)*100)
                     this.leftTimer()

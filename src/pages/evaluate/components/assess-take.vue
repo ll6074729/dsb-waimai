@@ -11,7 +11,7 @@
             </div>
             <div class="head-info"  v-if="page == 'take'">
                 <span>配送用时</span>
-                <span style="color:#469afe">25分钟</span>
+                <span style="color:#469afe">{{timer}}分钟</span>
             </div>
         </div>
         <div class="block">
@@ -19,7 +19,6 @@
             <span class="demonstration" v-if="page == 'shop'">店铺评分</span>
             <el-rate
                 v-model="value2"
-                :allow-half="true"
                 @change="changerate"
                 :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
             </el-rate>
@@ -33,15 +32,24 @@ export default {
     props:{
         page:String,
         shopinfo:Object,
-        takeinfo:Object
+        takeinfo:Object,
+        confirm_time:String,
+        ensure_time:String,
     },
     components:{
         Rate,
+    },
+    mounted () {
+        this.currenttimerr()
     },
     data () {
         return {
             value2:null,
             defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
+            starttimer: Date.parse(new Date(this.ensure_time))/1000, //接单时间
+            currenttimer:'', //当前时间
+            endtimer:Date.parse(new Date(this.confirm_time))/1000, //实际到达时间
+            timer:0,
         }
     },
     watch : {
@@ -51,9 +59,20 @@ export default {
             }else if(this.page == 'shop'){
                 this.$emit('changeshop',this.value2)
             }
-        }
+        },
     },
     methods:{
+        currenttimerr () {
+            console.log(this.ensure_time,123456)
+            let start = Date.parse(new Date(this.ensure_time))/1000 //接单时间
+            let end = Date.parse(new Date(this.confirm_time))/1000 //预计到达时间
+            let bugtime = parseInt(end) - parseInt(start)//配送时间
+            console.log(start,end)
+            let minutes =  parseInt(bugtime / 60 % 60, 10)
+            let seconds = parseInt(bugtime / 1000 % 60, 10);
+            this.timer = minutes
+            // console.log(minutes,123)
+        },
         changerate () {
             // if(this.page == 'take'){
             //     console.log(this.value2,1000)

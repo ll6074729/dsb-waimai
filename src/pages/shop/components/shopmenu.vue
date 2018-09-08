@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="menu-list" ref="cate" >
-            <ul :class="{ishead:ishead}">
+            <ul :class="{ishead:ishead,isfullmoney:fullmoney}" >
                 <li class="menu-item" 
                     v-for="(item,index) in cate" 
                     :key="index" 
@@ -30,6 +30,7 @@ export default {
         cate:Array,
         ishead:Boolean,
         num:Number,
+        fullmoney:Number,
     },
     data () {
         return {
@@ -61,6 +62,8 @@ export default {
         bottom 13.33vw
         overflow scroll
         width 26.66vw
+    .isfullmoney
+        bottom 1.6rem!important
     .menu-list
         width 26.66vw
         height 100%

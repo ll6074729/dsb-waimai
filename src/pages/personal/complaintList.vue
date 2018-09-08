@@ -14,16 +14,19 @@
                         <p>投诉详情</p>
                         <div style="margin:3vw 0">{{item.content}}</div>
                         <div class="item-picture">
-                            <img :src="pic" alt="" v-for="pic in picture[index]" :key="pic" v-if="picture[index].length > 0 " :onerror="defaultImg">
+                            <img :src="pic" alt="" v-for="pic in picture[index]" :key="pic" :onerror="defaultImg">
                         </div>
                     </div>
                     <div class="item-foot fs24 pd20">
-                        <div>订单号：{{item.order.order_sn}}</div>
+                        <!-- <div>订单号：{{item.order.order_sn}}</div> -->
                         <div>投诉类型：<span v-if="item.type == 0">配送问题</span><span v-if="item.type == 1">餐品质量</span><span v-if="item.type == 2">平台服务</span></div>
                     </div>
                 </li>
             </ul>
         </div>    
+        <div v-if="this.complaintList.length < 1" style="text-align:center;margin-top:3vw">
+            暂无投诉
+        </div>
     </div>
 </template>
 <script>
@@ -60,11 +63,11 @@ export default {
                 })
         },
         getcomplaintList (res) {
-            let date = eval('('+res.data.data+')') 
-            this.complaintList = date
-            for(let i in date) {
-                if(date[i].picture != null){
-                    this.picture[i] = date[i].picture.split(',')
+            let date1 = eval('('+res.data+')') 
+            this.complaintList = date1.data
+            for(let i in date1.data) {
+                if(date1.data[i].picture != null){
+                    this.picture[i] = date1.data[i].picture.substring(0,date1.data[i].picture.length-1).split(',')
                 } 
             }
         },

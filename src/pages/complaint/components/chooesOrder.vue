@@ -18,7 +18,7 @@
                 </p>
                 <div class="order df fs28">
                     <p class="order-name">{{selectArray.order_goods[0].goods_name}}等{{selectArray.order_goods.length}}件商品</p>
-                    <p class="order-price">￥{{selectArray.total_amount}}</p>
+                    <p class="order-price">￥{{selectArray.order_amount}}</p>
                 </div>
             </div>
         </div>

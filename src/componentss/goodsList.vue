@@ -1,14 +1,14 @@
 <template>
     <div class="box" ref="goodslist"   v-loading.fullscreen.lock="fullscreenLoading">
-        <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search'}" >
+        <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search' && isheader}">
             <slot ref="homeTitle"></slot>
-            <div class="tab">
+            <div class="tab" ref="tab">
                 <div class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</div>
                 <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">评分优先</div>
                 <div class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</div>
             </div>
         </div>
-        <div ref="shopList" class="shop" :class="page">
+        <div ref="shopList" class="shop" :class="page" >
             <ul :class="{'shop-height':isgoods}">
                 <!-- <li v-for="item in shopList" :key="item.shop_id" class="shop-list"> -->
                     <router-link tag="li" :to="'/shop/'+item.shop_id" v-for="item in shopList" :key="item.shop_id" class="shop-list">
@@ -37,12 +37,11 @@
 
                                     </div>
                                     <!-- {{item.sale}}m |  -->
-                                    <div class="shop-sale">销量 {{item.sale}}</div>
+                                    <div class="shop-sale">销量 {{item.sales}}</div>
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
-                                        
-                                        <span  v-for="label in item.tags" :key="label">{{label}}</span>
+                                        <!-- <span  v-for="label in tags[item.shop_id]" :key="label">{{label}}</span> -->
                                     </div>
                                     <div class="shop-label-right">
                                         <span class="label-status">
@@ -50,11 +49,64 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="shop-prom">
+                                    <div class="activity">
+                                        <div class="list-item" v-if="shopprom[item.shop_id].full ==1">
+                                            <span class="list-item-left">
+                                                <div class="shop-label-activity shop-label-type1">
+                                                    满减
+                                                </div>
+                                            </span>
+                                            <span class="list-item-right">
+                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 0">
+                                                    {{promitem.title}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="list-item"  v-if="shopprom[item.shop_id].give ==1">
+                                            <span class="list-item-left">
+                                                <div class="shop-label-activity shop-label-type3">
+                                                    赠品
+                                                </div>
+                                            </span>
+                                            <span class="list-item-right">
+                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 1">
+                                                    满{{promitem.condition}}赠{{promitem.title}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="list-item"  v-if="shopprom[item.shop_id].order ==1">
+                                            <span class="list-item-left">
+                                                <div class="shop-label-activity shop-label-type2">
+                                                    首单
+                                                </div>
+                                            </span>
+                                            <span class="list-item-right">
+                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
+                                                    {{promitem.title}}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="list-item">
+                                            <span class="list-item-left">
+                                                <div class="shop-label-activity shop-label-type4">
+                                                    配送
+                                                </div>
+                                            </span>
+                                            <span class="list-item-right">
+                                                配送费{{delivery_cost}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </router-link>
                 <!-- </li> -->
             </ul>
+        </div>
+        <div v-if="shopList.length < 1" class="shop-no">
+            暂无商家
         </div>
     </div>
 </template>
@@ -65,12 +117,17 @@ export default {
     props:{
         shopList:Array,
         page:String,
+        input10:String,
+        shopprom:Array,
+        tags:Array,
     },
     data () {
         return {
             sort:0,
             isgoods:false,
+            isheader:false,
             fullscreenLoading: false,
+            delivery_cost:this.$store.state.delivery_cost,
             defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"'
         }
     },
@@ -78,6 +135,9 @@ export default {
         chooes (sort) {
             this.sort = sort
             this.fullscreenLoading = true;
+            if(this.page == 'shop-search'){
+                document.documentElement.scrollTop = document.body.scrollTop = 0
+            }
             this.handSearch(sort)
         },
         handSearch (sort) {
@@ -86,6 +146,7 @@ export default {
                 q_type:'post',
                 type_id : this.$route.query.type_id,
                 area_id : this.$store.state.area_id,
+                search_name:this.input10
             }
             if(sort == 0){
                 data.sales = 'desc'
@@ -96,13 +157,9 @@ export default {
             }
             this.$http({
                 method: 'post',
-                url: '/mobile/api/q',
-                // url:'/api/buyer/shop_list',
+                // url: '/mobile/api/q',
+                url:'/api/buyer/shop_list',
                 data: data,
-                // headers :{
-                //     'Accept':'application/json',
-                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                // }
             })
                 .then(this.getSearch)
                 .catch(function (error) {
@@ -110,20 +167,29 @@ export default {
                 })
         },
         getSearch (res) {
-            let date = eval('(' + res.data + ')')
-            // let date = res.data
+            // let date = eval('(' + res.data + ')')
+            let date = res.data
             this.shopList = date.data.data //商家列表
+
+
+
+
             this.fullscreenLoading = false;
         },
 
 
         handleTop () {
             var scrollTop = this.styleIndex.handleScroll()
+            if(!this.$refs.tab.getBoundingClientRect()){
+                return
+            }
+            let tab = this.$refs.tab.getBoundingClientRect().height
+            let shopList = this.$refs.shopList.getBoundingClientRect().top
             if(this.page == 'shop-search'){
-                if(scrollTop > 1 ){
-                    this.isgoods = false
+                if(shopList >  tab){
+                    this.isheader = false
                 }else{
-                    this.isgoods = true
+                    this.isheader = true
                 }
             }else{
                 if(scrollTop < 740){
@@ -132,9 +198,40 @@ export default {
                     this.isgoods = true
                 }
             }
-            
             // console.log(this.$refs.goodslist.getBoundingClientRect().top,93)
             // console.log(scrollTop,123)
+        },
+    },
+    watch :{
+        shopList () {
+            this.shopprom = []
+            for (var i = 0; i < this.shopList.length;i++) {
+                if(this.shopList[i].prom.length > 0){
+                    this.shopprom[this.shopList[i].shop_id] = {}
+                    for(let j = 0; j <this.shopList[i].prom.length;j++){
+                        if(this.shopList[i].prom[j].type == 0){
+                            this.shopprom[this.shopList[i].shop_id].full = 1
+                        }
+                        if(this.shopList[i].prom[j].type == 1){
+                            this.shopprom[this.shopList[i].shop_id].give = 1
+                        }
+                        if(this.shopList[i].prom[j].type == 2){
+                            this.shopprom[this.shopList[i].shop_id].order = 1
+                        }
+                    }
+                }else{
+                    this.shopprom[this.shopList[i].shop_id] = {}
+                    this.shopprom[this.shopList[i].shop_id].full = 0
+                    this.shopprom[this.shopList[i].shop_id].give = 0
+                    this.shopprom[this.shopList[i].shop_id].order = 0
+                }
+            }
+            for(let i in this.shopList){
+                if(this.shopList[i].tags){
+                    let tag = this.shopList[i].tags
+                    this.tags[this.shopList[i].shop_id] = tag.split(',')
+                }
+            }
         },
     },
     mounted (){
@@ -147,6 +244,9 @@ export default {
 </script>
 <style lang="stylus" scoped>
 @import "~css/style"
+.shop-no
+    text-align center
+    margin-top 3vw
 .boxfixed
     position fixed!important
     z-index 101
@@ -165,7 +265,12 @@ export default {
         z-index 100
         box-shadow 0px -5px 20px 0px rgba(0,0,0,0.1)
     .box-head-search
-        top 0!important    
+        position fixed
+        top 0 !important    
+        width 100%
+        background-color #fff
+        z-index 100
+        box-shadow 0px -5px 20px 0px rgba(0,0,0,0.1)
     .tab
         display flex
         padding 0 6vw
@@ -274,6 +379,39 @@ export default {
                                 background #469afe
                                 padding 0.8vw 2vw
                                 color #fff
-
-
+                    .shop-prom
+                        .activity
+                            .list-item
+                                display flex
+                                margin 2.66vw 0
+                                .list-item-left 
+                                    // width 8.66vw
+                                    margin-right 1.33vw
+                                    .shop-label-activity
+                                        font-size 1.6vw
+                                        width 100%
+                                        box-sizing border-box
+                                        padding 2px
+                                        border-radius 3px
+                                    .shop-label-type1
+                                        color #ff7373 
+                                        background-color #ffe1e1
+                                        border solid 1px #ffa6a6
+                                    .shop-label-type2
+                                        color #f0af53
+                                        background-color #fffae1
+                                        border solid 1px #f0af53
+                                    .shop-label-type3
+                                        color #43ce56
+                                        background-color #e2ffe1
+                                        border solid 1px #7ccc87
+                                    .shop-label-type4
+                                        color #81a2ff
+                                        background-color #e1efff
+                                        border solid 1px #a6bdff
+                                .list-item-right
+                                    flex 1
+                                    font-size 2.93vw
+                                    line-height 5vw
+                                    margin-top -.5vw
 </style>

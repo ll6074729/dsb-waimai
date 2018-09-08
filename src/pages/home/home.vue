@@ -14,13 +14,13 @@
         <homeswiper-tab :list="swiperTab"></homeswiper-tab>
         <hr class="hr20">
         <!-- 公告消息 -->
-        <homeswiper-tip :notice="notice"></homeswiper-tip>
+        <homeswiper-tip :notice="notice" v-if="notice"></homeswiper-tip>
         <hr class="hr20">
         <!-- 优选商家 -->
-        <recommend :list="Recommend"></recommend>
+        <recommend :list="Recommend" v-if="Recommend"></recommend>
         <hr class="hr20">
         <!-- 商家列表 -->
-        <goods-list :shopList="shopList" :page="page">
+        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags">
             <div class="title">
                 优选商家
             </div>
@@ -53,6 +53,8 @@ export default {
         banner:[],
         swiperTab: [],
         Recommend:[],
+        shopprom:null,
+        tags:[],
         notice:[],
         shopList:[],
         defaulttab:0,
@@ -73,10 +75,6 @@ export default {
                         area_id:this.$store.state.area_id,
                         q_type:'post'
                     },
-                    // headers :{
-                    //     'Accept':'application/json',
-                    //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                    // }
                 })
                     .then(this.getHomeInfoSucc)
                     .catch(function (error) {
@@ -105,10 +103,6 @@ export default {
                     area_id : this.$store.state.area_id,
                     sales : 'desc',
                 },
-                // headers :{
-                //     'Accept':'application/json',
-                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                // }
             })
                 .then(this.getSearch)
                 .catch(function (error) {
@@ -119,7 +113,35 @@ export default {
             let date = eval('(' + res.data + ')')
             // let date = res.data
             this.shopList = date.data.data //商家列表
-        }
+            this.shopprom = []
+            for (var i = 0; i < this.shopList.length;i++) {
+                if(this.shopList[i].prom.length > 0){
+                    this.shopprom[this.shopList[i].shop_id] = {}
+                    for(let j = 0; j <this.shopList[i].prom.length;j++){
+                        if(this.shopList[i].prom[j].type == 0){
+                            this.shopprom[this.shopList[i].shop_id].full = 1
+                        }
+                        if(this.shopList[i].prom[j].type == 1){
+                            this.shopprom[this.shopList[i].shop_id].give = 1
+                        }
+                        if(this.shopList[i].prom[j].type == 2){
+                            this.shopprom[this.shopList[i].shop_id].order = 1
+                        }
+                    }
+                }else{
+                    this.shopprom[this.shopList[i].shop_id] = {}
+                    this.shopprom[this.shopList[i].shop_id].full = 0
+                    this.shopprom[this.shopList[i].shop_id].give = 0
+                    this.shopprom[this.shopList[i].shop_id].order = 0
+                }
+            }
+            for(let i in this.shopList){
+                if(this.shopList[i].tags){
+                    let tag = this.shopList[i].tags
+                    this.tags[this.shopList[i].shop_id] = tag.split(',')
+                }
+            }
+        },
     },
     mounted() {
         this.chooesSchool()

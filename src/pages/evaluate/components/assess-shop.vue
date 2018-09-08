@@ -14,6 +14,7 @@
                 :multiple="true"
                 :limit='6'
                 :on-success="handimg"
+                :on-exceed="exceed"
                >
             <i class="el-icon-plus"></i>
             </el-upload>
@@ -62,6 +63,12 @@ export default {
     methods:{
         handcontent () {
             this.$emit("changecontent",this.content)
+        },
+        exceed (files,fileList){
+            this.$message({
+                type:'error',
+                message:'只能传最多6张照片~。~！'
+            })
         },
         handimg (response, file, fileList) {
             this.img += response.data[0] + ','

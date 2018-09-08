@@ -3,9 +3,20 @@
         <div class="backg"></div>
         <!-- 头部 -->
         <div class="shop-head">
-            <router-link class="shop-head-left" tag="div" to="/">
+            <router-link class="shop-head-left" tag="div" to="/" v-if="!searchstatus">
                 <img src="../../assets/img/back_white.png" alt="">
             </router-link>
+            <div class="shop-head-left" v-if="searchstatus" @click="clearinput">
+                <img src="../../assets/img/back_white.png" alt="">
+            </div>
+            <div class="shop-head-center">
+                <el-input
+                    placeholder="请输入菜品名字"
+                    v-model="keyword"
+                    maxlength="15"
+                    clearable>
+                </el-input>
+            </div>
             <div class="shop-head-right">
                 <img src="../../assets/img/favorite.png" alt="" v-show="!isCollect" @click="isCollectA">
                 <img src="../../assets/img/favorite_white.png" alt="" v-show="isCollect" @click="isCollectA">
@@ -60,7 +71,7 @@
                         <span class="list-item-right">{{shoptitle[1]}}</span>
                     </div>
                     <div class="list-item" v-if="shoptitle[2]">
-                        <span class="list-item-left">
+                        <span class="list-item-left" >
                             <div class="shop-label-activity shop-label-type2">
                                 首单
                             </div>
@@ -86,13 +97,15 @@
             </div>
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isshowtab == 0">
-                    <shop-menu :cate="shop.cate" :ishead="ishead" @changeNum="changeNum" :num="num"></shop-menu>
+                    <shop-menu :cate="shop.cate" :ishead="ishead" @changeNum="changeNum" :num="num" :fullmoney="fullmoney"></shop-menu>
                     <shop-product 
                         :goods="shop.cate" 
                         :cart="cart" 
                         :productImg="productImg"
                         :ishead="ishead"
                         :menuHeight="num"
+                        :tabTop="tabTop"
+                        :fullmoney="fullmoney"
                         @AglinCart="AglinCart"
                         @upup="changeBuy"
                         @buygoodsinfo="buygoodsinfo"
@@ -102,6 +115,9 @@
                 <div class="shop-comment" v-show="isshowtab == 1">
                     <shop-comment :shop="shop" ></shop-comment>
                 </div>
+            </div>
+            <div class="fullmoney" v-if="fullmoney">
+                已减  <span>{{fullmoney}}</span> 
             </div>
             <div class="shop-cart">
                 <shop-foot 
@@ -123,9 +139,48 @@
                 ></shop-buy>
             </div>
         </div>
+        <div class="search-box" ref="searchBox" v-if="searchstatus">
+            <ul>
+                <li class="item" v-for="itemList in searchlist" :key="itemList.goods_id">
+                    <div class="shop-left">
+                        <div class="shop-img">
+                            <img :src="'http://wm.dqvip.cc/'+productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">
+                            <!-- <img :src="productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">   -->
+                        </div>
+                    </div>
+                    <div class="shop-right">
+                        <div class="shop-name">
+                            {{itemList.title}}
+                        </div>
+                        <div class="shop-spec">
+                            {{itemList.intro}}
+                        </div>
+                        <div class="shop-info">
+                            销量：{{itemList.sold_num}} | 好评率：{{itemList.sold_num}}
+                        </div>
+                        <div class="shop-foot">
+                            <div class="shop-price">
+                                ￥{{itemList.price}}
+                            </div>
+                            <div class="shop-num">
+                                <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">-</div>
+                                <div class="minus" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">-</div>
+                                <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
+                                <div class="plus" @click="addCart(itemList.goods_id)">+</div>
+                            </div>
+                        </div>
+                    </div>   
+                </li>
+                <li v-if="searchlist.length < 1" style="text-align:center;margin-top:2rem">
+                    暂时没有该商品~！
+                </li>
+            </ul>
+        </div>
     </div>
 </template>
 <script>
+import  BScroll from 'better-scroll'
 import ShopMenu from "./components/shopmenu"
 import ShopProduct from "./components/shopproduct"
 import ShopFoot from "./components/shopfoot"
@@ -149,6 +204,7 @@ export default {
             isshowtab:0,
             isShowA:true,
             isCollect: false,  //是否收藏
+            searchstatus:false, //是否展示搜索列表
             ishead:false,
             isBuy:false, //规格
             costPrice:0, //原价
@@ -161,9 +217,27 @@ export default {
             recommendImg:[],
             productImg:[],
             num:0,
+            tabTop:0,
+            keyword:"",
+            timer:null,
+            goods:[],
+            searchlist:[],
+            goods_spec:[],
+            fullmoney:null,
         }
     },
     methods:{
+        minusSpec () {
+            this.$message({
+                message: '多规格商品只能去购物车删除哟',
+                type: 'warning'
+            });
+        },
+        // 清楚搜索框
+        clearinput () {
+            this.searchstatus = false
+            this.keyword = ''
+        },
         changeNum (msg) {
             this.num = msg
         },
@@ -192,18 +266,14 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                // method: 'post',
-                method:'get',
-                // url:'mobile/api/q',
-                url:'api/buyer/list_address',
+                method: 'post',
+                // method:'get',
+                url:'mobile/api/q',
+                // url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                }
             })
                 .then(this.getaddrList)
                 .catch(function (error) {
@@ -211,8 +281,8 @@ export default {
                 })
         },
         getaddrList (res){
-            // const date = eval('('+res.data+')')
-            let date = res.data
+            const date = eval('('+res.data+')')
+            // let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -222,7 +292,6 @@ export default {
                     this.$store.dispatch("defaultAddress",JSON.stringify(this.addressList[i]))
                     delivery_price = this.addressList[i].delivery.delivery_price
                     this.delivery_price = delivery_price
-                    // console.log(delivery_price,110)
                     // this.$store.dispatch("changedelivery", (parseFloat(area_price) + parseFloat(delivery_price)).toFixed(2))
                     
                 }
@@ -239,18 +308,14 @@ export default {
             // 更改收藏状态
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/collect_shop',
+                url: 'mobile/api/q',
+                // url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
                     collect_type:type,
                     q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                }
             })
                 .then(this.collect)
                 .catch(function (error) {
@@ -258,10 +323,8 @@ export default {
                 })
         },
         collect (res) {
-            // let date = eval('('+res.data+')')
-            let date = res.data
-            // this.isCollect = eval(res.data.message)
-            console.log(date.message)
+            let date = eval('('+res.data+')')
+            // let date = res.data
             if(date.status == 200){
                 if(date.message  != 'false'){
                     this.$message({
@@ -289,17 +352,13 @@ export default {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/shop_info',
+                url: 'mobile/api/q',
+                // url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                }
             })
                 .then(this.getlistbox)
                 .catch(function (error) {
@@ -307,8 +366,8 @@ export default {
                 })
         },
         getlistbox(res){
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             this.shop = date.data
             if(this.shop.is_collect == 1){
                 this.isCollect = true
@@ -324,7 +383,6 @@ export default {
                 }
             }
             // 列表商品的图片
-            console.log(this.shop.cate,5656)
             for(let i in this.shop.cate){
                 for(let j = 0;j <this.shop.cate[i].goods.length;j++){
                     if(this.shop.cate[i].goods[j].details_figure){
@@ -332,7 +390,6 @@ export default {
                     }
                 }
             }
-            console.log(this.productImg,1993)
         },
         getCart () {
             this.$store.dispatch("changeOrderId",'')
@@ -340,17 +397,13 @@ export default {
             // 获取购物车信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/cart_list',
+                url: 'mobile/api/q',
+                // url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
                     q_type:'post'
                 },
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                }
             })
                 .then(this.getCartList)
                 .catch(function (error) {
@@ -358,26 +411,158 @@ export default {
                 })
         },
         getCartList (res) {
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             this.cart = date.data
         },
-        // 清空购物车
-        // cleanCart (msg){
-        //     this.cart = msg
-        // },
         // 固定在顶部
         handleTop () {
+            if(!this.$refs.tabTop.getBoundingClientRect()){
+                return
+            }
             // var tabtop = this.styleIndex.handleScroll()
             var tabTop = this.$refs.tabTop.getBoundingClientRect()
             var tabTop1 = tabTop.top
-            // console.log(tabTop1)
+            if(this.tabTop == 0){
+                this.tabTop = tabTop1
+            }
             if(tabTop1 > 1 ){
                 this.ishead = false
             }else{
                 this.ishead = true
             }
-        }
+        },
+        addCart (GoodId) {
+            const that = this
+            var goods_num = 1
+            var cart_id
+            for(let i in this.cart){
+                if(this.cart[i].goods_id == GoodId){
+                    cart_id = this.cart[i].cart_id
+                    goods_num = this.cart[i].goods_num +1
+                    break
+                }
+            }
+            // 获取当前商品的信息  规格  
+            this.$http({
+                method: 'post',
+                url: 'mobile/api/q',
+                // url:'api/goods_info',
+                data: {
+                    url:"http://api.dqvip.cc/goods_info",
+                    q_type:'post',
+                    goods_id:GoodId,
+                },
+            })
+                .then(function(response){
+                    that.getaddCart(response,GoodId,goods_num,cart_id)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getaddCart (res,GoodId,goods_num,cart_id) {
+            // let date = res.data
+            let date = eval('('+res.data+')')
+            let data ;
+            if(cart_id){
+                data =  {
+                        url:'http://api.dqvip.cc/buyer/cart_change',
+                        goods_id:GoodId,
+                        shop_id:this.$route.params.id,
+                        goods_num:goods_num,
+                        cart_id: cart_id,
+                        q_type:'post'
+                    }
+            }else{
+                data = {
+                        url:'http://api.dqvip.cc/buyer/cart_change',
+                        goods_id:GoodId,
+                        shop_id:this.$route.params.id,
+                        goods_num:goods_num,
+                        q_type:'post'
+                    }
+            }
+            if(date.data.spec.length == 0){
+                this.$http({
+                    method: 'post',
+                    url: 'mobile/api/q',
+                    // url:'api/buyer/cart_change',
+                    data: data,
+                })
+                .then(this.emitCart)
+                .catch(function (error) {
+                    console.log(error);
+                })
+            }else{
+                this.changeBuy(true)
+                this.buygoodsinfo(date.data)
+            }
+            
+        },
+        emitCart (res) {
+            let date = eval('('+res.data+')')
+            // let date = res.data
+            if(date.data == ''){
+                this.AglinCart(1)
+            }else{
+                alert('加入失败')
+            }
+
+        },
+        minus(GoodId){
+            const that = this
+            let goods_num
+            let cart_id
+            for(let i in this.cart){
+                if(GoodId == this.cart[i].goods_id){
+                    if(this.cart[i].goods_num == 0){
+                        goods_num = this.cart[i].goods_num 
+                    }else{
+                        goods_num = this.cart[i].goods_num -1
+                    }
+                    
+                    cart_id = this.cart[i].cart_id
+                }
+            }
+            console.log(goods_num,cart_id)
+            if(goods_num == 0){
+                
+                this.$http({
+                    method:'post',
+                    // method: 'delete',
+                    url: 'mobile/api/q',
+                    // url:'api/buyer/cart_clear',
+                    data:{
+                        cart_id:cart_id,
+                        url:"http://api.dqvip.cc/buyer/cart_clear",
+                        q_type:'delete',
+                    },
+                })
+                    .then(this.AglinCart())
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                return
+            }
+            // 获取当前商品的信息  规格  
+            this.$http({
+                method: 'post',
+                url: 'mobile/api/q',
+                // url:'api/goods_info',
+                data: {
+                    url:"http://api.dqvip.cc/goods_info",
+                    q_type:'post',
+                    goods_id:GoodId,
+                },
+            })
+                .then(function(response){
+                    that.getaddCart(response,GoodId,goods_num,cart_id)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
     },
     watch : {
         shop () {
@@ -396,6 +581,19 @@ export default {
                     type0.push(this.shop.prom[i])
                 }
             }
+            // 给满减排序
+            var compare = function (obj1, obj2) {
+                var val1 = obj1.condition;
+                var val2 = obj2.condition;
+                if (val1 < val2) {
+                    return -1;
+                } else if (val1 > val2) {
+                    return 1;
+                } else {
+                    return 0;
+                }            
+            } 
+            type0.sort(compare)
             for(var i in type0){
                 typetitle0 += (type0[i].title + ";")
             }
@@ -408,7 +606,7 @@ export default {
                 }
             }
             for(var i in type1){
-                typetitle1 += (type1[i].title + ";")
+                typetitle1 += '满'+type1[i].condition +'赠'+ type1[i].title
             }
             title.push(typetitle1)
             type.push(type1)
@@ -423,8 +621,22 @@ export default {
             }
             type.push(type2)
             this.shopprom = type
+             if(this.shopprom[2].length > 0){
+                let title3 = this.shopprom[2][0].title
+                title.push(title3)
+            }
             this.$store.dispatch("changeProm",JSON.stringify(this.shopprom))
             this.shoptitle = title
+
+
+            // 商品列表
+            for(let i in this.shop.cate){
+                if(this.shop.cate[i].goods){
+                    for(let j = 0; j <this.shop.cate[i].goods.length;j++ ){
+                        this.goods.push(this.shop.cate[i].goods[j])
+                    }
+                }
+            }
         },
         cart () {
             let cart = this.cart
@@ -441,16 +653,57 @@ export default {
             if(this.shopprom[0]){
                 let newmoney = this.rulingPrice
                 for(let i in this.shopprom[0]){
-                    if(this.costPrice > parseFloat(this.shopprom[0][i].condition)){
+                    if(this.costPrice >= parseFloat(this.shopprom[0][i].condition)){
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
+                        this.fullmoney = parseFloat(this.shopprom[0][i].money)
                         newmoney = Rprice.toFixed(2)
+                    }else{
+                        this.fullmoney = null
                     }
                 }
 
                 this.rulingPrice = newmoney
             }
+            // 多规格
+            let spec_array = new Array
+            for(let i in this.cart){
+                if(this.cart[i].spec_key.length > 0){
+                    let goods_num = spec_array[this.cart[i].goods_id] || 0
+                    goods_num += parseInt(this.cart[i].goods_num) 
+                    spec_array[this.cart[i].goods_id] = goods_num
+                }
+            }
+            this.goods_spec = spec_array
 
         },
+        keyword () {
+            if(this.keyword.length > 0){
+                document.body.style.overflow='hidden';
+                document.body.style.height = window.screen.height + 'px';
+                this.searchstatus = true
+            }else{
+                document.body.style.overflow='auto';
+                document.body.style.height = 'auto';
+                this.searchstatus = false
+            }
+
+            if(this.timer){
+                clearTimeout(this.timer)
+            }
+            if(!this.keyword){
+                this.searchlist = []
+                return
+            }
+            this.timer = setTimeout(() =>{
+                const result = []
+                for(var i in this.goods){
+                    if(this.goods[i].title.indexOf(this.keyword) > -1){
+                        result.push(this.goods[i])
+                    }
+                }
+                this.searchlist = result
+            },100)
+        }   
     },
     computed :{
         // shopprom () {
@@ -461,7 +714,6 @@ export default {
         
     },
     mounted () {
-        // this.getshop()
         this.getlist()
         this.getaddressList()
         this.getCart()
@@ -475,6 +727,15 @@ export default {
         color rgb(255,255,255)!important
     .shop-score >>> .el-rate
         height 2.13vw    
+    .shop-head-center >>> .el-input__inner
+        height 6.66vw
+        text-align center
+        line-height 6.66vw
+        font-size 2.9vw
+        border-radius 0.5rem
+        background-color rgba(0, 0, 0, 0.1)
+        border none
+        color #fff
     .shop-head
         display flex
         justify-content space-between
@@ -496,7 +757,7 @@ export default {
             height 4.13vw
             img 
                 width 2.13vw
-                height 4.13vw
+                height 4.13vw     
         .shop-head-right 
             width 5.33vw
             height 5.33vw
@@ -578,9 +839,9 @@ export default {
                         background-color #ffe1e1
                         border solid 1px #ffa6a6
                     .shop-label-type2
-                        color #81a2ff
-                        background-color #e1efff
-                        border solid 1px #a6bdff
+                        color #f0af53
+                        background-color #fffae1
+                        border solid 1px #f0af53
                     .shop-label-type3
                         color #43ce56
                         background-color #e2ffe1
@@ -622,6 +883,16 @@ export default {
             // position fixed   
             top 10.66vw     
             // width 100%
+        .fullmoney
+            position fixed
+            bottom 13.33vw
+            background-color #daebff
+            width 100%
+            height .5rem
+            line-height .5rem
+            text-align center
+            span
+                color #469afe
         .shop-cart
             position fixed
             bottom 0
@@ -629,4 +900,72 @@ export default {
             width 100%
             z-index 15
             box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.05)
+    .search-box
+        position fixed
+        top 10.66vw
+        bottom 13.33vw
+        left 0
+        right 0
+        overflow scroll
+        background #fff   
+        .item
+            display flex
+            padding 2.66vw 0
+            border-bottom 1px solid #f7f7f7
+            .shop-left
+                .shop-img
+                    width 21.33vw
+                    height 21.33vw
+                    margin 0 2.66vw
+                    img 
+                        width 100%
+                        height 100%
+            .shop-right
+                flex 1
+                min-width 0
+                .shop-name
+                    font-size 4vw
+                    line-height 5vw
+                    font-weight bold
+                .shop-spec
+                    font-size 2.66vw
+                    color #999
+                    margin 1.33vw 0
+                    line-height 4vw
+                .shop-info
+                    color #999
+                    font-size 2.66vw
+                .shop-foot
+                    display flex
+                    justify-content space-between
+                    padding-right 1.33vw
+                    font-size 4.26vw
+                    margin-top 4vw 
+                    .shop-price
+                        color #3ea4fd
+                        font-weight bold
+                        margin-top 1vw
+                    .shop-num
+                        span 
+                            line-height 5vw
+                            margin 0 4vw
+                        .minus,.plus
+                            width 5.33vw
+                            height 5.33vw
+                            border-radius 50%
+                            box-sizing border-box
+                            font-weight bold
+                            text-align center
+                            display inline-block
+                        .minus
+                            border solid 1px #469afe;
+                            color #469afe
+                            line-height 4vw
+                        .plus
+                            background-color #469afe
+                            color #fff
+                            line-height 5.33vw     
+                        .minus_spec
+                            border solid 1px #dbdbdb;
+                            color #dbdbdb   
 </style>

@@ -134,7 +134,8 @@ export default {
                 })
         },
         submitinfo (res) {
-            let res1 = eval('('+res+')')
+            let res1 = eval('('+res.data+')')
+            // let res1 = res.data
             let that = this
             if(res1.status == 200){
                  this.$message({
@@ -142,6 +143,8 @@ export default {
                     message:'投诉成功，请等待客服联系您'
                 })
                 setTimeout(that.$router.push({path:'/complaintList'}),3000)
+            }else{
+
             }
         },
         handexceed (files, fileList) {
@@ -214,12 +217,11 @@ export default {
             let date = date1.data.data
             let order = []
             for(let i in date){
-                if(Date.parse(new Date(date[i].created_at))/1000 > timer){
+                if(parseInt(Date.parse(new Date(date[i].created_at.replace(/\-/g, "/")))/1000) > parseInt(timer)){
                     order.push(date[i])
                 }
             }
             this.historyOrder = order
-            console.log(this.historyOrder,123)
         }
     }
 }

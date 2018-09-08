@@ -1,11 +1,11 @@
 <template>
-    <div class="takeout pd20" v-if="order_status == 2">
+    <div class="takeout pd20" v-if="order_ps">
         <div class="takeout-img">
-            <img src="../../../assets/img/组17@3x.png" alt="">
+            <img :src="'http://wm.dqvip.cc'+order_ps.headimgurl" alt="">
         </div>
         <div class="takeout-info">
             <div class="takeout-job">配送员</div>
-            <div class="takeout-name">小理哥哥</div>
+            <div class="takeout-name">{{order_ps.nickname}}</div>
         </div>
         <div class="takeout-phone">
             <a href="tel:13398499055">
@@ -18,7 +18,8 @@
 export default {
     name:"Takeout",
     props:{
-        order_status:Number
+        order_status:Number,
+        order_ps:Object,
     }
 }
 </script>
@@ -45,7 +46,7 @@ export default {
                 text-align center
                 height 5.33vw
                 line-height 5.33vw
-                // padding 1.33vw 2.13vw
+                padding: 0 3vw;
                 border-radius 2.66vw
                 color #fff
             .takeout-name

@@ -17,6 +17,7 @@ import AwesomePicker from 'vue-awesome-picker'
 import store from './store/index'
 import styleIndex from './assets/static/index'
 import axios from 'axios'
+import wx from 'weixin-js-sdk'
 // import 'babel-polyfill'
 // import Es6Promise from 'es6-promise'
 // require('es6-promise').polyfill()
@@ -40,6 +41,7 @@ Vue.use(BaiduMap, {
 Vue.config.productionTip = false
 Vue.prototype.styleIndex = styleIndex
 Vue.prototype.$http = axios
+Vue.prototype.$wx = wx
 // Vue.prototype.WXconfig = WXconfig
 /* eslint-disable no-new */
 new Vue({

@@ -28,6 +28,7 @@
             </div>
             <div class="order-list-no" v-if="historyOrder.length < 1">
                 暂时没有订单可供您投诉,请您先去下单哟~！
+                {{historyOrder}}
             </div>
         </div>
     </div>
@@ -91,6 +92,8 @@ export default {
             top 13.32vw
             left 0
             right 0
+            bottom 13.33vw
+            overflow scroll
             .order-item
                 padding 3vw 0
                 border-bottom 1px solid #eee

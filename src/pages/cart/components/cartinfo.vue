@@ -7,15 +7,14 @@
             <div class="shop-head-name">{{shopinfo.shop_name}}</div>
             <div class="takeout-img"  v-if="page != 'cart'">
                 <a :href="'tel:' + shopinfo.mobile">
-                    <img src="../../../assets/img/call.png" alt="">
+                    <img src="../../../assets/img/call.png" alt="" >
                 </a>
             </div>
         </div>
         <div class="goods-list">
             <div class="goods-list-item" v-for="(item,index) in cart" :key="index">
                 <div class="goods-img">
-                    <img src="../../../assets/img/food.jpg" alt="">
-                    <!-- :src="item.goods.details_figure" -->
+                    <img :src="item.pic[0]" alt="" :onerror="defaultImg">
                 </div>
                 <div class="goods-info">
                     <div class="goods-name" v-if="page != 'center'">{{item.goods.title}}</div>
@@ -45,8 +44,36 @@ export default {
         cart:Array,
         shopinfo:Array
     },
-    return () {
-
+    data () {
+        return {
+            defaultImg : 'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
+        }
+    },
+    watch: {
+        cart () {
+            
+            for(let i in this.cart){
+                let img = []
+                for(var j = 0;j<this.cart.length;j++){
+                    if(this.page == 'center'){
+                         if(this.cart[i].details_figure.substring(0,this.cart[i].details_figure.length -1) == ','){
+                            img = this.cart[i].details_figure.split(',')
+                        }else{
+                            img[0] = this.cart[i].details_figure
+                        }
+                    }else{
+                        if(this.cart[i].goods.details_figure.substring(0,this.cart[i].goods.details_figure.length -1) == ','){
+                            img = this.cart[i].goods.details_figure.split(',')
+                        }else{
+                            img[0] = this.cart[i].goods.details_figure
+                        }
+                    }
+                    
+                    
+                }
+                this.cart[i].pic = img
+            }
+        }
     }
 }
 </script>

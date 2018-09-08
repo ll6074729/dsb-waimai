@@ -5,7 +5,7 @@
             <div class="head">
                 <div class="head-left">
                     <div class="head-img">
-                        <img src="goodsinfo.goods_info.details_figure" alt="" :onerror="this.$store.state.defaultShop">
+                        <img :src="this.imgurl" alt="" :onerror="defaultImg">
                     </div>
                 </div>
                 <div class="head-right">
@@ -51,7 +51,9 @@ export default {
     data () {
         return {
             cartbox:[],
-            cartlist:{}
+            cartlist:{},
+            imgurl:'',
+            defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
         }
     },
     updated () {
@@ -101,13 +103,9 @@ export default {
             data.q_type = 'post'
             this.$http({
                     method: 'post',
-                    // url: 'mobile/api/q',
-                    url:'api/buyer/cart_change',
+                    url: 'mobile/api/q',
+                    // url:'api/buyer/cart_change',
                     data: data,
-                    headers :{
-                        'Accept':'application/json',
-                        'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                    }
                 })
                 .then(this.emitCart)
                 .catch(function (error) {
@@ -115,8 +113,8 @@ export default {
                 })
         },
         emitCart (res) {
-            let date = res.data
-            // let date = eval('('+res.data+')')
+            // let date = res.data
+            let date = eval('('+res.data+')')
             if(date.status ==200){
                 this.cartbox = []
                 this.closeGoodsInfo()
@@ -158,6 +156,10 @@ export default {
         }
     },
     watch:{
+        goodsinfo () {
+            let img = this.goodsinfo.goods_info.details_figure.split(',')
+            this.imgurl = img[0]
+        },
         cartbox () {
             console.log(1111)
             console.log(this.cartbox)

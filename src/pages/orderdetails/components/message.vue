@@ -8,6 +8,16 @@
                 {{timer}}
             </div>
         </div>
+        <div class="message-item df msn-add" v-if="user_note">
+            <div class="list-name">
+                备注信息
+            </div>
+            <div class="message-text">
+                <div class="message-address">
+                    {{user_note}}
+                </div>
+            </div>
+        </div>
         <div class="message-item df msn-add">
             <div class="list-name">
                 收货地址
@@ -42,6 +52,7 @@ export default {
         user_mobile:String,
         timer:String,
         ensure_time:String,
+        user_note:String
     },
     data () {
         return {

@@ -7,9 +7,9 @@
             <div class="label" :class="{active:chooes== 3}" @click="replace(3,'bad')">差评 {{shop.bad}}</div>
         </div>
         <div class="comment-list">
-            <div class="list-item" v-for="item in evaluation" :key="item.id" v-if="evaluation.length > 0">
+            <div class="list-item" v-for="(item,index) in evaluation" :key="item.id" v-if="evaluation.length > 0">
                 <div class="item-head">
-                    <div class="head-img"><img :src="item.head_pic" alt=""></div>
+                    <div class="head-img"><img :src="item.head_pic" alt="" ></div>
                     <div class="head-name">{{item.username}}</div>
                     <div class="head-time">{{item.created_at}}</div>
                     <el-rate
@@ -27,7 +27,7 @@
                         {{item.content}}
                     </div>
                     <div class="comment-img" >
-                        <img :src="'http://wm.dqvip.cc'+itemImg" alt="" v-for="(itemImg,index) in item.pic" :key="index">
+                        <img :src="itemImg" alt="" v-if="itemImg.length > 20" v-for="itemImg in item.pic" :key="itemImg"  @click="previewImage(itemImg,index)">
                     </div>
                     <div class="shop-reply" v-if="item.comment_reply.length > 0" v-for="reply in item.comment_reply" :key="reply.comment_id">
                         <strong>商家回复:</strong>
@@ -38,7 +38,7 @@
                     <div class="food-label" v-for="foodname in item.order_goods" :key="foodname.goods_id">{{foodname.goods_name}}</div>
                 </div>
             </div>
-            <div v-if="evaluation.length == 0">
+            <div v-if="evaluation.length == 0" style="text-align:center;margin-top:3vw">
                 暂无评论
             </div>
         </div>
@@ -61,6 +61,12 @@ export default {
         this.isevaluation()
     },
     methods : {
+        previewImage(img,index){
+            this.$wx.previewImage({
+                current: 'http://wm.dqvip.cc' + img, // 当前显示图片的http链接
+                urls: this.evaluation[index].pic // 需要预览的图片http链接列表
+            });
+        },
         replace(index,type){
             this.chooes = index
             this.isevaluation (type) 
@@ -77,13 +83,9 @@ export default {
             date.q_type = 'post'
             this.$http({
                 method: 'post',
-                url:"/api/buyer/evaluation",
-                // url: '/mobile/api/q',
+                // url:"/api/buyer/evaluation",
+                url: '/mobile/api/q',
                 data: date,
-                headers :{
-                    'Accept':'application/json',
-                    'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                }
             })
                 .then(this.getevaluation)
                 .catch(function (error) {
@@ -91,13 +93,23 @@ export default {
                 })
         },
         getevaluation (res) {
-            // console.log(res)
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             this.evaluation = date.data.data
+            let compic
+            console.log(this.evaluation,555)
             for (let i in this.evaluation){
-                this.evaluation[i].pic = this.evaluation[i].img.split(',')
+                let compic2 = new Array()
+                if(this.evaluation[i].img  != null){
+                    compic = this.evaluation[i].img.split(',')
+                    for(var j = 0;j < compic.length; j++){
+                        // console.log(compic[j],100)
+                        compic2.push('http://wm.dqvip.cc'+ compic[j])
+                    }
+                    this.evaluation[i].pic = compic2
+                }    
             }
+            console.log(this.evaluation,666)
         },
     },
     watch :{
@@ -169,6 +181,9 @@ export default {
                         width 18vw
                         height 18vw
                         margin-right 1.33vw
+                        margin-top 1.33vw
+                        // position absolute
+                        // clip rect()
                 .shop-reply
                     font-size 2.93vw
                     line-height 4.8vw
@@ -185,6 +200,7 @@ export default {
                     border-radius .8vw
                     background-color #ecf5ff
                     margin-right 3vw
+                    margin-bottom 3vw
             &:last-child
                 padding-bottom 20vw       
 </style>    
