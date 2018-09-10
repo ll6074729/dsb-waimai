@@ -9,7 +9,7 @@
                     <div class="cate-title" v-if="!(item.goods.length ==0)"> {{item.cate_name}}</div>
                     <div class="item-list">
                         <div class="item" v-for="itemList in item.goods" :key="itemList.cate_id">
-                            <div class="shop-left">
+                            <div class="shop-left" @click="showgoods(itemList.goods_id)">
                                 <div class="shop-img">
                                     <!-- <img :src="'http://wm.dqvip.cc/'+productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg"> -->
                                     <img :src="productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">  
@@ -89,19 +89,9 @@ export default {
         }
     },
     methods:{
-        handleTop () {
-            // if(this.styleIndex.handleScroll() > 300){
-                // for(let i in this.$refs){
-                //     if(this.$refs[i][0]){
-                //         if(this.styleIndex.handleScroll() > this.$refs[i][0].offsetTop){
-                //             this.$emit('changeNum',(i-2))
-                //             // break
-                //         }else if (this.styleIndex.handleScroll() < 150){
-                //             this.$emit('changeNum',0)
-                //         }
-                //     }
-                // }
-            // }
+        showgoods(num) {
+            console.log(num)
+            this.$emit('showgoods',num)
         },
         minusSpec () {
             this.$message({
@@ -317,7 +307,7 @@ export default {
                                 .minus
                                     border solid 1px #469afe;
                                     color #469afe
-                                    line-height 4vw
+                                    line-height 5.33vw
                                 .plus
                                     background-color #469afe
                                     color #fff

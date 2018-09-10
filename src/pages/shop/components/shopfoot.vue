@@ -331,11 +331,11 @@ export default {
                             .minus
                                 border solid 1px #469afe;
                                 color #469afe
-                                line-height 4vw
+                                line-height 5.33vw
                             .plus
                                 background-color #469afe
                                 color #fff
-                                line-height 5vw
+                                line-height 5.33vw
         .isshop
             text-align center
             padding 5vw

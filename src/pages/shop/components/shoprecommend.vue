@@ -3,7 +3,7 @@
         <swiper :options="swiperOption"> 
             <swiper-slide v-for="(item,index) in food" :key="item.goods_id">
                 <div class="box">
-                    <div class="box-left">
+                    <div class="box-left" @click="showgoods(item.goods_id)">
                         <img :src="recommendImg[index][0]" alt="" :onerror="defaultImg">
                     </div>
                     <div class="box-right">
@@ -33,6 +33,7 @@ export default {
         food:Array,
         cart:Array,
         recommendImg:Array,
+        fullmoney:Number
     },
     data () {
         return {
@@ -58,6 +59,10 @@ export default {
         }
     },
     methods:{
+        showgoods(num) {
+            console.log(num)
+            this.$emit('showgoods',num)
+        },
         minusSpec () {
             this.$message({
                 message: '多规格商品只能去购物车删除哟',
@@ -244,7 +249,7 @@ export default {
                     .minus
                         border solid 1px #469afe;
                         color #469afe
-                        line-height 4vw
+                        line-height 5.33vw
                     .plus
                         background-color #469afe
                         color #fff

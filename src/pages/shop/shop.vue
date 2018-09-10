@@ -88,6 +88,7 @@
             @upup="changeBuy" 
             @AglinCart="AglinCart" 
             @buygoodsinfo="buygoodsinfo" 
+            @showgoods="showgoods"
         ></shop-recommend>
         <!-- tab列表 -->
         <div class="shop-box"  ref="tabTop">
@@ -110,6 +111,7 @@
                         @upup="changeBuy"
                         @buygoodsinfo="buygoodsinfo"
                         @changeNum="changeNum"
+                        @showgoods="showgoods"
                         ></shop-product>
                 </div>
                 <div class="shop-comment" v-show="isshowtab == 1">
@@ -177,6 +179,18 @@
                 </li>
             </ul>
         </div>
+        <shop-info 
+            :goods="goods" 
+            :productImg="productImg" 
+            :cart="cart" 
+            :goods_spec="goods_spec" 
+            :goods_feel="goods_feel" 
+            @close_feel="closeFeel"
+            @upup="changeBuy" 
+            @AglinCart="AglinCart" 
+            @buygoodsinfo="buygoodsinfo" 
+            >
+        </shop-info>
     </div>
 </template>
 <script>
@@ -187,6 +201,7 @@ import ShopFoot from "./components/shopfoot"
 import ShopBuy from "./components/shopbuy"
 import ShopComment from "./components/comment"
 import ShopRecommend from "./components/shoprecommend"
+import ShopInfo from "./components/shopinfo"
 export default {
     name:'Shop',
     components:{
@@ -195,7 +210,8 @@ export default {
         ShopFoot,
         ShopBuy,
         ShopComment,
-        ShopRecommend
+        ShopRecommend,
+        ShopInfo
     },
     data () {
         return {
@@ -224,9 +240,23 @@ export default {
             searchlist:[],
             goods_spec:[],
             fullmoney:null,
+            goods_feel:null
         }
     },
     methods:{
+        showgoods (msg) {
+            console.log(msg,654)
+            for(let i in this.goods){
+                if(this.goods[i].goods_id == msg){
+                    this.goods_feel = i
+                    return
+                }
+            }
+            
+        },
+        closeFeel () {
+            this.goods_feel = null
+        },
         minusSpec () {
             this.$message({
                 message: '多规格商品只能去购物车删除哟',
@@ -586,9 +616,9 @@ export default {
                 var val1 = obj1.condition;
                 var val2 = obj2.condition;
                 if (val1 < val2) {
-                    return -1;
-                } else if (val1 > val2) {
                     return 1;
+                } else if (val1 > val2) {
+                    return -1;
                 } else {
                     return 0;
                 }            
@@ -654,10 +684,16 @@ export default {
                 let newmoney = this.rulingPrice
                 for(let i in this.shopprom[0]){
                     if(this.costPrice >= parseFloat(this.shopprom[0][i].condition)){
+                        console.log(parseFloat(this.shopprom[0][i].condition),66565656)
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                         this.fullmoney = parseFloat(this.shopprom[0][i].money)
+                        console.log(this.fullmoney,1)
+                        console.log(parseFloat(this.shopprom[0][i].money),66565656)
                         newmoney = Rprice.toFixed(2)
+                        break
                     }else{
+                        console.log(this.costPrice,2)
+                        console.log(this.shopprom[0][i].condition,3)
                         this.fullmoney = null
                     }
                 }
@@ -960,7 +996,7 @@ export default {
                         .minus
                             border solid 1px #469afe;
                             color #469afe
-                            line-height 4vw
+                            line-height 5.33vw
                         .plus
                             background-color #469afe
                             color #fff

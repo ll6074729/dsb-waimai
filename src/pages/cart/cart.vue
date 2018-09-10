@@ -186,11 +186,13 @@ export default {
             })
             .then(this.buybtnafter)
             .catch(function (error) {
-                alert(404)
+                alert(JSON.stringify(error))
+                // alert(404)
                 console.log(error);
             })
         },
         buybtnafter (res) {
+            // alert(res.data)
             let date = eval('(' + res.data + ')')
             // let date = res.data
             // 把订单存在本地
@@ -249,6 +251,19 @@ export default {
             this.cartprom = []
             // 满减
             for(let i in shopprom[0]){
+                var compare = function (obj1, obj2) {
+                    var val1 = obj1.condition;
+                    var val2 = obj2.condition;
+                    if (val1 < val2) {
+                        return -1;
+                    } else if (val1 > val2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }            
+                } 
+                shopprom[0].sort(compare)
+                console.log(shopprom[0],156464343)
                 if(this.costPrice > parseFloat(shopprom[0][i].condition)){
                     let Rprice = parseFloat(this.costPrice) - parseFloat(shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
