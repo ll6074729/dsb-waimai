@@ -1,9 +1,9 @@
 <template>
     <div class="df const">
-        <div>
+        <router-link tag="div" to="/balance" class="const-border">
             <p class="fs40">{{userinfo.moeny}}</p>
             <p class="fs24">余额</p>
-        </div>
+        </router-link>
         <router-link tag="div" to="/coupon" class="const-border">
             <p class="fs40">{{couponList.length}}</p>
             <p class="fs24">优惠卷</p>

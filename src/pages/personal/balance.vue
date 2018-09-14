@@ -15,7 +15,7 @@ export default {
     },
     data () {
         return{
-            title:'积分明细',
+            title:'余额明细',
             integral:[]
         }
     },
@@ -26,8 +26,8 @@ export default {
         getintegral () {
             this.$http({
                 method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/account_log',
+                // url: '/mobile/api/q',
+                url:'api/buyer/account_log',
                 data: {
                    page_size:15
                 },
@@ -39,8 +39,8 @@ export default {
         },
         _getintegral (res) {
             console.log(res)
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.integral = date.data.data
         }
     },

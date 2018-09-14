@@ -30,12 +30,17 @@
                                         ￥{{itemList.price}}
                                     </div>
                                     <div class="shop-num">
-                                        <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">-</div>
+                                        <!-- <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">-</div>
                                         <div class="minus" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">-</div>
                                         <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
-                                        <div class="plus" @click="addCart(itemList.goods_id)">+</div>
-                                        
+                                        <div class="plus" @click="addCart(itemList.goods_id)">+</div> -->
+
+                                        <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">
+                                        <img class="minus" src="../../../assets/img/minus@3x.png" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">
+                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                        <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
+                                        <img class="plus" src="../../../assets/img/add@3x.png" @click="addCart(itemList.goods_id)">
                                     </div>
                                 </div>
                             </div>
@@ -299,20 +304,10 @@ export default {
                                 .minus,.plus
                                     width 5.33vw
                                     height 5.33vw
-                                    border-radius 50%
                                     box-sizing border-box
-                                    font-weight bold
-                                    text-align center
                                     display inline-block
                                 .minus
-                                    border solid 1px #469afe;
-                                    color #469afe
                                     line-height 5.33vw
                                 .plus
-                                    background-color #469afe
-                                    color #fff
                                     line-height 5.33vw     
-                                .minus_spec
-                                    border solid 1px #dbdbdb;
-                                    color #dbdbdb
 </style>

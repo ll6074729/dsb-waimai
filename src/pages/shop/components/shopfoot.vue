@@ -47,9 +47,9 @@
                         <div class="isgood-foot">
                             <div class="isgood-price">￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}</div>
                             <div class="isgood-num">
-                                <div class="minus" @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key)">-</div>
+                                <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key)">
                                 <span>{{item.goods_num}}</span>
-                                <div class="plus" @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key)">+</div>
+                                <img class="plus" src="../../../assets/img/add@3x.png" alt="" @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key)">
                             </div>
                         </div>
                     </div>
@@ -323,19 +323,6 @@ export default {
                             .minus,.plus
                                 width 5.33vw
                                 height 5.33vw
-                                border-radius 50%
-                                box-sizing border-box
-                                font-weight bold
-                                text-align center
-                                
-                            .minus
-                                border solid 1px #469afe;
-                                color #469afe
-                                line-height 5.33vw
-                            .plus
-                                background-color #469afe
-                                color #fff
-                                line-height 5.33vw
         .isshop
             text-align center
             padding 5vw

@@ -5,6 +5,7 @@ import Search from '@/pages/search/search'
 import Shop from '@/pages/shop/shop'
 import Cart from '@/pages/cart/cart'
 import Pay from '@/pages/pay/pay'
+import Paystatus from '@/pages/pay/paystatus'
 import Order from '@/pages/order/order'
 import OrderDetails from '@/pages/orderdetails/orderdetails'
 import Personal from '@/pages/personal/personal'
@@ -16,6 +17,7 @@ import Concurrent from '@/pages/concurrent/concurrent'
 import Location from '@/pages/location/location'
 import Sitelist from '@/pages/sitelist/sitelist'
 import Integral from '@/pages/personal/integral'
+import Balance from '@/pages/personal/balance'
 import Merchant from '@/pages/Merchant/Merchant'
 import Coupon from '@/pages/personal/coupon'
 import Collect from '@/pages/personal/collect'
@@ -32,6 +34,11 @@ export default new Router({
       meta:{
         title:'首页'
       }
+    },
+    {
+      path:'/paystatus',
+      name:'Paystatus',
+      component:Paystatus,
     },
     {
       path:'/complaintList',
@@ -54,6 +61,14 @@ export default new Router({
       component: Integral,
       meta:{
         title:'积分明细'
+      }
+    },
+    {
+      path:'/balance',
+      name: 'Balance',
+      component: Balance,
+      meta:{
+        title:'余额明细'
       }
     },
     {

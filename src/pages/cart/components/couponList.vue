@@ -19,11 +19,11 @@
                             {{item.coupon.name}}
                         </div>
                         <div class="coupon-time fs20">
-                            有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}}
+                            有效期至 {{ item.coupon.use_start_time}}
                         </div>
                     </div>
                 </li>
-                <li style="text-align:center;margin-top:3vw">
+                <li v-if="couponList.length < 1" style="text-align:center;margin-top:3vw">
                     暂无可用优惠券
                 </li>
             </ul>
@@ -53,9 +53,17 @@ export default {
     },
     methods:{
         couponchange (coupon) {
-            this.coupon = coupon
-            this.$emit('changecoupon',coupon)
-            this.setcoupon()
+            if(parseFloat(this.costPrice) >= parseFloat(coupon.coupon.condition)){
+                this.coupon = coupon
+                this.$emit('changecoupon',coupon)
+                this.setcoupon()
+            }else{
+                this.$message({
+                    type:'warning',
+                    message:'当前价钱不满足优惠券使用条件'
+                })
+            }
+           
         },
         setcoupon () {
             this.$emit('setcoupon',false)

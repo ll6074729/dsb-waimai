@@ -163,9 +163,6 @@ export default {
             this.fullscreenLoading = true;
             var balance_money = this.balance_money || 0
             var integral_num = this.integral_num || 0
-
-
-
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
@@ -193,20 +190,25 @@ export default {
         },
         buybtnafter (res) {
             // alert(res.data)
+            console.log(res)
             let date = eval('(' + res.data + ')')
             // let date = res.data
             // 把订单存在本地
             this.$store.dispatch("changeOrderId",date.data.order_id)
             this.$store.dispatch("changeOrderSn",date.data.order_sn)
             let _this = this
-            this.$http({
-                method:'post',
-                url:'http://wm.dqvip.cc/Mobile/Payment/getpayCode',
-                data:{
-                    order_id:date.data.order_id,
-                    pay_radio:'pay_code='+ date.data.pay_code
-                },
-            })
+            if(date.data.pay_code == 'alipayMobile'){
+                    // this.$router.push('/Paystatus')
+                window.location.href = '/Mobile/Payment/getpayCode?order_id='+date.data.order_id+'&pay_code='+date.data.pay_code
+            }else{
+                this.$http({
+                    method:'post',
+                    url:'/Mobile/Payment/getpayCode',
+                    data:{
+                        order_id:date.data.order_id,
+                        pay_radio:'pay_code='+ date.data.pay_code
+                    },
+                })
                 .then(function(response){
                     _this.fullscreenLoading = false;
                     _this.styleIndex.callpay(response.data)
@@ -214,6 +216,7 @@ export default {
                 .catch(function(error){
                     console.log(error)
                 })
+            }
         },
         // 选择支付方式
         payCode(type){
@@ -389,7 +392,7 @@ export default {
         getDeliveryList (res) {
             // let date = res.data
             let date = eval('(' + res.data + ')')
-            console.log(date,33)
+            // console.log(date,33)
             this.delivery_cost = date.data
             let freight = this.$store.state.delivery_cost
             let freight_price = this.$store.state.delivery_price

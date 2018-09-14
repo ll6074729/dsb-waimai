@@ -14,11 +14,11 @@
                             ￥{{item.price}}
                         </div>
                         <div class="box-right-foot">
-                            <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[item.goods_id]">-</div>
-                            <div class="minus" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">-</div>
+                            <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
+                            <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
                             <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                             <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                            <div class="plus" @click="addCart(item.goods_id)">+</div>
+                            <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id)">
                         </div>
                     </div>
                 </div>
@@ -239,25 +239,14 @@ export default {
                     .minus,.plus
                         width 5.33vw
                         height 5.33vw
-                        border-radius 50%
                         box-sizing border-box
-                        font-weight bold
-                        text-align center
                         display inline-block
                     .opacity
                         opacity 0
-                    .minus
-                        border solid 1px #469afe;
-                        color #469afe
-                        line-height 5.33vw
                     .plus
-                        background-color #469afe
                         color #fff
                         line-height 5.33vw   
                         position absolute  
                         right 5vw
-                        bottom 2.7vw
-                    .minus_spec
-                        border solid 1px #dbdbdb;
-                        color #dbdbdb    
+                        bottom 2.9vw
 </style>

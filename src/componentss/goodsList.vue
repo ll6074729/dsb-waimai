@@ -157,8 +157,8 @@ export default {
             }
             this.$http({
                 method: 'post',
-                // url: '/mobile/api/q',
-                url:'/api/buyer/shop_list',
+                url: '/mobile/api/q',
+                // url:'/api/buyer/shop_list',
                 data: data,
             })
                 .then(this.getSearch)
@@ -167,8 +167,8 @@ export default {
                 })
         },
         getSearch (res) {
-            // let date = eval('(' + res.data + ')')
-            let date = res.data
+            let date = eval('(' + res.data + ')')
+            // let date = res.data
             this.shopList = date.data.data //商家列表
 
 

@@ -1,49 +1,48 @@
 <template>
     <div class="integral">
-        <div class="item df">
-            <div class="info">
-                <div class="info-text">
-                    每日登陆
+        <div>
+            <div class="item df" v-for="item in integral" :key="item.id">
+                <div class="info">
+                    <div class="info-text">
+                        {{item.desc}}
+                    </div>
+                    <div class="info-time">
+                        {{item.change_time}}
+                    </div>
                 </div>
-                <div class="info-time">
-                    2018-08-03
+                <div class="moeny" v-if="title == '积分明细'">
+                    {{item.pay_points}}
+                </div>
+                <div class="moeny" v-if="title == '余额明细'">
+                    {{item.user_money}}
                 </div>
             </div>
-            <div class="moeny">
-                +10
-            </div>
+            <!-- <div class="item df">
+                <div class="info">
+                    <div class="info-text">
+                        平台消费
+                    </div>
+                    <div class="info-time">
+                        2018-08-03
+                    </div>
+                </div>
+                <div class="moeny moeny-fail">
+                    -500
+                </div>
+            </div> -->
         </div>
-        <div class="item df">
-            <div class="info">
-                <div class="info-text">
-                    评价订单
-                </div>
-                <div class="info-time">
-                    2018-08-03
-                </div>
-            </div>
-            <div class="moeny">
-                +10
-            </div>
-        </div>
-        <div class="item df">
-            <div class="info">
-                <div class="info-text">
-                    平台消费
-                </div>
-                <div class="info-time">
-                    2018-08-03
-                </div>
-            </div>
-            <div class="moeny moeny-fail">
-                -500
-            </div>
+        <div v-if="integral.length < 1" style="text-align:center;margin-top:3vw">
+            暂无{{title}}
         </div>
     </div>
 </template>
 <script>
 export default {
     name:"integrallist",
+    props:{
+        integral:Array,
+        title:String
+    }
 }
 </script>
 <style lang="stylus" scoped>

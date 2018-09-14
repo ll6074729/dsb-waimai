@@ -90,21 +90,22 @@ export default {
                 })
         },
         pay () {
-            let _this = this
-            this.$http({
-                method:'post',
-                url:'http://wm.dqvip.cc/Mobile/Payment/getpayCode',
-                data:{
-                    order_id:this.order_id,
-                    pay_radio:'pay_code=weixin'
-                },
-            })
-                .then(function(response){
-                    _this.styleIndex.callpay(response.data)
-                })
-                .catch(function(error){
-                    console.log(error)
-                })
+            this.$router.push({path:'/paystatus',query:{"order_id":this.order_id}})
+            // let _this = this
+            // this.$http({
+            //     method:'post',
+            //     url:'http://wm.dqvip.cc/Mobile/Payment/getpayCode',
+            //     data:{
+            //         order_id:this.order_id,
+            //         pay_radio:'pay_code=weixin'
+            //     },
+            // })
+            //     .then(function(response){
+            //         _this.styleIndex.callpay(response.data)
+            //     })
+            //     .catch(function(error){
+            //         console.log(error)
+            //     })
         }
     }
 }

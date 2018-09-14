@@ -15,14 +15,15 @@
                             {{item.coupon.name}}
                         </div>
                         <div class="coupon-time fs20">
-                            有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}}
+                            <!-- 有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}} -->
+                            有效期至 {{ item.coupon.use_start_time}}
                         </div>
                     </div>
                 </li> 
+                <li v-if="couponList.length < 1" style="text-align:center;margin-top:3vw">
+                    暂无可用优惠券
+                </li>
             </ul>
-        </div>
-        <div v-if="couponList.lenght == 0">
-            暂无可用优惠券
         </div>
     </div>
     
@@ -49,6 +50,8 @@ export default {
             this.$http({
                 method: 'post',
                 url: 'mobile/api/q',
+                // methods:'get',
+                // url:'/api/buyer/coupon_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/coupon_list',
                     q_type:'get'
@@ -61,6 +64,7 @@ export default {
         },
         getcouponList (res) {
             let date = eval('('+res.data+')')
+            // let date = res.data
             this.couponList = date.data
         },
     },

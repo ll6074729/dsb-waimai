@@ -33,6 +33,7 @@ export default {
         height 10.66vw
         line-height 10.66vw
         border-bottom 1px solid #f7f7f7
+        background #fff
         box-shadow 0px 5px 20px 0px rgba(0, 0, 0, 0.05)
         .cart-head-left 
             margin-left 2.13vw
