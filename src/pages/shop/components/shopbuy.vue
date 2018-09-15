@@ -168,7 +168,19 @@ export default {
         cartbox () {
             console.log(1111)
             console.log(this.cartbox)
-        }
+        },
+        isBuy () {
+            // console.log(this.swiper,999)
+            if(this.isBuy){
+                document.body.style.overflow='hidden';
+                document.body.style.height = window.screen.height + 'px';
+            }else{
+                document.body.style.overflow='auto';
+                document.body.style.height = 'auto';
+            }
+               
+        },
+
     }
 }
 </script>

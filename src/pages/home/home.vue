@@ -20,16 +20,18 @@
         <recommend :list="Recommend" v-if="Recommend"></recommend>
         <hr class="hr20">
         <!-- 商家列表 -->
-        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags">
+        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags" :range="range">
             <div class="title">
                 优选商家
             </div>
         </goods-list>
         <tab-bar :defaulttab="defaulttab"></tab-bar>
-        <all-map></all-map>
+        <!-- <all-map></all-map> -->
+        <div id="allmap" style="display:none"></div>
     </div>
 </template>
 <script>
+import BMap from 'BMap'
 import HomeswiperBanner from "./components/swiperbanner";
 import HomeHead from "./components/head";
 import HomeswiperTab from "./components/swiperTab"
@@ -59,9 +61,18 @@ export default {
         shopList:[],
         defaulttab:0,
         page:'shop-home',
+        lng:localStorage.lng,
+        lat:localStorage.lat,
+        range:[]
     }
   },
     methods:{
+        GetDistance() {
+            if(localStorage.lat || localStorage.lng){
+                window.map = new BMap.Map('allmap')
+                console.log(map)
+            }
+        },
         chooesSchool () {
             if(this.$store.state.area_id == undefined){
                 this.$router.push({path:"/Location"})
@@ -140,12 +151,20 @@ export default {
                     let tag = this.shopList[i].tags
                     this.tags[this.shopList[i].shop_id] = tag.split(',')
                 }
+                if(this.shopList[i].longitude && this.shopList[i].latitude){
+                    var pointA = new BMap.Point(this.lng, this.lat)
+                    var pointB = new BMap.Point(this.shopList[i].longitude, this.shopList[i].latitude)
+                    this.range[this.shopList[i].shop_id] = parseInt(window.map.getDistance(pointA,pointB))
+                }else{
+                    this.range[this.shopList[i].shop_id] = 0
+                }
             }
         },
     },
     mounted() {
         this.chooesSchool()
         this.handSearch()
+        this.GetDistance()
     },
 
 }

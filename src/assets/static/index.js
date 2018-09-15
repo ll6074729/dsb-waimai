@@ -36,11 +36,24 @@ export default{
             return null;
         }
     },
+    getmap (lng,lat) {
+        var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+        var x = parseFloat(lng);
+        var y = parseFloat(lat);
+        var z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+        var theta = Math.atan2(y,x) + 0.000003 * Math.cos(x * x_pi);
+        lng = z * Math.cos(theta) + 0.0065;
+        lat = z * Math.sin(theta) + 0.006;
+        window.localStorage.lng = lng;
+        window.localStorage.lat = lat;
+    },
+
     /**
      * 拿到用户信息  token_type   expires_in  过期时间    access_token 后台请求需要的
      */
     wxShowMenu () {
         // this.GetQueryString(location.href)
+        var _this = this
         axios.post('/index.php?m=Mobile&c=Index&a=ajaxGetWxConfig&t='+Math.random(),{
             'askUrl':encodeURIComponent(location.href.split('#')[0]) 
         }).then(function(res) {
@@ -52,7 +65,8 @@ export default{
                 nonceStr: wxArray.nonceStr, // 必填，生成签名的随机串
                 signature: wxArray.signature,// 必填，签名，见附录1
                 jsApiList: [
-                  'chooseWXPay'
+                  'chooseWXPay',
+                  'getLocation'
                 ]
 
             });
@@ -63,16 +77,16 @@ export default{
             });
               //处理验证成功的信息
             wx.ready(function () {
-                // wx.getLocation({
-                //     type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-                //     success: function (res) {
-                //         var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-                //         var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                //         var speed = res.speed; // 速度，以米/每秒计
-                //         var accuracy = res.accuracy; // 位置精度
-                        
-                //     }
-                // })
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        var speed = res.speed; // 速度，以米/每秒计
+                        var accuracy = res.accuracy; // 位置精度
+                        _this.getmap(longitude,latitude)
+                    }
+                })
                 // wx.chooseWXPay({
                 //     timestamp: 0, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
                 //     nonceStr: '', // 支付签名随机串，不长于 32 位

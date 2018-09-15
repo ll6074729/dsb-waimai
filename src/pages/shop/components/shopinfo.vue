@@ -37,8 +37,8 @@
                                     </div>
                                 </div>
                                 <div class="goods-laud">
-                                    <div>1848 人点赞</div>
-                                    <div>1848 人点踩</div>
+                                    <div>{{item.praise}}人点赞</div>
+                                    <div>{{item.stamp}} 人点踩</div>
                                 </div>
                             </div>
                             
@@ -86,7 +86,6 @@ export default {
     },
     watch: {
         goods_feel () {
-            // console.log(this.swiper,999)
             if(this.goods_feel){
                 document.body.style.overflow='hidden';
                 document.body.style.height = window.screen.height + 'px';

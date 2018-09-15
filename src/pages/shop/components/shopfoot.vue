@@ -221,7 +221,17 @@ export default {
                 this.cart[i].pic = img
             }
             this.value = goods_val
-        }
+        },
+        isBuy () {
+            // console.log(this.swiper,999)
+            if(this.isBuy){
+                document.body.style.overflow='hidden';
+                document.body.style.height = window.screen.height + 'px';
+            }else{
+                document.body.style.overflow='auto';
+                document.body.style.height = 'auto';
+            }
+        },
     }
 }
 </script>

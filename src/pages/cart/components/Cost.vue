@@ -149,7 +149,7 @@ export default {
             margin-right -55vw
         #remarks
             width 100%
-            height 27.73vw
+            height 17.73vw
             border 1px solid #dbdbdb
             background-color #f7f7f7
             border-radius 5px

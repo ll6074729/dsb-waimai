@@ -37,7 +37,7 @@
 
                                     </div>
                                     <!-- {{item.sale}}m |  -->
-                                    <div class="shop-sale">销量 {{item.sales}}</div>
+                                    <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | 销量 {{item.sales}}</div>
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
@@ -108,9 +108,11 @@
         <div v-if="shopList.length < 1" class="shop-no">
             暂无商家
         </div>
+        <div id="allmap" style="display:none"></div>
     </div>
 </template>
 <script>
+import BMap from 'BMap'
 // import  BScroll from 'better-scroll'
 export default {
     name:'goodsList',
@@ -120,6 +122,7 @@ export default {
         input10:String,
         shopprom:Array,
         tags:Array,
+        range:Array
     },
     data () {
         return {
@@ -128,10 +131,19 @@ export default {
             isheader:false,
             fullscreenLoading: false,
             delivery_cost:this.$store.state.delivery_cost,
-            defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"'
+            defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"',
+            lng:localStorage.lng,
+            lat:localStorage.lat,
         }
     },
     methods : {
+        GetDistance() {
+            if(localStorage.lat || localStorage.lng){
+                let map = new BMap.Map('allmap')
+                let point = new BMap.Point(this.lng, this.lat)
+                
+            }
+        },
         chooes (sort) {
             this.sort = sort
             this.fullscreenLoading = true;
@@ -231,11 +243,19 @@ export default {
                     let tag = this.shopList[i].tags
                     this.tags[this.shopList[i].shop_id] = tag.split(',')
                 }
+                if(this.shopList[i].longitude && this.shopList[i].latitude){
+                    var pointA = new BMap.Point(this.lng, this.lat)
+                    var pointB = new BMap.Point(this.shopList[i].longitude, this.shopList[i].latitude)
+                    this.range[this.shopList[i].shop_id] = parseInt(map.getDistance(pointA,pointB))
+                }else{
+                    this.range[this.shopList[i].shop_id] = 0
+                }
             }
         },
     },
     mounted (){
         window.addEventListener("scroll",this.handleTop)
+        this.GetDistance()
         // this.scroll = new BScroll(this.$refs.shopList,{
         //     click:true
         // })

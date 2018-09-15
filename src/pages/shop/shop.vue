@@ -45,7 +45,7 @@
                                 score-template="{value}">
                             </el-rate>
                         </div>
-                        <div class="shop-sale">{{shop.sales}}m | 销量 {{shop.sales}}</div>
+                        <div class="shop-sale"> <span v-if="this.range != 0">{{this.range}}m | </span> 销量 {{shop.sales}}</div>
                     </div>
                     <div class="shop-foot">
                         {{shop.addr}}
@@ -196,10 +196,12 @@
             @buygoodsinfo="buygoodsinfo" 
             >
         </shop-info>
+        <div id="allmap" style="display:none"></div>
     </div>
 </template>
 <script>
-import  BScroll from 'better-scroll'
+import BMap from 'BMap'
+import BScroll from 'better-scroll'
 import ShopMenu from "./components/shopmenu"
 import ShopProduct from "./components/shopproduct"
 import ShopFoot from "./components/shopfoot"
@@ -246,10 +248,20 @@ export default {
             searchlist:[],
             goods_spec:[],
             fullmoney:null,
-            goods_feel:null
+            goods_feel:null,
+            range:0
         }
     },
     methods:{
+        GetDistance() {
+            if(localStorage.lat || localStorage.lng){
+                let map = new BMap.Map('allmap')
+                var pointA = new BMap.Point(localStorage.lng, localStorage.lat)
+                var pointB = new BMap.Point(this.shop.longitude, this.shop.latitude)
+                // console.log(parseInt(map.getDistance(pointA,pointB)))
+                this.range = parseInt(map.getDistance(pointA,pointB))
+            }
+        },
         down () {
             this.showtitle = !this.showtitle
         },
@@ -408,6 +420,7 @@ export default {
             let date = eval('('+res.data+')')
             // let date = res.data
             this.shop = date.data
+            this.GetDistance()
             if(this.shop.is_collect == 1){
                 this.isCollect = true
             }else{
