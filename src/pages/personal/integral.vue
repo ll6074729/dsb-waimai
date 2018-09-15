@@ -29,7 +29,9 @@ export default {
                 url: '/mobile/api/q',
                 // url:'api/buyer/account_log',
                 data: {
-                   page_size:15
+                    page_size:500,
+                    url:"http://api.dqvip.cc/buyer/account_log",
+                    q_type:'post'
                 },
             })
             .then(this._getintegral)

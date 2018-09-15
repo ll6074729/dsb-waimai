@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
-                                        <!-- <span  v-for="label in tags[item.shop_id]" :key="label">{{label}}</span> -->
+                                        <span  v-for="label in tags[item.shop_id]" :key="label">{{label}}</span>
                                     </div>
                                     <div class="shop-label-right">
                                         <span class="label-status">
@@ -305,7 +305,8 @@ export default {
             .shop-list-item
                 border-top 1px solid #f7f7f7
                 display flex
-                padding 5.3vw 2.66vw
+                padding 2.66vw
+                padding-bottom 0
                 .shop-left 
                     // flex 0 18.66vw
                     height 100%;
@@ -369,7 +370,7 @@ export default {
                                 display inline-block
                                 font-size 2.1vw
                                 color #999
-                                border 1px solid #999
+                                border 1px solid #dbdbdb
                                 padding 0.8vw 2vw
                                 margin-right 2.66vw
                                 border-radius 0.8vw
@@ -414,4 +415,5 @@ export default {
                                     font-size 2.93vw
                                     line-height 5vw
                                     margin-top -.5vw
+                                    ellipsis()
 </style>

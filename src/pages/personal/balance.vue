@@ -26,10 +26,12 @@ export default {
         getintegral () {
             this.$http({
                 method: 'post',
-                // url: '/mobile/api/q',
-                url:'api/buyer/account_log',
+                url: '/mobile/api/q',
+                // url:'api/buyer/account_log',
                 data: {
-                   page_size:15
+                    page_size:500,
+                    url:"http://api.dqvip.cc/buyer/account_log",
+                    q_type:'post'
                 },
             })
             .then(this._getintegral)
@@ -38,9 +40,8 @@ export default {
             })
         },
         _getintegral (res) {
-            console.log(res)
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             this.integral = date.data.data
         }
     },

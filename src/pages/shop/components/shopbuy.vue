@@ -1,43 +1,48 @@
 <template>
-    <div class="buy_box" v-if="isBuy">
-        <div class="backg" @click="closeGoodsInfo"></div>
-        <div class="shop-box">
-            <div class="head">
-                <div class="head-left">
-                    <div class="head-img">
-                        <img :src="this.imgurl" alt="" :onerror="defaultImg">
+<div>
+    <el-collapse-transition>
+        <div class="buy_box" v-if="isBuy">
+            <div class="backg" @click="closeGoodsInfo"></div>
+            <div class="shop-box">
+                <div class="head">
+                    <div class="head-left">
+                        <div class="head-img">
+                            <img :src="this.imgurl" alt="" :onerror="defaultImg">
+                        </div>
+                    </div>
+                    <div class="head-right">
+                        <div class="food-name">{{goodsinfo.goods_info.title}}</div>
+                        <div class="food-price" :ref="goodsinfo.goods_info.goods_id">￥{{goodsinfo.goods_info.price}}</div>
+                    </div>
+                    <div class="colse" @click="closeGoodsInfo">
+                        <img src="../../../assets/img/close.png" alt="">
                     </div>
                 </div>
-                <div class="head-right">
-                    <div class="food-name">{{goodsinfo.goods_info.title}}</div>
-                    <div class="food-price" :ref="goodsinfo.goods_info.goods_id">￥{{goodsinfo.goods_info.price}}</div>
+                <div class="category" ref="categoryList">
+                    <ul>
+                        <li class="category-item" v-for="(item,index) in goodsinfo.spec" :key="index">
+                            <div class="category-name">{{item.name}}：</div>
+                            <div class="category-list" >
+                                <div class="item" 
+                                    v-for="(itemList,index) of item.item" 
+                                    :key="itemList.item_id"
+                                    @click="chooesItem(index,itemList.item_id,itemList.goods_id,itemList.spec_id,itemList.price)"
+                                    :ref="itemList.spec_id"
+                                    >
+                                    {{itemList.item}} 
+                                    </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="colse" @click="closeGoodsInfo">
-                    <img src="../../../assets/img/close.png" alt="">
+                <div class="join-cart" cart-id="goodsinfo.goods_info.cart_id" @click="addCart" >
+                    加入购物车
                 </div>
-            </div>
-            <div class="category" ref="categoryList">
-                <ul>
-                    <li class="category-item" v-for="(item,index) in goodsinfo.spec" :key="index">
-                        <div class="category-name">{{item.name}}：</div>
-                        <div class="category-list" >
-                            <div class="item" 
-                                v-for="(itemList,index) of item.item" 
-                                :key="itemList.item_id"
-                                @click="chooesItem(index,itemList.item_id,itemList.goods_id,itemList.spec_id,itemList.price)"
-                                :ref="itemList.spec_id"
-                                >
-                                {{itemList.item}} 
-                                </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <div class="join-cart" cart-id="goodsinfo.goods_info.cart_id" @click="addCart" >
-                加入购物车
             </div>
         </div>
-    </div>
+    </el-collapse-transition>
+</div>
+    
 </template>
 <script>
 import BScroll from 'better-scroll'

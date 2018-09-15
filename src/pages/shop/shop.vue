@@ -61,23 +61,28 @@
                             </div>
                         </span>
                         <span class="list-item-right">{{shoptitle[0]}}</span>
+                        <img src="../../assets/img/down.png" alt="" :class="{showtitle:showtitle}" style="width:9px;height:5px;margin-top:5px;transform:rotate(0deg);" v-if="!showtitle && shoptitle[1] || shoptitle[2]" @click="down">
                     </div>
-                    <div class="list-item" v-if="shoptitle[1]">
-                        <span class="list-item-left">
-                            <div class="shop-label-activity shop-label-type3">
-                                赠品
+                    <el-collapse-transition>
+                        <div v-if="showtitle">
+                            <div class="list-item" v-if="shoptitle[1]">
+                                <span class="list-item-left">
+                                    <div class="shop-label-activity shop-label-type3">
+                                        赠品
+                                    </div>
+                                </span>
+                                <span class="list-item-right">{{shoptitle[1]}}</span>
                             </div>
-                        </span>
-                        <span class="list-item-right">{{shoptitle[1]}}</span>
-                    </div>
-                    <div class="list-item" v-if="shoptitle[2]">
-                        <span class="list-item-left" >
-                            <div class="shop-label-activity shop-label-type2">
-                                首单
+                            <div class="list-item" v-if="shoptitle[2]">
+                                <span class="list-item-left" >
+                                    <div class="shop-label-activity shop-label-type2">
+                                        首单
+                                    </div>
+                                </span>
+                                <span class="list-item-right">{{shoptitle[2]}}</span>
                             </div>
-                        </span>
-                        <span class="list-item-right">{{shoptitle[2]}}</span>
-                    </div>
+                        </div>
+                    </el-collapse-transition>
                 </div>
             </div>
         </div>
@@ -218,6 +223,7 @@ export default {
             shop:[], //店铺信息
             cart:[], //购物车
             isshowtab:0,
+            showtitle:false,
             isShowA:true,
             isCollect: false,  //是否收藏
             searchstatus:false, //是否展示搜索列表
@@ -244,6 +250,9 @@ export default {
         }
     },
     methods:{
+        down () {
+            this.showtitle = !this.showtitle
+        },
         showgoods (msg) {
             console.log(msg,654)
             for(let i in this.goods){
@@ -765,6 +774,7 @@ export default {
         height 2.13vw    
     .shop-head-center >>> .el-input__inner
         height 6.66vw
+        width 60vw
         text-align center
         line-height 6.66vw
         font-size 2.9vw
@@ -856,11 +866,13 @@ export default {
                     font-size 3.2vw
         .activity
             margin 0 6.4vw
-            padding 2.66vw 5.33vw
+            padding .66vw 5.33vw
             background-color rgba(0, 0, 0, 0.2)
             .list-item
                 display flex
                 margin 2.66vw 0
+                .showtitle
+                    transform rotate(180deg)!important
                 .list-item-left 
                     // width 8.66vw
                     margin-right 1.33vw

@@ -1,53 +1,57 @@
 <template>
-    <div class="shopbox" v-if="goods_feel">
-        <div class="shopbox-item" ref="liu">
-            <img src="../../../assets/img/close@3x.png" alt="" class="close" @click="close">
-            <swiper :options="swiperOption" class="swiper-warp" ref="mySwiper">
-                <swiper-slide v-for="item in goods" :key="item.goods_id" class="swiper-item">
-                    <!-- <img src="../../../assets/img/food.jpg" alt="" style="width:100%"> -->
-                    <swiper :options="swiperImg" >
-                        <swiper-slide v-for="itemimg in productImg[item.goods_id]" :key="itemimg">
-                            <img :src="'http://wm.dqvip.cc'+itemimg" alt=""   style="width:100%;max-height:85vw">
-                        </swiper-slide>
-                        <div class="swiper-paginationimg" style="text-align:center" slot="pagination"></div>
-                    </swiper>    
-                    <div class="goods-info">
-                        <div class="goods-name">
-                            {{item.title}}
-                        </div>
-                        <div class="goods-desc">
-                            {{item.intro}}
-                        </div>
-                        <div class="goods-num df">
-                            <div>￥{{item.price}}</div>
-                            <div class="shop-num">
-                                <!-- <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[item.goods_id]">-</div>
-                                <div class="minus" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">-</div>
-                                <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
-                                <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                                <div class="plus" @click="addCart(item.goods_id)">+</div> -->
+    <div>
+        <transition name="el-fade-in-linear">
+            <div class="shopbox" v-if="goods_feel">
+                <div class="shopbox-item" ref="liu">
+                    <img src="../../../assets/img/close@3x.png" alt="" class="close" @click="close">
+                    <swiper :options="swiperOption" class="swiper-warp" ref="mySwiper">
+                        <swiper-slide v-for="item in goods" :key="item.goods_id" class="swiper-item">
+                            <!-- <img src="../../../assets/img/food.jpg" alt="" style="width:100%"> -->
+                            <swiper :options="swiperImg" >
+                                <swiper-slide v-for="itemimg in productImg[item.goods_id]" :key="itemimg">
+                                    <img :src="'http://wm.dqvip.cc'+itemimg" alt=""   style="width:100%;max-height:85vw">
+                                </swiper-slide>
+                                <div class="swiper-paginationimg" style="text-align:center" slot="pagination"></div>
+                            </swiper>    
+                            <div class="goods-info">
+                                <div class="goods-name">
+                                    {{item.title}}
+                                </div>
+                                <div class="goods-desc">
+                                    {{item.intro}}
+                                </div>
+                                <div class="goods-num df">
+                                    <div>￥{{item.price}}</div>
+                                    <div class="shop-num">
+                                        <!-- <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[item.goods_id]">-</div>
+                                        <div class="minus" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">-</div>
+                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                        <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
+                                        <div class="plus" @click="addCart(item.goods_id)">+</div> -->
 
-                                <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
-                                <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
-                                <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
-                                <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                                <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id)">
+                                        <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
+                                        <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
+                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                        <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
+                                        <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id)">
+                                    </div>
+                                </div>
+                                <div class="goods-laud">
+                                    <div>1848 人点赞</div>
+                                    <div>1848 人点踩</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="goods-laud">
-                            <div>1848 人点赞</div>
-                            <div>1848 人点踩</div>
-                        </div>
-                    </div>
-                    
-                </swiper-slide>
-            </swiper>
-        </div>
-        <div class="swiper-other">
-            <div class="swiper-pagination"  slot="pagination"></div>
-            <!-- <div class="swiper-button-prev swiper-button-black" slot="button-prev"></div>
-            <div class="swiper-button-next swiper-button-black" slot="button-next"></div> -->
-        </div>
+                            
+                        </swiper-slide>
+                    </swiper>
+                </div>
+                <div class="swiper-other">
+                    <div class="swiper-pagination"  slot="pagination"></div>
+                    <!-- <div class="swiper-button-prev swiper-button-black" slot="button-prev"></div>
+                    <div class="swiper-button-next swiper-button-black" slot="button-next"></div> -->
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 <script>

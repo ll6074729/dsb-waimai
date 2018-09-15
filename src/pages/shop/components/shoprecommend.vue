@@ -248,5 +248,5 @@ export default {
                         line-height 5.33vw   
                         position absolute  
                         right 5vw
-                        bottom 2.9vw
+                        bottom 2.8vw
 </style>

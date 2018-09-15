@@ -18,6 +18,10 @@ import store from './store/index'
 import styleIndex from './assets/static/index'
 import axios from 'axios'
 import wx from 'weixin-js-sdk'
+// fade/zoom 等
+import 'element-ui/lib/theme-chalk/base.css';
+// collapse 展开折叠
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 // import 'babel-polyfill'
 // import Es6Promise from 'es6-promise'
 // require('es6-promise').polyfill()
@@ -34,7 +38,7 @@ Vue.use(Badge)
 Vue.use(Loading)
 Vue.use(Progress)
 Vue.use(Radio)
-
+Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.use(BaiduMap, {
   ak: 'ySYb24WsXpbFzl80OKpgeb2xN2CFKdmB'
 })

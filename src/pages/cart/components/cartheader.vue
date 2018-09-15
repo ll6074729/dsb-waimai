@@ -14,11 +14,11 @@
             </div>
             <div class="address-content db">
                 <div class="address-top">
-                    <strong>{{defaultAddress.consignee}}</strong>
-                    <strong>{{defaultAddress.mobile}}</strong>
+                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}楼
                 </div>
                 <div class="address-info">
-                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}楼
+                    <strong>{{defaultAddress.consignee}}</strong>
+                    <strong>{{defaultAddress.mobile}}</strong>
                 </div>
             </div>
             <router-link class="address-right fr" tag="div" :to="{path:'/sitelist',query:{page:'cart',cart_id:this.$route.params.id}}">
@@ -112,10 +112,13 @@ export default {
                 height 5.86vw
         .address-content
             vertical-align middle
+            width 80%
+            line-height 150%
             .address-top 
                 font-size 3.73vw
+                font-size 4.5vw
             .address-info
-                font-size 2.93vw
+                font-size 3.66vw
                 color #999
                 margin-top 4vw
                 max-width 75vw

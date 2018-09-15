@@ -26,40 +26,42 @@
             店铺休息
         </div>
     </div>
-    <div class="cart" v-show="iscartshow">
-        <div class="cart-head">
-            <div class="cart-title">购物车</div>
-            <div class="cart-clean" @click="cleanCart">清空</div>
-        </div>
-        <div class="isgoods" ref="isgoods" v-if="cart.length>=1">
-            <ul>
-                <li class="isgoods-item" v-for="item in cart" :key="item.cart_id">
-                    <div class="isgood-left">
-                        <div class="isgood-img">
-                            <img :src="item.pic[0]" alt="" :onerror="defaultImg">
-                        </div>
-                    </div>
-                    <div class="isgood-right">
-                        <div class="isgood-name">{{item.goods.title}}</div>
-                        <div class="isgood-attr">
-                            {{item.spec_key_name}}
-                        </div>
-                        <div class="isgood-foot">
-                            <div class="isgood-price">￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}</div>
-                            <div class="isgood-num">
-                                <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key)">
-                                <span>{{item.goods_num}}</span>
-                                <img class="plus" src="../../../assets/img/add@3x.png" alt="" @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key)">
+    <el-collapse-transition>
+        <div class="cart" v-show="iscartshow">
+            <div class="cart-head">
+                <div class="cart-title">购物车</div>
+                <div class="cart-clean" @click="cleanCart">清空</div>
+            </div>
+            <div class="isgoods" ref="isgoods" v-if="cart.length>=1">
+                <ul>
+                    <li class="isgoods-item" v-for="item in cart" :key="item.cart_id">
+                        <div class="isgood-left">
+                            <div class="isgood-img">
+                                <img :src="item.pic[0]" alt="" :onerror="defaultImg">
                             </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                        <div class="isgood-right">
+                            <div class="isgood-name">{{item.goods.title}}</div>
+                            <div class="isgood-attr">
+                                {{item.spec_key_name}}
+                            </div>
+                            <div class="isgood-foot">
+                                <div class="isgood-price">￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}</div>
+                                <div class="isgood-num">
+                                    <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key)">
+                                    <span>{{item.goods_num}}</span>
+                                    <img class="plus" src="../../../assets/img/add@3x.png" alt="" @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key)">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div v-if="cart.length<1" class="isshop">
+                暂时没有
+            </div>
         </div>
-        <div v-if="cart.length<1" class="isshop">
-            暂时没有
-        </div>
-    </div>
+    </el-collapse-transition>
 </div>
     
 </template>
