@@ -15,10 +15,12 @@
                 <img src="../../assets/img/search@3x.png" alt="" srcset="">
             </div>
         </div>
-        <goods-list :shopList="shopList" :page="page" :input10="input10"></goods-list>
+        <goods-list :shopList="shopList" :page="page" :input10="input10" :tags="tags" :range="range"></goods-list>
+        <div id="allmap" style="display:none"></div>
     </div>
 </template>
 <script>
+import BMap from 'BMap'
 import GoodsList from "../../componentss/goodsList"
 import axios from "axios"
 export default {
@@ -31,10 +33,20 @@ export default {
             input10: '',
             shopList:[],
             page:'shop-search',
-
+            tags:[],
+            range:[],
         }
     },
+    created () {
+        this._GetDistance()
+    },
     methods:{
+        _GetDistance() {
+            if(localStorage.lat || localStorage.lng){
+                window.map = new BMap.Map('allmap')
+                console.log(map)
+            }
+        },
         searchitem (){
             this.$http({
                  method:'post',
@@ -77,6 +89,19 @@ export default {
             // let date = res.data
             if(date.status == 200){
                 this.shopList = date.data.data
+                for(let i in this.shopList){
+                    if(this.shopList[i].tags){
+                        let tag = this.shopList[i].tags
+                        this.tags[this.shopList[i].shop_id] = tag.split(',')
+                    }
+                    if(this.shopList[i].longitude && this.shopList[i].latitude){
+                        var pointA = new BMap.Point(this.lng, this.lat)
+                        var pointB = new BMap.Point(this.shopList[i].longitude, this.shopList[i].latitude)
+                        this.range[this.shopList[i].shop_id] = parseInt(window.map.getDistance(pointA,pointB))
+                    }else{
+                        this.range[this.shopList[i].shop_id] = 0
+                    }
+                }
             }else{
                 this.$message({
                     message:date.message,

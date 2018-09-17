@@ -5,11 +5,11 @@
             <ul>
                 <li class="item df" v-for="item in this.collect" :key="item.collect_id">
                     <hr class="hr20">
-                    <div class="item-left">
+                    <router-link tag="div" :to="'/shop/'+item.shop.shop_id" class="item-left">
                         <div class="item-shopimg">
                             <img :src="item.shop.logo" alt="" :onerror="defaultImg">
                         </div>
-                    </div>
+                    </router-link>
                     <div class="item-right">
                         <!-- 头部信息 -->
                         <div class="item-right-top df">

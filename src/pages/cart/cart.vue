@@ -184,7 +184,7 @@ export default {
             .then(this.buybtnafter)
             .catch(function (error) {
                 alert(JSON.stringify(error))
-                // alert(404)
+                alert(404)
                 console.log(error);
             })
         },

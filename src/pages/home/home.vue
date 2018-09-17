@@ -67,7 +67,7 @@ export default {
     }
   },
     methods:{
-        GetDistance() {
+        _GetDistance() {
             if(localStorage.lat || localStorage.lng){
                 window.map = new BMap.Map('allmap')
                 console.log(map)
@@ -162,9 +162,10 @@ export default {
         },
     },
     mounted() {
+        this._GetDistance()
         this.chooesSchool()
         this.handSearch()
-        this.GetDistance()
+       
     },
 
 }

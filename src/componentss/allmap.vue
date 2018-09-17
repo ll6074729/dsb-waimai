@@ -9,6 +9,7 @@
   import BMap from 'BMap'
   import { Loading } from 'element-ui'
   export default {
+    name:'allmap',
     data () {
       return {
         type: 'tab',

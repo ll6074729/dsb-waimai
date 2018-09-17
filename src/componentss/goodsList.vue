@@ -36,7 +36,7 @@
                                         </el-rate>
 
                                     </div>
-                                    <!-- {{item.sale}}m |  -->
+                                    <!--  -->
                                     <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | 销量 {{item.sales}}</div>
                                 </div>
                                 <div class="shop-foot">
@@ -137,11 +137,9 @@ export default {
         }
     },
     methods : {
-        GetDistance() {
+        _GetDistance() {
             if(localStorage.lat || localStorage.lng){
-                let map = new BMap.Map('allmap')
-                let point = new BMap.Point(this.lng, this.lat)
-                
+                window.map = new BMap.Map('allmap') 
             }
         },
         chooes (sort) {
@@ -182,9 +180,6 @@ export default {
             let date = eval('(' + res.data + ')')
             // let date = res.data
             this.shopList = date.data.data //商家列表
-
-
-
 
             this.fullscreenLoading = false;
         },
@@ -246,16 +241,18 @@ export default {
                 if(this.shopList[i].longitude && this.shopList[i].latitude){
                     var pointA = new BMap.Point(this.lng, this.lat)
                     var pointB = new BMap.Point(this.shopList[i].longitude, this.shopList[i].latitude)
-                    this.range[this.shopList[i].shop_id] = parseInt(map.getDistance(pointA,pointB))
+                    this.range[this.shopList[i].shop_id] = parseInt(window.map.getDistance(pointA,pointB))
                 }else{
                     this.range[this.shopList[i].shop_id] = 0
                 }
             }
         },
     },
+    created () {
+        this._GetDistance()
+    },
     mounted (){
         window.addEventListener("scroll",this.handleTop)
-        this.GetDistance()
         // this.scroll = new BScroll(this.$refs.shopList,{
         //     click:true
         // })
@@ -377,7 +374,7 @@ export default {
                             color #999
                     .shop-content
                         display flex
-                        margin 2.66vw 0
+                        margin 1vw 0
                         justify-content space-between
                         .shop-sale
                             color #999

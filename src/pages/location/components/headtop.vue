@@ -6,7 +6,7 @@
             </router-link> -->
             <div class="search-head-center">
                 <el-input
-                    placeholder="请输入内容"
+                    placeholder="请输入校区名字"
                     v-model="keyword"
                     clearable>
                 </el-input>

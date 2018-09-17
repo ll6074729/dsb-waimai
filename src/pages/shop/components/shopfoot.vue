@@ -104,6 +104,11 @@ export default {
                     type:'warning',
                     message: '亲,请您至少选择一件商品',
                 })
+            }else if(this.addressList.length < 1){
+                this.$message({
+                    type:'warning',
+                    message: '没有目的地,外卖要送给小哥么~。~！',
+                })
             }else{
                 this.$router.push({name:'Cart',params:{shop_id:this.$route.params.id}})
             }

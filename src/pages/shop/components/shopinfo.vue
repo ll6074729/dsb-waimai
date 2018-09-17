@@ -269,6 +269,7 @@ export default {
                     margin-right 5%!important
                     width 90%!important
                     background #fff
+                    max-height 80vh
                     border-radius 10px
                     img 
                         border-top-left-radius 10px

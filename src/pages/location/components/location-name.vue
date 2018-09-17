@@ -5,17 +5,14 @@
                 <img src="../../../assets/img/address-cart.png" alt="">
                 <span class="loc-name">{{this.$store.state.defaultCity}}</span>
             </div>
-            <div class="loc-btn" @click="chooesclick">
-            <!-- <router-link to="/Location" class="loc-btn" tag="div"> -->
-                <img src="../../../assets/img/loc@3x.png" alt="">
-                <span class="loc-name">重新定位 </span>
-            <!-- </router-link> -->
-            </div>
+                <div class="loc-btn" @click="chooesclick">
+                    <img src="../../../assets/img/loc@3x.png" alt="">
+                    <span class="loc-name">重新定位 </span>
+                </div>
         </div>
     </div>
 </template>
 <script>
-// import { mapState } from 'vuex'
 export default {
     name:"locationName",
     data () {
@@ -29,8 +26,11 @@ export default {
     },
     methods:{
         chooesclick () {
-            this.$router.push({path:"/Location"})
-            this.$router.go(0)
+            // this.$router.go(0)
+            // alert(2)
+            location.reload()
+            // this.$router.push({path:"/Location"})
+            
         }
     }
 }

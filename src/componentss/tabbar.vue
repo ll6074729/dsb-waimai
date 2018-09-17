@@ -56,7 +56,7 @@ export default {
         z-index 9999999
         height 13.33vw
         box-shadow 0px -5px 20px 0px rgba(0, 0, 0, 0.1)
-        padding-left 2.34vw
+        text-align center
         .active
             color #469afe
         .tabbar-item
