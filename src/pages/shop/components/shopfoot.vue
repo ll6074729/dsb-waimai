@@ -13,7 +13,12 @@
                 <span class="price2" v-if="costPrice != 0">￥{{costPrice}}</span>
             </div>
             <div class="distribution" v-if="addressList.length >0">
-                配送费: ￥{{(parseFloat(delivery_cost) + parseFloat(delivery_price)).toFixed(2)}}
+                <span v-if="parseFloat(custom_delivery) !=0">
+                    配送费: ￥{{(parseFloat(custom_delivery) + parseFloat(delivery_price)).toFixed(2)}}
+                </span>
+                <span v-if="!parseFloat(custom_delivery) || parseFloat(custom_delivery) ==0">
+                    配送费: ￥{{(parseFloat(delivery_cost) + parseFloat(delivery_price)).toFixed(2)}}
+                </span>
             </div>
             <router-link tag="div" class="distribution" v-if="addressList.length == 0" to="/sitelist">
                 请先设置默认收货地址
@@ -77,6 +82,7 @@ export default {
         addressList:Array,
         delivery_price:Number,
         shop_status:Number,
+        custom_delivery:String
     },
     mounted() {
         this.getDelivery()

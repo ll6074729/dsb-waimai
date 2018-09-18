@@ -58,7 +58,7 @@ export default {
 <style lang="stylus" scoped>
     .ishead
         position fixed
-        top 10.33vw
+        top 22vw
         bottom 13.33vw
         overflow scroll
         width 26.66vw

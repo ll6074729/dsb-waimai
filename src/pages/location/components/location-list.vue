@@ -63,7 +63,8 @@ export default {
             this.$store.dispatch("changedelivery",parseFloat(delivery_cost).toFixed(2))
             this.$http({
                     method: 'post',
-                    url: '/mobile/api/q',
+                    // url: '/mobile/api/q',
+                    url:'api/buyer/user_locator',
                     data: {
                         url:'http://api.dqvip.cc/buyer/user_locator',
                         area_id:area_id,

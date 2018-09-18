@@ -39,7 +39,6 @@ export default {
     },
     methods:{
         paycode (type) {
-            console.log(type,16)
             this.paytype = type
             this.$emit('payCode',type)
         }

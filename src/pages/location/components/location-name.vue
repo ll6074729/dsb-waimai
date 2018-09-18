@@ -43,12 +43,13 @@ export default {
             img 
                 width 3.73vw
                 height 4.8vw
+                vertical-align baseline 
                 margin-right 1.33vw
         .loc-btn
             color #999
             img 
                 width 4vw
                 height 4vw  
-                vertical-align sub     
+                vertical-align baseline     
                 margin-right 1.33vw  
 </style>

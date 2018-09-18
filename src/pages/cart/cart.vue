@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <cart-header></cart-header>
+    <div v-loading.fullscreen.lock="fullscreenLoading">
+        <cart-header :timer="delivery_cost[2]"></cart-header>
         <hr class="hr20">
         <cart-info :cart="cart" :shopinfo="shopinfo" :page="page"></cart-info>
         <cost 
@@ -15,6 +15,7 @@
             :integral_num="integral_num"
             :balance_money="balance_money"
             :shopprom="shopprom"
+            :shopinfo="shopinfo"
             @getintegral_num="getintegral_num"
             @getbalance_money="getbalance_money"
             @setcoupon="setcoupon"
@@ -64,7 +65,7 @@ export default {
         return {
             cart:[],
             page:'cart',
-            shopinfo:[],
+            shopinfo:Object,
             delivery_cost:[],
             costPrice:0, //原价
             rulingPrice:0, //折扣价
@@ -77,17 +78,19 @@ export default {
             shopprom:JSON.parse(this.$store.state.shopprom),
             cartprom:null,
             cart_id:[],
-            fullscreenLoading: false,
             desc:"",
             integral:"",
             balance:"",
             balance_money:'',
             integral_num:'',
+            custom:0,
+            custom_delivery:0,
+            fullscreenLoading: true
         }
     },
     mounted () {
-        this.init()
         this.pushshopinfo()
+        this.init()
         this.DeliveryList()
         this.coupon_list()
         this.userinfo()
@@ -136,7 +139,10 @@ export default {
                 this.rulingPrice =  parseFloat(this.rulingPrice_money) - parseFloat(this.coupon.coupon.money)
                 this.coupon_id = this.coupon.id
             }
-        }
+        },
+        // shopinfo () {
+        //     this.money()
+        // }
     },
     methods:{
         // 可使用的余额
@@ -165,8 +171,8 @@ export default {
             var integral_num = this.integral_num || 0
             this.$http({
                 method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/submit_order',
+                // url: '/mobile/api/q',
+                url:'api/buyer/submit_order',
                 data: {
                     url:'http://api.dqvip.cc/buyer/submit_order',
                     shop_id:this.$route.params.id,
@@ -191,8 +197,8 @@ export default {
         buybtnafter (res) {
             // alert(res.data)
             console.log(res)
-            let date = eval('(' + res.data + ')')
-            // let date = res.data
+            // let date = eval('(' + res.data + ')')
+            let date = res.data
             // 把订单存在本地
             this.$store.dispatch("changeOrderId",date.data.order_id)
             this.$store.dispatch("changeOrderSn",date.data.order_sn)
@@ -237,20 +243,15 @@ export default {
             // 优惠信息
             let shopprom = JSON.parse(this.$store.state.shopprom)
             for(let i in cart){
-                total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
+                total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num)
             }
-            // 加配送费
-            for(let i =0;i<2;i++){
-                total += parseFloat(this.delivery_cost[i].value)
-            }
-            
             // 加楼层费   楼层费在最外层的cart 组件中已计算
             // if(parseFloat(this.$store.state.delivery_price) > 0){
             //     total += parseFloat(this.$store.state.delivery_price)
             // }
             this.costPrice = total.toFixed(2)
             this.rulingPrice = total.toFixed(2)
-            console.log(this.rulingPrice,1155555)
+            // console.log(this.rulingPrice,1155555)
             this.cartprom = []
             // 满减
             for(let i in shopprom[0]){
@@ -266,7 +267,7 @@ export default {
                     }            
                 } 
                 shopprom[0].sort(compare)
-                console.log(shopprom[0],156464343)
+                // console.log(shopprom[0],156464343)
                 if(this.costPrice > parseFloat(shopprom[0][i].condition)){
                     let Rprice = parseFloat(this.costPrice) - parseFloat(shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
@@ -274,12 +275,11 @@ export default {
                 }
             }
             // 赠品 只有一个
-            if(shopprom[1]){
+            if(shopprom[1][0]){
                 if(this.costPrice > parseFloat(shopprom[1][0].condition)){
                     this.cartprom[1] = shopprom[1][0]
                 }
             }
-            
             // 首单
             // 优惠券价钱是所有价钱算完了之后再计算的  watch 中的 coupon 方法
             if(this.shopinfo.is_first < 1){
@@ -298,16 +298,35 @@ export default {
                 this.shopprom[2][0] = null
                 this.rulingPrice_money = this.rulingPrice
             }
-            
-            
+             // 加配送费
+            // console.log(this.custom,88866)
+            if(this.shopinfo != undefined){
+                if(parseFloat(this.shopinfo.custom_delivery) != 0){
+                    // alert(1)
+                    let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
+                    this.costPrice = parseFloat(custom_money) + parseFloat(this.costPrice)
+                    this.rulingPrice = parseFloat(custom_money) + parseFloat(this.rulingPrice)
+                }else{
+                    // alert(2)
+                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
+                    this.costPrice = parseFloat(delivery_price) + parseFloat(this.costPrice)
+                    this.rulingPrice = parseFloat(delivery_price) + parseFloat(this.rulingPrice)
+                }
+            }else{
+                // alert(3)
+                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
+                    this.costPrice = parseFloat(delivery_price) + parseFloat(this.costPrice)
+                    this.rulingPrice = parseFloat(delivery_price) + parseFloat(this.rulingPrice)
+            }
+            this.fullscreenLoading = false
             // 如果是首单的话  只计算商品的钱   配送及打包 还是要算的
         },
         // 初始化购物车
         init () {
             this.$http({
                 method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/cart_list',
+                // url: '/mobile/api/q',
+                url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
@@ -320,10 +339,9 @@ export default {
                 })
         },
         initCart (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.cart = date.data
-            console.log(date,2)
             var cart_id = []
             for(let i in this.cart){
                 cart_id.push(this.cart[i].cart_id)
@@ -334,8 +352,8 @@ export default {
         pushshopinfo () {
             this.$http({
                 method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/shop_info',
+                // url: '/mobile/api/q',
+                url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
@@ -348,16 +366,19 @@ export default {
             })
         },
         getshopinfo (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.shopinfo = date.data
+            this.custom_delivery = date.data.custom_delivery
+            this.custom = date.data.custom
+            this.money()
         },
         // 获取配置文件
         DeliveryList () {
             this.$http({
-                method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/init',
+                method: 'get',
+                // url: '/mobile/api/q',
+                url:'api/init',
                 data: {
                     url:'http://api.dqvip.cc/init',
                     q_type:'get'
@@ -370,9 +391,9 @@ export default {
         },
         userinfo () {
             this.$http({
-                method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/user_info',
+                method: 'get',
+                // url: '/mobile/api/q',
+                url:'api/user_info',
                 data: {
                     url:'http://api.dqvip.cc/user_info',
                     q_type:'get'
@@ -384,14 +405,14 @@ export default {
                 })
         },
         getuserinfo (res) {
-            let date = eval('(' + res.data + ')')
-            // let date = res.data
+            // let date = eval('(' + res.data + ')')
+            let date = res.data
             this.balance = date.data.moeny
             this.integral = date.data.points
         },
         getDeliveryList (res) {
-            // let date = res.data
-            let date = eval('(' + res.data + ')')
+            let date = res.data
+            // let date = eval('(' + res.data + ')')
             // console.log(date,33)
             this.delivery_cost = date.data
             let freight = this.$store.state.delivery_cost
@@ -405,13 +426,13 @@ export default {
             if(packing_expense){
                 this.delivery_cost[1].value = packing_expense
             }
-            this.money()
+            // this.money()
         },
         coupon_list () {
             this.$http({
-                method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/coupon_list',
+                method: 'get',
+                // url: '/mobile/api/q',
+                url:'api/buyer/coupon_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/coupon_list',
                     q_type:'get'
@@ -423,8 +444,8 @@ export default {
                 })
         },
         getcouponList (res) {
-            let date = eval('('+res.date+')')
-            // let date =res.data
+            // let date = eval('('+res.date+')')
+            let date =res.data
             if(date){
                 this.couponList = date.data
             }

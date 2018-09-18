@@ -33,7 +33,7 @@
                 <strong class="fl">
                     送达时间
                 </strong>
-                <span class="fr">尽快送达，预计30分钟</span>    
+                <span class="fr">尽快送达，预计{{parseInt(timer.value)}}分钟</span>    
             </div>
             <!-- <div class="delivery-right fr">
                 <img src="../../../assets/img/right_f7.png" alt="">
@@ -44,6 +44,9 @@
 <script>
 export default {
     name:"cartheader",
+    props:{
+        timer:String
+    },
     data () {
         return {
             defaultAddress:[]

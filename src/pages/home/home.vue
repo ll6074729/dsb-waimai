@@ -1,5 +1,5 @@
 <template>
-    <div class="header">
+    <div class="header"  v-loading.fullscreen.lock="fullscreenLoading">
         <!-- 头部轮播 -->
         <homeswiper-banner :banner="banner"></homeswiper-banner>
         <!-- 头部搜索 -->
@@ -63,7 +63,8 @@ export default {
         page:'shop-home',
         lng:localStorage.lng,
         lat:localStorage.lat,
-        range:[]
+        range:[],
+        fullscreenLoading: true
     }
   },
     methods:{
@@ -159,6 +160,7 @@ export default {
                     this.range[this.shopList[i].shop_id] = 0
                 }
             }
+            this.fullscreenLoading = false
         },
     },
     mounted() {

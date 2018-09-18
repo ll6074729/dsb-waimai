@@ -41,7 +41,8 @@
                                 </div>
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
-                                        <span  v-for="label in tags[item.shop_id]" :key="label">{{label}}</span>
+                                        <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
+                                        <strong v-if="!tags[item.shop_id]">{{item.addr}}</strong>
                                     </div>
                                     <div class="shop-label-right">
                                         <span class="label-status">
@@ -87,13 +88,16 @@
                                                 </span>
                                             </span>
                                         </div>
-                                        <div class="list-item">
+                                        <div class="list-item" v-if="parseFloat(item.custom_delivery) != 0 || parseFloat(delivery_cost) != 0 ">
                                             <span class="list-item-left">
                                                 <div class="shop-label-activity shop-label-type4">
                                                     配送
                                                 </div>
                                             </span>
-                                            <span class="list-item-right">
+                                            <span class="list-item-right" v-if="parseFloat(item.custom_delivery) != 0">
+                                                配送费{{item.custom_delivery}}
+                                            </span>
+                                            <span class="list-item-right" v-if="parseFloat(item.custom_delivery) == 0">
                                                 配送费{{delivery_cost}}
                                             </span>
                                         </div>
@@ -323,7 +327,7 @@ export default {
                 border-top 1px solid #f7f7f7
                 display flex
                 padding 2.66vw
-                padding-bottom 0
+                // padding-bottom 0
                 .shop-left 
                     // flex 0 18.66vw
                     height 100%;
@@ -362,6 +366,7 @@ export default {
                             height 4.3vw
                             font-weight bold
                             width 75%
+                            padding-top 0.5vw
                             ellipsis()
                         .shop-status
                             width 13.3vw

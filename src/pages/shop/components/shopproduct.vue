@@ -94,6 +94,16 @@ export default {
         }
     },
     methods:{
+        handleTop (){
+            for(let i = 0;i<this.goods.length;i++){
+                var mheight = this.$refs[i][0].getBoundingClientRect().top
+                if(mheight){
+                    if(mheight > 30 && mheight <52){
+                        this.$emit('changeNum',i)
+                    }
+                }
+            }
+        },
         showgoods(num) {
             console.log(num)
             this.$emit('showgoods',num)

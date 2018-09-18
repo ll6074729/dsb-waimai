@@ -2,7 +2,7 @@
     <div style="position: relative">
         <div class="backg"></div>
         <!-- 头部 -->
-        <div class="shop-head">
+        <div class="shop-head" ref="shopHead">
             <router-link class="shop-head-left" tag="div" to="/" v-if="!searchstatus">
                 <img src="../../assets/img/back_white.png" alt="">
             </router-link>
@@ -135,6 +135,7 @@
                     :addressList="addressList"
                     :delivery_price="delivery_price"
                     :shop_status="shop.status"
+                    :custom_delivery="shop.custom_delivery"
                     ></shop-foot>
                 <shop-buy 
                 :isBuy="isBuy" 
@@ -347,6 +348,7 @@ export default {
                     
                 }
             }
+            this.$store.dispatch("changedeliveryPrice",delivery_price)
         },
         getCollect () {
             let type
@@ -478,7 +480,7 @@ export default {
             if(this.tabTop == 0){
                 this.tabTop = tabTop1
             }
-            if(tabTop1 > 1 ){
+            if(tabTop1 > this.$refs.shopHead.offsetHeight ){
                 this.ishead = false
             }else{
                 this.ishead = true
@@ -706,11 +708,11 @@ export default {
                 let newmoney = this.rulingPrice
                 for(let i in this.shopprom[0]){
                     if(this.costPrice >= parseFloat(this.shopprom[0][i].condition)){
-                        console.log(parseFloat(this.shopprom[0][i].condition),66565656)
+                        // console.log(parseFloat(this.shopprom[0][i].condition),66565656)
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                         this.fullmoney = parseFloat(this.shopprom[0][i].money)
-                        console.log(this.fullmoney,1)
-                        console.log(parseFloat(this.shopprom[0][i].money),66565656)
+                        // console.log(this.fullmoney,1)
+                        // console.log(parseFloat(this.shopprom[0][i].money),66565656)
                         newmoney = Rprice.toFixed(2)
                         break
                     }else{
@@ -782,7 +784,6 @@ export default {
 <style lang="stylus" scoped>
     .shop-score >>> .el-rate__icon
         font-size 2.13vw
-        color rgb(255,255,255)!important
     .shop-score >>> .el-rate
         height 2.13vw    
     .shop-head-center >>> .el-input__inner
@@ -799,6 +800,9 @@ export default {
         display flex
         justify-content space-between
         width 100%;
+        position fixed
+        top 0
+        z-index 10
         height 10.66vw
         align-items center
         padding 1.33vw 2.66vw
@@ -824,6 +828,7 @@ export default {
                 width 5.33vw
                 height 5.33vw  
     .shop-warp    
+        margin-top 10.66vw
         background-image: linear-gradient(90deg, 
             #4c91fe 0%, 
             #41a1fe 33%, 
@@ -928,7 +933,7 @@ export default {
                 color #4897fe
         .ishead
             position fixed
-            top 0
+            top 10.66vw
             width 100%      
             background-color #fff
             z-index 10

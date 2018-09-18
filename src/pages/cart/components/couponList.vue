@@ -8,6 +8,7 @@
             <ul>
                 <!-- v-if="item.condition > costPrice" -->
                 <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)">
+                    <!-- {{couponList}} -->
                     <div class="coupon-money">
                         ￥<span>{{item.coupon.money}}</span>
                     </div>
@@ -89,7 +90,7 @@ export default {
         background-color #f7f7f7
         position fixed
         width 100%
-        bottom 13.33vw
+        bottom 12vw
         top 60%
         z-index 9
         .coupon-title
@@ -102,6 +103,7 @@ export default {
             box-shadow 0px 5px 20px 0px rgba(0, 0, 0, 0.05)
         ul
             overflow scroll   
+            height 100%
             background-color #f7f7f7
             .active
                 background-image url(../../../assets/img/coupon_bg_blue.png)!important

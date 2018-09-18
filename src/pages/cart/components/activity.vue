@@ -47,7 +47,7 @@ export default {
     },
     methods : {
         liucartprom () {
-            console.log(this.cartprom,199)
+            // console.log(this.cartprom,199)
         }
     },
     data () {
@@ -57,7 +57,7 @@ export default {
     },
     watch: {
         cartprom () {
-            console.log(this.cartprom,199)
+            // console.log(this.cartprom,199)
         }
     }
 }

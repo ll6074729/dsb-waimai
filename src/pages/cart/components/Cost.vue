@@ -1,6 +1,6 @@
 <template>
     <div>
-        <expen-ses :delivery_cost="delivery_cost" v-if="delivery_cost"></expen-ses>
+        <expen-ses :delivery_cost="delivery_cost" v-if="delivery_cost" :shopinfo="shopinfo"></expen-ses>
         <hr class="hr20">
         <aciti-vity :cartprom="cartprom" :page="page" :shopprom="shopprom"></aciti-vity>
         <div class="cost-item df" @click="iscoupon">
@@ -43,6 +43,7 @@ export default {
         balance:String,
         balance_money:String,
         integral_num:String,
+        shopinfo:Object,
     },
     components:{
         AcitiVity,
@@ -123,7 +124,7 @@ export default {
         },
         // 判断积分余额是否大于待支付金额
         handmoney () {
-            console.log(this.cartprom,998)
+            // console.log(this.cartprom,998)
         }
     }
 }

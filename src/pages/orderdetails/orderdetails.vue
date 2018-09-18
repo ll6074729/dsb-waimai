@@ -23,7 +23,7 @@
         <take-out :order_status="order_status" :order_ps="order_ps"></take-out>
         <hr class="hr20">
         <cart-info :cart="cart" :page="page" :shopinfo="shop" ></cart-info>
-        <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2"></expen-ses>
+        <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2" :shopinfo="shop" :floor_amount="floor_amount"></expen-ses>
         <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity>
         <div class="df">
             <div class="list-name">
@@ -51,7 +51,7 @@ import Count from "./components/count"
 import OrderBtn from "../order/components/orderbtn"
 import TakeOut from "./components/takeout"
 import CartInfo from "../cart/components/cartinfo"
-import ExpenSes from "../cart/components/expenses"
+import ExpenSes from "./components/expensess"
 import AcitiVity from "../cart/components/activity"
 import MessAge from "./components/message"
 export default {
@@ -93,6 +93,7 @@ export default {
             order_ps:null,
             shop_id:0,
             is_comment:0,
+            floor_amount:0,
         }
     },
     mounted () {
@@ -109,11 +110,7 @@ export default {
                     q_type:'post',
                     order_id:this.$route.query.order_id,
                     order_sn:this.$route.query.order_sn
-                },
-                // headers :{
-                //     'Accept':'application/json',
-                //     'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImY1YWE4OTRmYmZkMDRiNzU4Yzk2ZGRlOTY0NzcyMWQ5M2IzM2Q1Mzk1NGZlNTAwMmFlNTQ1ODNkMjZlNjZiMDhiMWYxYmI3ZGIyOWY5MzYzIn0.eyJhdWQiOiIyIiwianRpIjoiZjVhYTg5NGZiZmQwNGI3NThjOTZkZGU5NjQ3NzIxZDkzYjMzZDUzOTU0ZmU1MDAyYWU1NDU4M2QyNmU2NmIwOGIxZjFiYjdkYjI5ZjkzNjMiLCJpYXQiOjE1MzU3MTE1MTIsIm5iZiI6MTUzNTcxMTUxMiwiZXhwIjoxNTM4MzAzNTEyLCJzdWIiOiI2NSIsInNjb3BlcyI6WyIqIl19.sr8YCf3ZR1Tc8P4IU8gLK15WTdRwQy-DdZNxSND_C-sTohzhEfuAz6ZqVPnUmCFU9Stb7o94vKBj-SFg8695SxdnQ6KTsln5jbl0zGqZPpa00nyW-2q_PDu8aKTv78inCEtl_bfsJ7XLz9wOnn8LfM9TmQJz4OXRI52baKpsBZ5Dxapp90uvGFlK26rAuzClXasvCSlH9YuC7J0rLP8yhuc8iFscWxN8YhARPIswVlG9_Mij2-DJdwAiqE_3XPxHPLrxIWsD3Ud-NYs0YbqzkXrEAEbDhllxuDW1VxNH1nvX0qNhvPUZ7WV3GuOfJgbIECvpaBfpQ7EWPZp1bQVFktgutGO0RMbATjE6IaD-tlycB46wIxxintgrDg-KGIowdcGXY274hXJCi8smPF0zPgN7UIT-lnddC6ySkldyWtcdWM0jzsUQvXwt2tmoJ1izcysJHkWQUTRU7Y3BB9oEL1qERCa8qCp8mXnMmXNTtUzRhRB2K2-IBstYKKFdvNl4x0FQMehqSHevkAdOixObkwKI5xoHxqdVouv1W01QeeU4nmpT12yQqZl6XL8b5tNBlAel8CbEd23tc3wPDeXdoxyB-kxYGDqqbocRI4rZs5wnuY32D8bweuv3iCf6RgpIgkKNpdWoZmbNW5QOWMfDCn7BRsLG1VXNs4OLryFRNCk'
-                // }
+                }
             })
                 .then(this.getorder_info)
                 .catch(function (error) {
@@ -137,6 +134,7 @@ export default {
             this.pay_status = date.data.pay_status
             this.shipping_status = date.data.shipping_status
             this.user_note = date.data.user_note
+            this.floor_amount = date.data.floor_amount
             if(date.data.finish_time){
                 this.timer = date.data.finish_time.replace(/\-/g, "/")
             }else{
