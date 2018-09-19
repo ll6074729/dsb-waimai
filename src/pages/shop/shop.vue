@@ -180,9 +180,9 @@
                         </div>
                     </div>   
                 </li>
-                <!-- <li v-if="searchlist.length < 1" style="text-align:center;margin-top:2rem">
+                <li v-if="this.searchlist.length < 1" style="text-align:center;margin-top:2rem">
                     暂时没有该商品~！
-                </li> -->
+                </li>
             </ul>
         </div>
         <shop-info 
@@ -267,7 +267,7 @@ export default {
             this.showtitle = !this.showtitle
         },
         showgoods (msg) {
-            console.log(msg,654)
+            // console.log(msg,654)
             for(let i in this.goods){
                 if(this.goods[i].goods_id == msg){
                     this.goods_feel = i
@@ -357,7 +357,7 @@ export default {
             }else{
                 type = 'true'
             }
-            console.log(type)
+            // console.log(type)
             // 更改收藏状态
             this.$http({
                 method: 'post',
@@ -579,7 +579,7 @@ export default {
                     cart_id = this.cart[i].cart_id
                 }
             }
-            console.log(goods_num,cart_id)
+            // console.log(goods_num,cart_id)
             if(goods_num == 0){
                 
                 this.$http({
@@ -716,8 +716,8 @@ export default {
                         newmoney = Rprice.toFixed(2)
                         break
                     }else{
-                        console.log(this.costPrice,2)
-                        console.log(this.shopprom[0][i].condition,3)
+                        // console.log(this.costPrice,2)
+                        // console.log(this.shopprom[0][i].condition,3)
                         this.fullmoney = null
                     }
                 }

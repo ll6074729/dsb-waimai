@@ -50,10 +50,10 @@
             </div>
             <div class="df pd20">
                 <div class="list-name">
-                    地址
+                    寝室号
                 </div>
                 <div class="list-input">
-                    <input type="text" placeholder="请填写详细地址" v-model="address">
+                    <input type="text" placeholder="请填写寝室号" v-model="address" maxlength="8">
                 </div>
             </div>
         </div>

@@ -12,7 +12,7 @@
                     </div>
                     <div class="head-right">
                         <div class="food-name">{{goodsinfo.goods_info.title}}</div>
-                        <div class="food-price" :ref="goodsinfo.goods_info.goods_id">￥{{goodsinfo.goods_info.price}}</div>
+                        <div class="food-price" ref="goodsPrice">￥{{goodsinfo.goods_info.price}}</div>
                     </div>
                     <div class="colse" @click="closeGoodsInfo">
                         <img src="../../../assets/img/close.png" alt="">
@@ -58,6 +58,7 @@ export default {
             cartbox:[],
             cartlist:{},
             imgurl:'',
+            // goodsPrice:this.goodsinfo.goods_info.price,
             defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
         }
     },
@@ -135,6 +136,7 @@ export default {
         },
         // 选择规格
         chooesItem (index,item_id,goods_id,spec_id,spec_price) {
+
             this.cartlist = {}
             this.cartlist.goods_id = goods_id
             this.cartlist.index = index
@@ -142,11 +144,15 @@ export default {
             this.cartlist.spec_id = spec_id
             this.cartlist.spec_price = spec_price
             this.cartbox[spec_id] = this.cartlist
+            // console.log(this.$refs[spec_id],0)
             // this.$refs[spec_id][index].
+            
+            //  let i = 0; i < this.$refs[spec_id].length -1; i ++
             for(let i in this.$refs[spec_id]){
-                this.$refs[spec_id][i].style.color = '#999'
-                this.$refs[spec_id][i].style.background = '#fff'
-                // 
+                if(this.$refs[spec_id][i].style){
+                    this.$refs[spec_id][i].style.color = '#999'
+                    this.$refs[spec_id][i].style.background = '#fff'
+                }
             }
             this.$refs[spec_id][index].style.color = '#fff'
             this.$refs[spec_id][index].style.background = '#469afe'
@@ -156,14 +162,18 @@ export default {
                     foodprice += parseFloat(this.cartbox[i].spec_price)
                 }
             }
-            // console.log(this.$refs[goods_id])
-            this.$refs[goods_id].innerHTML = '￥'+ (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
+            console.log(this.$refs)
+            console.log(goods_id)
+            console.log(this.$refs[goods_id])
+            this.$refs.goodsPrice.innerHTML = '￥'+ (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
+            // this.goodsinfo.goods_info.price = (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
         }
     },
     watch:{
         goodsinfo () {
             let img = this.goodsinfo.goods_info.details_figure.split(',')
             this.imgurl = img[0]
+            // this.$refs.goodsPrice.innerHTML = this.goodsinfo.goods_info.price
         },
         cartbox () {
             console.log(1111)

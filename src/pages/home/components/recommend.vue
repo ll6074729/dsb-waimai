@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="list.length > 0">
         <div class="title title-94">
             大牌推荐
         </div>

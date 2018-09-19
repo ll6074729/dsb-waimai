@@ -1,20 +1,26 @@
 <template>
     <div>
-        <div v-if="parseFloat(this.shopinfo.custom_delivery) !=0 ">
-            <div class="cost-item df">
+        <!-- <div v-if="this.shopinfo"> -->
+            <div class="cost-item df" v-if="parseFloat(this.shopinfo.custom_delivery) !=0">
                 <div class="cost-type">配送费</div>
                 <div class="cost-price">￥{{(parseFloat(this.shopinfo.custom_delivery)+ parseFloat(this.$store.state.delivery_price)).toFixed(2)}} </div>
             </div>
-            <div class="cost-item df">
+            <div class="cost-item df" v-if="parseFloat(this.shopinfo.custom) !=0">
                 <div class="cost-type">打包费</div>
                 <div class="cost-price">￥{{this.shopinfo.custom}}</div>
             </div>
-        </div>
-        <div v-if="parseFloat(this.shopinfo.custom_delivery) == 0">
-            <div class="cost-item df" v-for="(item,index) in delivery_cost" :key="index" v-if="delivery_cost.length >0 && item.name !='delivery_duration'">
-                <div class="cost-type">{{item.desc}}</div>
+        <!-- </div> -->
+        <!-- <div v-if="!this.shopinfo"> -->
+             <!-- v-for="(item,index) in delivery_cost" :key="index" v-if="delivery_cost.length >0 && item.name !='delivery_duration'" -->
+            <div class="cost-item df" v-if="parseFloat(delivery_cost[0].value) > 0">
+                <div class="cost-type">{{delivery_cost[0].desc}}</div>
                 <!-- <div class="cost-price" v-if="item.name == 'delivery_cost'">￥{{(parseFloat(item.value) + parseFloat(this.$store.state.delivery_price)).toFixed(2)}}</div> -->
-                <div class="cost-price">￥{{item.value}}</div>
+                <div class="cost-price">￥{{delivery_cost[0].value}}</div>
+            </div>
+            <div class="cost-item df" v-if="parseFloat(delivery_cost[1].value) > 0">
+                <div class="cost-type">{{delivery_cost[1].desc}}</div>
+                <!-- <div class="cost-price" v-if="item.name == 'delivery_cost'">￥{{(parseFloat(item.value) + parseFloat(this.$store.state.delivery_price)).toFixed(2)}}</div> -->
+                <div class="cost-price">￥{{delivery_cost[1].value}}</div>
             </div>
             <div class="cost-item df" v-if="delivery_cost1">
                 <div class="cost-type">{{delivery_cost1.desc}}</div>
@@ -24,7 +30,7 @@
                 <div class="cost-type">{{delivery_cost2.desc}}</div>
                 <div class="cost-price">￥{{delivery_cost2.value}}</div>
             </div>
-        </div>
+        <!-- </div> -->
     </div>
 </template>
 <script>

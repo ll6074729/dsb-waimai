@@ -82,6 +82,7 @@ export default {
             text-align center
             box-sizing border-box
             padding 2vw
+            font-size 2.93vw
             box-sizing border-box
             padding 2vw
             text-overflow ellipsis

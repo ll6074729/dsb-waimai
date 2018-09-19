@@ -1,6 +1,6 @@
 <template>
     <div class="icons">
-        <swiper :options="swiperOption">
+        <swiper :options="swiperOption" >
             <swiper-slide v-for="(page,index) of pages" :key="index">
                 <div class="icon" v-for="item of page" :key="item.type_id">
                     <router-link :to="{path:'search',query:{type_id:item.type_id}}">
@@ -14,6 +14,9 @@
                 </div>  
             </swiper-slide> 
         </swiper>
+        <div class="pages-no" v-if="pages.length < 1">
+            暂无分类
+        </div>
    </div>
 </template>
 <script>
@@ -50,8 +53,15 @@ export default {
         height 0
         padding-bottom 50%
     .icons
+        position relative
         margin-top .1rem
         margin-bottom .1rem
+        .pages-no
+            position absolute
+            top 50%
+            text-align center
+            width 100%
+            color #469afe
         .icon 
             position relative
             overflow hidden
@@ -66,7 +76,7 @@ export default {
                 right 0
                 bottom .44rem
                 box-sizing border-box
-                padding .2rem
+                padding 0.15rem
                 .icon-img-content
                     display block
                     margin 0 auto 

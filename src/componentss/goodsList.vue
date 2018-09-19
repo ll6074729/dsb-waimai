@@ -42,7 +42,7 @@
                                 <div class="shop-foot">
                                     <div class="shop-label-left">
                                         <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
-                                        <strong v-if="!tags[item.shop_id]">{{item.addr}}</strong>
+                                        <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong>
                                     </div>
                                     <div class="shop-label-right">
                                         <span class="label-status">
@@ -267,7 +267,8 @@ export default {
 @import "~css/style"
 .shop-no
     text-align center
-    margin-top 3vw
+    margin-top 1vw
+    padding-bottom 3vw
 .boxfixed
     position fixed!important
     z-index 101
@@ -379,7 +380,7 @@ export default {
                             color #999
                     .shop-content
                         display flex
-                        margin 1vw 0
+                        margin-top 1vw
                         justify-content space-between
                         .shop-sale
                             color #999
@@ -407,6 +408,8 @@ export default {
                             .list-item
                                 display flex
                                 margin 2.66vw 0
+                                &:last-child
+                                    margin-bottom 0
                                 .list-item-left 
                                     // width 8.66vw
                                     margin-right 1.33vw

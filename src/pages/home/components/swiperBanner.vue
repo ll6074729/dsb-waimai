@@ -13,6 +13,7 @@
         <div class="mask">
             <img src="../img/border-bottom.png" alt="">
         </div>
+        <img src="../../../assets/img/banner1.png" alt="" style="width:100%" v-if="banner.length < 1">
     </div>
 </template>
 <script>

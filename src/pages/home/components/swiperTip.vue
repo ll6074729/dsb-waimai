@@ -1,5 +1,5 @@
 <template>
-    <div class="tip">
+    <div class="tip" v-if="notice.length > 0">
         <div class="tip-img">
             <img src="../img/tip.png" alt="">
         </div>

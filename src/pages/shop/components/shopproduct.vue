@@ -1,5 +1,5 @@
 <template>
-        <div class="shop-product" ref="shop" :class="{'isshop':ishead,isfullmoney:fullmoney}">
+        <div class="shop-product" ref="shop" :class="{isfullmoney:fullmoney}">
             <ul>
                 <li class="area" 
                     v-for="(item , index) in goods" 
@@ -243,16 +243,9 @@ export default {
     .item-list >>> .item:last-child 
         border none!important
     .isfullmoney
-        padding-bottom 1.5rem!important    
-    .isshop
-        // position fixed
-        // top 10.66vw
-        // width 73.34vw   
-        // margin-left 26.66vw 
-        padding-bottom 13.33vw
+        padding-bottom 1.5rem!important
     .shop-product 
         background-color #fff
-        
         flex 1
         // position absolute
         // top 2vw
@@ -261,6 +254,8 @@ export default {
         // bottom 0
         // overflow hidden
         .area 
+            &:last-child
+                padding-bottom 13.33vw
             .cate-title
                 width 95%
                 height 6.66vw
