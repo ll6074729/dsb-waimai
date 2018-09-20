@@ -440,5 +440,6 @@ export default {
                                     font-size 2.93vw
                                     line-height 5vw
                                     margin-top -.5vw
+                                    max-width 65vw
                                     ellipsis()
 </style>

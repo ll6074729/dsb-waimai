@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="activity" v-if="shop.prom.length > 1">
+            <div class="activity" v-if="shop.prom.length > 0">
                 <div>
                     <div class="list-item" v-if="shoptitle[0]">
                         <span class="list-item-left">
@@ -628,7 +628,6 @@ export default {
             let type0 = []
             let type1 = []
             let type2 = []
-
             // 满减
             for(var i = 0;i < this.shop.prom.length;i++){ 
                 if(this.shop.prom[i].type == 0){
@@ -743,7 +742,7 @@ export default {
                 this.searchstatus = true
             }else{
                 document.body.style.overflow='auto';
-                document.body.style.height = 'auto';
+                document.body.style.height = '100%';
                 this.searchstatus = false
             }
 

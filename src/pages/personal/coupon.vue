@@ -65,7 +65,7 @@ export default {
         getcouponList (res) {
             let date = eval('('+res.data+')')
             // let date = res.data
-            alert(res.data)
+            // alert(res.data)
             this.couponList = date.data
         },
     },

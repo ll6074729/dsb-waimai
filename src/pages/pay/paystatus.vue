@@ -90,6 +90,9 @@ export default {
             let date = eval('('+res.data+')')
             // let date1 = res.data
             console.log(date)
+            if(date.data.pay_status == 1){
+                this.$router.push({path:'/orderdetails',query:{order_sn:date.data.order_sn,order_id:date.data.order_id}})
+            }
             this.order_sn = date.data.order_sn
             this.order_amount = date.data.order_amount
         }

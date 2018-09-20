@@ -60,7 +60,7 @@ export default {
     methods: {
         edit_address (num) {
             // console.log(num)
-            this.$router.push({path:'/site',query:{address_num:num}})
+            this.$router.push({path:'/site',query:{address_num:num,page:this.$route.query.page}})
         },
         defaultAddress () {
             for(let i in  this.list){

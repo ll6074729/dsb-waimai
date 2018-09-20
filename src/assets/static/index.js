@@ -111,7 +111,7 @@ export default{
 				 if(res.err_msg == "get_brand_wcpay_request:ok") {
                     location.href='/#/pay/true';
 				 }else{
-				 	// alert(res.err_code+res.err_desc+res.err_msg);
+				 	alert(res.err_code+res.err_desc+res.err_msg);
                     location.href='/#/pay/false';
 				 }
 			}

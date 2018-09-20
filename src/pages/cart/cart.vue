@@ -97,6 +97,9 @@ export default {
     },
     watch:{
         integral_num () {
+            if(!this.integral_num){
+                this.integral_num = ""
+            }
             var integral_num = this.integral_num || 0
             // this.shopprom = []
            this.money()
@@ -116,6 +119,9 @@ export default {
             
         },
         balance_money (){
+            if(!this.balance_money){
+                this.balance_money = ""
+            }
             var balance_money = this.balance_money || 0
             // this.shopprom = []
             this.money()
@@ -139,6 +145,9 @@ export default {
                 this.rulingPrice =  parseFloat(this.rulingPrice_money) - parseFloat(this.coupon.coupon.money)
                 this.coupon_id = this.coupon.id
             }
+        },
+        delivery_cost() {
+            this.money()
         },
         // shopinfo () {
         //     this.money()
@@ -189,39 +198,43 @@ export default {
             })
             .then(this.buybtnafter)
             .catch(function (error) {
-                alert(JSON.stringify(error))
+                // alert(JSON.stringify(error))
                 alert(404)
                 console.log(error);
             })
         },
         buybtnafter (res) {
-            // alert(JSON.stringify(res.data))
-            console.log(res)
+            // alert(JSON.stringify(res.data))  
             let date = eval('(' + res.data + ')')
             // let date = res.data
             // 把订单存在本地
             this.$store.dispatch("changeOrderId",date.data.order_id)
             this.$store.dispatch("changeOrderSn",date.data.order_sn)
             let _this = this
-            if(date.data.pay_code == 'alipayMobile'){
-                    // this.$router.push('/Paystatus')
-                window.location.href = '/Mobile/Payment/getpayCode?order_id='+date.data.order_id+'&pay_code='+date.data.pay_code
+            if(parseInt(date.data.order_amount) == 0){
+                _this.fullscreenLoading = false;
+                location.href='/#/pay/true';
             }else{
-                this.$http({
-                    method:'post',
-                    url:'/Mobile/Payment/getpayCode',
-                    data:{
-                        order_id:date.data.order_id,
-                        pay_radio:'pay_code='+ date.data.pay_code
-                    },
-                })
-                .then(function(response){
-                    _this.fullscreenLoading = false;
-                    _this.styleIndex.callpay(response.data)
-                })
-                .catch(function(error){
-                    console.log(error)
-                })
+                if(date.data.pay_code == 'alipayMobile'){
+                    // this.$router.push('/Paystatus')
+                    window.location.href = '/Mobile/Payment/getpayCode?order_id='+date.data.order_id+'&pay_code='+date.data.pay_code
+                }else{
+                    this.$http({
+                        method:'post',
+                        url:'/Mobile/Payment/getpayCode',
+                        data:{
+                            order_id:date.data.order_id,
+                            pay_radio:'pay_code='+ date.data.pay_code
+                        },
+                    })
+                    .then(function(response){
+                        _this.fullscreenLoading = false;
+                        _this.styleIndex.callpay(response.data)
+                    })
+                    .catch(function(error){
+                        console.log(error)
+                    })
+                }
             }
         },
         // 选择支付方式
@@ -240,11 +253,14 @@ export default {
         money () {
             let cart = this.cart
             let total = 0
+            console.log(cart)
             // 优惠信息
             let shopprom = JSON.parse(this.$store.state.shopprom)
             for(let i in cart){
+                console.log(i)
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num)
             }
+            console.log(total,55555555)
             // 加楼层费   楼层费在最外层的cart 组件中已计算
             // if(parseFloat(this.$store.state.delivery_price) > 0){
             //     total += parseFloat(this.$store.state.delivery_price)
@@ -305,32 +321,38 @@ export default {
               * delivery_cost 默认的费用  是个数组
               * 
               */
-            if(this.shopinfo != undefined){
-                if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) != 0){
-                    // alert(1)
-                    let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
-                    this.costPrice = (parseFloat(custom_money) + parseFloat(this.costPrice)).toFixed(2)
-                    this.rulingPrice = (parseFloat(custom_money) + parseFloat(this.rulingPrice)).toFixed(2)
-                }else if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) == 0){
-                    let delivery_price = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.delivery_cost[1].value)
-                    this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                    this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-                }else if(parseFloat(this.shopinfo.custom_delivery) == 0 && parseFloat(this.shopinfo.custom) != 0){
-                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.shopinfo.custom)
-                    this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                    this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+            //  console.log(this.delivery_cost)
+            // if(this.delivery_cost.length == 0){
+            //     location.reload()
+            // }else{
+                if(this.shopinfo != undefined){
+                    if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) != 0){
+                        // alert(1)
+                        let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
+                        this.costPrice = (parseFloat(custom_money) + parseFloat(this.costPrice)).toFixed(2)
+                        this.rulingPrice = (parseFloat(custom_money) + parseFloat(this.rulingPrice)).toFixed(2)
+                    }else if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) == 0){
+                        let delivery_price = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.delivery_cost[1].value)
+                        this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
+                        this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    }else if(parseFloat(this.shopinfo.custom_delivery) == 0 && parseFloat(this.shopinfo.custom) != 0){
+                        let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.shopinfo.custom)
+                        this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
+                        this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    }else{
+                        // alert(2)
+                        let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
+                        this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
+                        this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    }
                 }else{
-                    // alert(2)
-                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
-                    this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                    this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    // alert(3)
+                        let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
+                        this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
+                        this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
                 }
-            }else{
-                // alert(3)
-                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
-                    this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                    this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-            }
+            // }
+
             this.fullscreenLoading = false
             // 如果是首单的话  只计算商品的钱   配送及打包 还是要算的
         },
@@ -375,7 +397,7 @@ export default {
             })
             .then(this.getshopinfo)
             .catch(function (error) {
-                console.log(error);
+                console.log(error)
             })
         },
         getshopinfo (res) {
@@ -422,6 +444,7 @@ export default {
             // let date = res.data
             this.balance = date.data.moeny
             this.integral = date.data.points
+            this.money()
         },
         getDeliveryList (res) {
             // let date = res.data
@@ -439,7 +462,9 @@ export default {
             if(packing_expense){
                 this.delivery_cost[1].value = packing_expense
             }
-            // this.money()
+            // this.$nextTick(function () {
+            //     this.money()
+            // })
         },
         coupon_list () {
             this.$http({

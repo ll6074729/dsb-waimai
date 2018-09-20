@@ -1,7 +1,7 @@
 <template>
     <div class="takeout pd20" v-if="order_ps">
         <div class="takeout-img">
-            <img :src="'http://wm.dqvip.cc'+order_ps.headimgurl" alt="">
+            <img :src="order_ps.headimgurl" alt="">
         </div>
         <div class="takeout-info">
             <div class="takeout-job">配送员</div>

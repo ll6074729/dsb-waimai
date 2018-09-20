@@ -162,9 +162,6 @@ export default {
                     foodprice += parseFloat(this.cartbox[i].spec_price)
                 }
             }
-            console.log(this.$refs)
-            console.log(goods_id)
-            console.log(this.$refs[goods_id])
             this.$refs.goodsPrice.innerHTML = '￥'+ (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
             // this.goodsinfo.goods_info.price = (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
         }
@@ -180,13 +177,13 @@ export default {
             console.log(this.cartbox)
         },
         isBuy () {
-            // console.log(this.swiper,999)
+            console.log(this.swiper,999)
             if(this.isBuy){
                 document.body.style.overflow='hidden';
                 document.body.style.height = window.screen.height + 'px';
             }else{
                 document.body.style.overflow='auto';
-                document.body.style.height = 'auto';
+                document.body.style.height = '100%';
             }
                
         },

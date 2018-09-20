@@ -120,13 +120,19 @@ export default {
             let minutes =  parseInt(bugtime / 60 % 60, 10)
             let seconds = parseInt(bugtime / 1000 % 60, 10);
             if(this.order_status != 4){
-                if(currenTime <= countTime){
-                    this.count = parseInt((currenTime/countTime)*100)
-                    this.leftTimer()
+                if(currenTime && countTime){
+                    if(currenTime <= countTime){
+                        this.count = parseInt((currenTime/countTime)*100)
+                        this.leftTimer()
+                    }else{
+                        this.count = 100
+                        this.$refs.progress.color = "#ff7777"
+                        this.text = '订单超时'
+                    }
                 }else{
                     this.count = 100
-                    this.$refs.progress.color = "#ff7777"
-                    this.text = '订单超时'
+                    this.$refs.progress.color = "#f7f7f7"
+                    this.text = '已取消'
                 }
             }else{
                 this.count = 100

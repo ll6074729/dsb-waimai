@@ -50,7 +50,7 @@
                 @orderlist="orderlist"
             >
             </order-btn>
-            <hr class="hr20">
+            <hr class="hr20" v-if="list.length > 1">
         </div>
     </div>
     
@@ -89,7 +89,9 @@ export default {
     @import "~css/style"
     .order-head
         display flex
-        padding 2.66vw
+        margin 2.66vw
+        padding-bottom 2.66vw
+        border-bottom 1px solid #f7f7f7
         img 
             width 8vw
             height 8vw

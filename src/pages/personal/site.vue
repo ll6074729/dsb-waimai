@@ -144,7 +144,7 @@ export default {
                 date.address_id = this.address_id
             }
             this.$http({
-                 method: 'post',
+                method: 'post',
                 url: 'mobile/api/q',
                 // url:"api/buyer/edit_address",
                 data: date,

@@ -120,6 +120,7 @@ export default {
         getorder_info (res) {
             let date = eval('('+res.data+')')
             // let date = res.data
+            console.log(date)
             this.consignee = date.data.consignee
             this.address = date.data.address
             this.user_mobile = date.data.mobile

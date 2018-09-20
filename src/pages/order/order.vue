@@ -2,7 +2,7 @@
     <div v-loading.fullscreen.lock="fullscreenLoading">
         <div v-if="latestOrder.length ==0 && historyOrder.length == 0" style="text-align:center;margin-top:3vw">暂无订单,请您快去购买哟~！</div>
         <div v-if="latestOrder.length != 0" :class="{'history':historyOrder.length == 0}">   
-            <div class="title">当前订单</div>
+            <div class="title">订单列表</div>
             <shop-info :list="latestOrder" @orderlist="orderlist"></shop-info>
         </div>
         <div class="history" v-if="historyOrder.length != 0">

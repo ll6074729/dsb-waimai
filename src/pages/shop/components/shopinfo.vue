@@ -9,7 +9,7 @@
                             <!-- <img src="../../../assets/img/food.jpg" alt="" style="width:100%"> -->
                             <swiper :options="swiperImg" >
                                 <swiper-slide v-for="itemimg in productImg[item.goods_id]" :key="itemimg">
-                                    <img :src="'http://wm.dqvip.cc'+itemimg" alt=""   style="width:100%;max-height:85vw">
+                                    <img :src="itemimg" alt=""   style="width:100%;max-height:85vw">
                                 </swiper-slide>
                                 <div class="swiper-paginationimg" style="text-align:center" slot="pagination"></div>
                             </swiper>    
@@ -95,7 +95,7 @@ export default {
                 
             }else{
                 document.body.style.overflow='auto';
-                document.body.style.height = 'auto';
+                document.body.style.height = '100%';
             }
                
         },

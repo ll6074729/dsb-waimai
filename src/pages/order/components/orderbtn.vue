@@ -78,12 +78,21 @@ export default {
             })
                 .then(function(res){
                     console.log(res)
-                    _this.$emit('orderlist','0')
-                    _this.$message({
-                        type: 'success',
-                        message: '取消成功'
-                    })
-                    _this.$router.push('/order')
+                    let date = eval('('+res.data+')')
+                    // alert(res.data)
+                    if(date.status == 422){
+                        _this.$emit('orderlist','0')
+                        _this.$message({
+                            type: 'success',
+                            message: '取消成功'
+                        })
+                        _this.$router.push('/order')
+                    }else{
+                        _this.$message({
+                            type: 'error',
+                            message: date.message
+                        })
+                    }  
                 })
                 .catch(function(error){
                     console.log(error)
@@ -119,7 +128,7 @@ export default {
         display flex
         padding 2.66vw
         .order-btn-item
-            padding 2.26vw 3.33vw
+            padding 1.66vw 2.22vw
             border 1px solid #999
             margin-left 2.66vw
             border-radius 1vw
