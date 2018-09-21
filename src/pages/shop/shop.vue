@@ -294,8 +294,8 @@ export default {
             this.num = msg
         },
         // 再次请求购物车
-        AglinCart () {
-            this.getCart()
+        AglinCart (msg) {
+            this. cart = msg.data
         },
         buygoodsinfo (msg) {
             this.goodsinfo = msg
@@ -318,10 +318,10 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                method: 'post',
-                // method:'get',
-                url:'mobile/api/q',
-                // url:'api/buyer/list_address',
+                // method: 'post',
+                method:'get',
+                // url:'mobile/api/q',
+                url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
@@ -333,8 +333,8 @@ export default {
                 })
         },
         getaddrList (res){
-            const date = eval('('+res.data+')')
-            // let date = res.data
+            // const date = eval('('+res.data+')')
+            let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -361,8 +361,8 @@ export default {
             // 更改收藏状态
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/collect_shop',
+                // url: 'mobile/api/q',
+                url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
@@ -376,8 +376,8 @@ export default {
                 })
         },
         collect (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.status == 200){
                 if(date.message  != 'false'){
                     this.$message({
@@ -405,8 +405,8 @@ export default {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/shop_info',
+                // url: 'mobile/api/q',
+                url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
@@ -419,8 +419,8 @@ export default {
                 })
         },
         getlistbox(res){
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.shop = date.data
             this.GetDistance()
             if(this.shop.is_collect == 1){
@@ -451,8 +451,8 @@ export default {
             // 获取购物车信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/cart_list',
+                // url: 'mobile/api/q',
+                url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
@@ -465,8 +465,8 @@ export default {
                 })
         },
         getCartList (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.cart = date.data
         },
         // 固定在顶部
@@ -500,8 +500,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -516,8 +516,8 @@ export default {
                 })
         },
         getaddCart (res,GoodId,goods_num,cart_id) {
-            // let date = res.data
-            let date = eval('('+res.data+')')
+            let date = res.data
+            // let date = eval('('+res.data+')')
             let data ;
             if(cart_id){
                 data =  {
@@ -540,8 +540,8 @@ export default {
             if(date.data.spec.length == 0){
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(this.emitCart)
@@ -555,10 +555,10 @@ export default {
             
         },
         emitCart (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.data == ''){
-                this.AglinCart(1)
+                this.cart = date.data
             }else{
                 alert('加入失败')
             }
@@ -583,17 +583,17 @@ export default {
             if(goods_num == 0){
                 
                 this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
+                    // method:'post',
+                    method: 'delete',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_clear',
                     data:{
                         cart_id:cart_id,
                         url:"http://api.dqvip.cc/buyer/cart_clear",
                         q_type:'delete',
                     },
                 })
-                    .then(this.AglinCart())
+                    .then(this.getCart())
                     .catch(function (error) {
                         console.log(error);
                     })
@@ -602,8 +602,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',

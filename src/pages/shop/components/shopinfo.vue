@@ -139,7 +139,10 @@ export default {
                         q_type:'delete',
                     },
                 })
-                    .then(this.$parent.AglinCart)
+                    .then(function(res){
+                        console.log(eval('('+res.data+')'))
+                        that.$emit('AglinCart',eval('('+res.data+')'))
+                    })
                     .catch(function (error) {
                         console.log(error);
                     })

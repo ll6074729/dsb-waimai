@@ -127,6 +127,7 @@ export default {
             this.shopList = date.data.data //商家列表
             this.shopprom = []
             for (var i = 0; i < this.shopList.length;i++) {
+                this.shopList[i].showtitle = false
                 if(this.shopList[i].prom.length > 0){
                     this.shopprom[this.shopList[i].shop_id] = {}
                     for(let j = 0; j <this.shopList[i].prom.length;j++){

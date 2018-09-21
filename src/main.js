@@ -45,6 +45,7 @@ Vue.use(BaiduMap, {
 Vue.config.productionTip = false
 Vue.prototype.styleIndex = styleIndex
 Vue.prototype.$http = axios
+
 Vue.prototype.$wx = wx
 // Vue.prototype.WXconfig = WXconfig
 /* eslint-disable no-new */

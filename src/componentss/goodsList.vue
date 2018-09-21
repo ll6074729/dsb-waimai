@@ -10,103 +10,102 @@
         </div>
         <div ref="shopList" class="shop" :class="page" >
             <ul :class="{'shop-height':isgoods}">
-                <!-- <li v-for="item in shopList" :key="item.shop_id" class="shop-list"> -->
-                    <router-link tag="li" :to="'/shop/'+item.shop_id" v-for="item in shopList" :key="item.shop_id" class="shop-list">
-                        <div class="shop-list-item">
-                            <div class="shop-left">
-                                <img :src="item.logo" alt="" class="shop-img" :onerror="defaultImg">
-                                <span class="tag new" v-if="item.is_new == 1">new</span>
-                                <span class="tag hot" v-if="item.is_hot == 1">hot</span>
+                <li  v-for="(item,index) in shopList" :key="item.shop_id" class="shop-list">
+                    <router-link class="shop-list-item" :to="'/shop/'+item.shop_id" tag="div">
+                        <div class="shop-left">
+                            <img :src="item.logo" alt="" class="shop-img" :onerror="defaultImg">
+                            <span class="tag new" v-if="item.is_new == 1">new</span>
+                            <span class="tag hot" v-if="item.is_hot == 1">hot</span>
+                        </div>
+                        <div class="shop-right">
+                            <div class="shop-title">
+                                <div class="shop-name">{{item.shop_name}}</div>
+                                <div class="shop-status" v-if="item.status == 0">休息中</div>
                             </div>
-                            <div class="shop-right">
-                                <div class="shop-title">
-                                    <div class="shop-name">{{item.shop_name}}</div>
-                                    <div class="shop-status" v-if="item.status == 0">休息中</div>
-                                </div>
-                                <div class="shop-content">
-                                    <div class="shop-score">
-                                        <el-rate
-                                            v-model="item.store_ratings"
-                                            disabled
-                                            allow-half
-                                            show-score
-                                            void-color="#ff3800"
-                                            text-color="#333"
-                                            score-template="{value}">
-                                        </el-rate>
+                            <div class="shop-content">
+                                <div class="shop-score">
+                                    <el-rate
+                                        v-model="item.store_ratings"
+                                        disabled
+                                        allow-half
+                                        show-score
+                                        void-color="#ff3800"
+                                        text-color="#333"
+                                        score-template="{value}">
+                                    </el-rate>
 
-                                    </div>
-                                    <!--  -->
-                                    <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | 销量 {{item.sales}}</div>
                                 </div>
-                                <div class="shop-foot">
-                                    <div class="shop-label-left">
-                                        <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
-                                        <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong>
-                                    </div>
-                                    <div class="shop-label-right">
-                                        <span class="label-status">
-                                            送到寝室
-                                        </span>
-                                    </div>
+                                <!--  -->
+                                <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | 销量 {{item.sales}}</div>
+                            </div>
+                            <div class="shop-foot">
+                                <div class="shop-label-left">
+                                    <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
+                                    <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong>
                                 </div>
-                                <div class="shop-prom">
-                                    <div class="activity">
-                                        <div class="list-item" v-if="shopprom[item.shop_id].full ==1">
-                                            <span class="list-item-left">
-                                                <div class="shop-label-activity shop-label-type1">
-                                                    满减
-                                                </div>
-                                            </span>
-                                            <span class="list-item-right">
-                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 0">
-                                                    {{promitem.title}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <div class="list-item"  v-if="shopprom[item.shop_id].give ==1">
-                                            <span class="list-item-left">
-                                                <div class="shop-label-activity shop-label-type3">
-                                                    赠品
-                                                </div>
-                                            </span>
-                                            <span class="list-item-right">
-                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 1">
-                                                    满{{promitem.condition}}赠{{promitem.title}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <div class="list-item"  v-if="shopprom[item.shop_id].order ==1">
-                                            <span class="list-item-left">
-                                                <div class="shop-label-activity shop-label-type2">
-                                                    首单
-                                                </div>
-                                            </span>
-                                            <span class="list-item-right">
-                                                <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
-                                                    {{promitem.title}}
-                                                </span>
-                                            </span>
-                                        </div>
-                                        <div class="list-item" v-if="parseFloat(item.custom_delivery) != 0 || parseFloat(delivery_cost) != 0 ">
-                                            <span class="list-item-left">
-                                                <div class="shop-label-activity shop-label-type4">
-                                                    配送
-                                                </div>
-                                            </span>
-                                            <span class="list-item-right" v-if="parseFloat(item.custom_delivery) != 0">
-                                                配送费{{parseFloat(item.custom_delivery)  + parseFloat(delivery_price)}}
-                                            </span>
-                                            <span class="list-item-right" v-if="parseFloat(item.custom_delivery) == 0">
-                                                配送费{{parseFloat(delivery_cost) + parseFloat(delivery_price)}}
-                                            </span>
-                                        </div>
-                                    </div>
+                                <div class="shop-label-right">
+                                    <span class="label-status">
+                                        送到寝室
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </router-link>
-                <!-- </li> -->
+                    <div class="shop-prom">
+                        <div class="activity" @click="showtitle(index)">
+                            <div class="list-item" v-if="parseFloat(item.custom_delivery) != 0 || parseFloat(delivery_cost) != 0 ">
+                                <span class="list-item-left">
+                                    <div class="shop-label-activity shop-label-type4">
+                                        配送
+                                    </div>
+                                </span>
+                                <span class="list-item-right" v-if="parseFloat(item.custom_delivery) != 0">
+                                    配送费{{parseFloat(item.custom_delivery) + parseFloat(delivery_price)}}
+                                </span>
+                                <span class="list-item-right" v-if="parseFloat(item.custom_delivery) == 0">
+                                    配送费{{parseFloat(delivery_cost) + parseFloat(delivery_price)}}
+                                </span>
+                                <img src="../assets/img/down_black.png" alt="" style="width:9px;height:5px;margin-top:5px;transform:rotate(0deg);">
+                            </div>
+                            <div class="list-item" v-if="shopprom[item.shop_id].full ==1">
+                                <span class="list-item-left">
+                                    <div class="shop-label-activity shop-label-type1">
+                                        满减
+                                    </div>
+                                </span>
+                                <span class="list-item-right">
+                                    <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 0">
+                                        {{promitem.title}}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="list-item"  v-if="shopprom[item.shop_id].give ==1 ">
+                                <span class="list-item-left">
+                                    <div class="shop-label-activity shop-label-type3">
+                                        赠品
+                                    </div>
+                                </span>
+                                <span class="list-item-right">
+                                    <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 1">
+                                        满{{promitem.condition}}赠{{promitem.title}}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="list-item"  v-if="shopprom[item.shop_id].order ==1">
+                                <span class="list-item-left">
+                                    <div class="shop-label-activity shop-label-type2">
+                                        首单
+                                    </div>
+                                </span>
+                                <span class="list-item-right">
+                                    <span v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
+                                        {{promitem.title}}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
         <div v-if="shopList.length < 1" class="shop-no">
@@ -141,10 +140,14 @@ export default {
             defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"',
             lng:localStorage.lng,
             lat:localStorage.lat,
-            delivery_price:this.$store.state.delivery_price
+            delivery_price:this.$store.state.delivery_price || 0.00
         }
     },
     methods : {
+        showtitle(index){
+            console.log(index)
+            this.shopList[index].showtitle = true
+        },
         _GetDistance() {
             if(localStorage.lat || localStorage.lng){
                 window.map = new BMap.Map('allmap') 
@@ -221,6 +224,7 @@ export default {
         shopList () {
             this.shopprom = []
             for (var i = 0; i < this.shopList.length;i++) {
+                this.shopList[i].showtitle = false
                 if(this.shopList[i].prom.length > 0){
                     this.shopprom[this.shopList[i].shop_id] = {}
                     for(let j = 0; j <this.shopList[i].prom.length;j++){
@@ -411,43 +415,46 @@ export default {
                                 background #469afe
                                 padding 0.8vw 2vw
                                 color #fff
-                    .shop-prom
-                        .activity
-                            .list-item
-                                display flex
-                                margin 2.66vw 0
-                                &:last-child
-                                    margin-bottom 0
-                                .list-item-left 
-                                    // width 8.66vw
-                                    margin-right 1.33vw
-                                    .shop-label-activity
-                                        font-size 1.6vw
-                                        width 100%
-                                        box-sizing border-box
-                                        padding 2px
-                                        border-radius 3px
-                                    .shop-label-type1
-                                        color #ff7373 
-                                        background-color #ffe1e1
-                                        border solid 1px #ffa6a6
-                                    .shop-label-type2
-                                        color #f0af53
-                                        background-color #fffae1
-                                        border solid 1px #f0af53
-                                    .shop-label-type3
-                                        color #43ce56
-                                        background-color #e2ffe1
-                                        border solid 1px #7ccc87
-                                    .shop-label-type4
-                                        color #81a2ff
-                                        background-color #e1efff
-                                        border solid 1px #a6bdff
-                                .list-item-right
-                                    flex 1
-                                    font-size 2.93vw
-                                    line-height 5vw
-                                    margin-top -.5vw
-                                    max-width 65vw
-                                    ellipsis()
+            .shop-prom
+                padding-left 21.32vw
+                margin-bottom 2.66vw
+                .activity
+                    .list-item
+                        display flex
+                        margin 2.66vw 0
+                        position relative
+                        &:last-child
+                            margin-bottom 0
+                        .list-item-left 
+                            // width 8.66vw
+                            margin-right 1.33vw
+                            .shop-label-activity
+                                font-size 1.6vw
+                                width 100%
+                                box-sizing border-box
+                                padding 2px
+                                border-radius 3px
+                            .shop-label-type1
+                                color #ff7373 
+                                background-color #ffe1e1
+                                border solid 1px #ffa6a6
+                            .shop-label-type2
+                                color #f0af53
+                                background-color #fffae1
+                                border solid 1px #f0af53
+                            .shop-label-type3
+                                color #43ce56
+                                background-color #e2ffe1
+                                border solid 1px #7ccc87
+                            .shop-label-type4
+                                color #81a2ff
+                                background-color #e1efff
+                                border solid 1px #a6bdff
+                        .list-item-right
+                            flex 1
+                            font-size 2.93vw
+                            line-height 5vw
+                            margin-top -.5vw
+                            max-width 65vw
+                            ellipsis()
 </style>
