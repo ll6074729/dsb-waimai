@@ -38,8 +38,12 @@
                     <div class="food-label" v-for="foodname in item.order_goods" :key="foodname.goods_id">{{foodname.goods_name}}</div>
                 </div>
             </div>
-            <div v-if="evaluation.length == 0" style="text-align:center;margin-top:3vw">
-                暂无评论
+            <div v-if="evaluation.length == 0" class="no">
+                <img src="../../../assets/img/noaddress.png" alt="" >
+                <div>
+                    ( • ̀ω•́ )✧  暂无评论
+                </div>
+                
             </div>
         </div>
     </div>
@@ -149,6 +153,14 @@ export default {
             background-color rgba(72, 151, 254, 0.2)
             color #1b8bdb
     .comment-list
+        .no
+            text-align center     
+            color #999
+            img 
+                width 33.33vw
+                height 33.33vw
+                margin-top 5vw
+                margin-bottom 5vw
         .list-item
             padding 5.33vw 2.66vw
             border-top 1px solid #f7f7f7

@@ -20,8 +20,11 @@
                         </div>
                     </div>
                 </li> 
-                <li v-if="couponList.length < 1" style="text-align:center;margin-top:3vw">
-                    暂无可用优惠券
+                <li v-if="couponList.length < 1" class="no">
+                    <img src="../../assets/img/noaddress.png" alt="" >
+                    <div>
+                        您还没有获得优惠券哟(〃'▽'〃)
+                    </div>
                 </li>
             </ul>
         </div>
@@ -81,6 +84,7 @@ export default {
     html
         background-color #f7f7f7!important
     .coupon-list
+        margin-top 13.66vw
         .coupon-title
             text-align center
             font-size 4vw
@@ -89,6 +93,14 @@ export default {
             padding 4vw 0
             background-color #fff
             box-shadow 0px 5px 20px 0px rgba(0, 0, 0, 0.05)
+        .no
+            text-align center     
+            color #999
+            img 
+                width 66.66vw
+                height 66.66vw 
+                margin-top 21.33vw    
+                margin-bottom 5vw      
         .item
             margin 2.66vw
             background-color #f7f7f7

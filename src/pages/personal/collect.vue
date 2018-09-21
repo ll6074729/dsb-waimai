@@ -49,7 +49,10 @@
                     </div>
                 </li>
                 <li v-if="this.collect.length == 0" style="text-align:center;margin-top:3vw">
-                    暂无收藏
+                    <img src="../../assets/img/noaddress.png" alt="" >
+                    <div>
+                        你不喜欢我们的商家么( Ĭ ^ Ĭ )  快去收藏一个吧
+                    </div>
                 </li>
             </ul>
         </div>
@@ -153,6 +156,7 @@ export default {
     .el-rate >>> .el-rate__text
         font-size 2.86vw!important
     .collect-list
+        margin-top 13.66vw
         .item
             height 26.66vw
             background-color #ffffff

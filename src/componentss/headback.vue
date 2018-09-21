@@ -30,6 +30,9 @@ export default {
 </script>
 <style lang="stylus" scoped>
     .cart-head
+        position fixed
+        top 0
+        width 100%
         height 10.66vw
         line-height 10.66vw
         border-bottom 1px solid #f7f7f7

@@ -122,3 +122,6 @@ html,body{
     font-size: 10px !important;
     /* color: #469afe !important; */
 }
+.el-rate .el-rate__text {
+    font-size: 10px !important;
+}

@@ -1,6 +1,6 @@
 <template>
     <div>
-         <div class="head df">
+        <div class="head df">
             <div class="head-back" @click="back()">
                 <img src="../../assets/img/back.png" alt="">
             </div>
@@ -8,44 +8,49 @@
                 新增地址
             </router-link>
         </div>
+        <div class="siteBox">
+            <div class="sitelist" v-show="isshow" v-for="(item,index) in list" :key="item.address_id">
+                <div class="site-item">
+                    <hr class="hr20">
+                    <div class="siteinfo">
+                        <div class="userinfo">
+                            <div class="username">
+                                {{item.consignee}}
+                            </div>
+                            <div class="userphone">
+                                {{item.mobile}}
+                            </div>
+                        </div>
+                        <div class="sitename fs24">
+                            {{item.address}}
+                        </div>
+                    </div>
+                    <div class="df">
+                        <div class="defaultsite" :class="{active:item.is_default == 1}" @click="setDefault(item.address_id)">
 
-        <div class="sitelist" v-show="isshow" v-for="(item,index) in list" :key="item.address_id">
-            <div class="site-item">
-                <hr class="hr20">
-                <div class="siteinfo">
-                    <div class="userinfo">
-                        <div class="username">
-                            {{item.consignee}}
+                            <img src="../../assets/img/uncheck.png" v-if="item.is_default == 0" alt="">
+                            <img src="../../assets/img/check.png" v-if="item.is_default == 1" alt="">
+                            <span>默认地址</span>
                         </div>
-                        <div class="userphone">
-                            {{item.mobile}}
-                        </div>
-                    </div>
-                    <div class="sitename fs24">
-                        {{item.address}}
-                    </div>
-                </div>
-                <div class="df">
-                    <div class="defaultsite" :class="{active:item.is_default == 1}" @click="setDefault(item.address_id)">
-
-                        <img src="../../assets/img/uncheck.png" v-if="item.is_default == 0" alt="">
-                        <img src="../../assets/img/check.png" v-if="item.is_default == 1" alt="">
-                        <span>默认地址</span>
-                    </div>
-                    <div class="handle">
-                        <div class="hand-edit" @click="edit_address(index)">
-                            编辑
-                        </div>
-                        <div class="hand-delete" @click="open2(item.address_id)">
-                            删除
+                        <div class="handle">
+                            <div class="hand-edit" @click="edit_address(index)">
+                                编辑
+                            </div>
+                            <div class="hand-delete" @click="open2(item.address_id)">
+                                删除
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="siteno" v-show="!isshow">
+                <img src="../../assets/img/noaddress.png" alt="" >
+                <div>
+                    您还没有设置宿舍地址哦 o(￣▽￣)ｄ 
+                </div>
+            </div>
         </div>
-        <div class="siteno" v-show="!isshow">
-            暂时没有地址
-        </div>
+
     </div>
 </template>
 <script>
@@ -121,6 +126,7 @@ export default {
                 this.isshow = false
             }else{
                 this.isshow = true
+                // this.list = []
                 this.list = date.data
                 // 把列表传给其他子组件
             }
@@ -192,44 +198,57 @@ export default {
 </script>
 <style lang="stylus" scoped>    
     .head
+        position fixed
+        width 100%
+        top 0
         height 10.66vw
+        box-sizing border-box
         padding 0 2.66vw
         line-height 10.66vw
+        background-color #fff
         .head-back
             img 
                 width 2.13vw
                 height 4.13vw
-    .siteno
-        text-align center            
-    .sitelist
-        .site-item
-            .siteinfo
-                padding 5.33vw
-                border-bottom 1px solid #f7f7f7
-                .userinfo
-                    .username,.userphone
-                        color #333
-                    .userphone
-                        float right  
-                    .username
-                        float left       
-                .sitename
-                    clear both     
-                    margin-top 10.66vw
-                    color #999   
-            .df
-                padding 4vw 5.33vw
-                .active
-                    color #469afe
-                .defaultsite
-                    img 
-                        width 4vw 
-                        height 4vw  
-                        vertical-align bottom 
-                        margin-right 2.66vw
-                .handle
-                    display flex   
-                    color #999
-                    .hand-edit
-                        margin-right 5vw     
+    .siteBox
+        margin-top 10.66vw
+        .siteno
+            text-align center     
+            color #999
+            img 
+                width 66.66vw
+                height 66.66vw 
+                margin-top 21.33vw    
+                margin-bottom 5vw      
+        .sitelist
+            .site-item
+                .siteinfo
+                    padding 5.33vw
+                    border-bottom 1px solid #f7f7f7
+                    .userinfo
+                        .username,.userphone
+                            color #333
+                        .userphone
+                            float right  
+                        .username
+                            float left       
+                    .sitename
+                        clear both     
+                        margin-top 10.66vw
+                        color #999   
+                .df
+                    padding 4vw 5.33vw
+                    .active
+                        color #469afe
+                    .defaultsite
+                        img 
+                            width 4vw 
+                            height 4vw  
+                            vertical-align bottom 
+                            margin-right 2.66vw
+                    .handle
+                        display flex   
+                        color #999
+                        .hand-edit
+                            margin-right 5vw     
 </style>

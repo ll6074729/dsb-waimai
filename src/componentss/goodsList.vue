@@ -95,10 +95,10 @@
                                                 </div>
                                             </span>
                                             <span class="list-item-right" v-if="parseFloat(item.custom_delivery) != 0">
-                                                配送费{{item.custom_delivery}}
+                                                配送费{{parseFloat(item.custom_delivery)  + parseFloat(delivery_price)}}
                                             </span>
                                             <span class="list-item-right" v-if="parseFloat(item.custom_delivery) == 0">
-                                                配送费{{delivery_cost}}
+                                                配送费{{parseFloat(delivery_cost) + parseFloat(delivery_price)}}
                                             </span>
                                         </div>
                                     </div>
@@ -110,7 +110,10 @@
             </ul>
         </div>
         <div v-if="shopList.length < 1" class="shop-no">
-            暂无商家
+            <img src="../assets/img/noaddress.png" alt="" >
+            <div>
+                真对不起,商家们不知道哪里去了 ╥﹏╥
+            </div>
         </div>
         <div id="allmap" style="display:none"></div>
     </div>
@@ -126,7 +129,7 @@ export default {
         input10:String,
         shopprom:Array,
         tags:Array,
-        range:Array
+        range:Array,
     },
     data () {
         return {
@@ -138,6 +141,7 @@ export default {
             defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"',
             lng:localStorage.lng,
             lat:localStorage.lat,
+            delivery_price:this.$store.state.delivery_price
         }
     },
     methods : {
@@ -266,9 +270,13 @@ export default {
 <style lang="stylus" scoped>
 @import "~css/style"
 .shop-no
-    text-align center
-    margin-top 1vw
-    padding-bottom 3vw
+    text-align center     
+    color #999
+    img 
+        width 66.66vw
+        height 66.66vw 
+        margin-top 21.33vw    
+        margin-bottom 5vw    
 .boxfixed
     position fixed!important
     z-index 101

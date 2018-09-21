@@ -21,7 +21,7 @@
                         <div>订单号：{{item.order.order_sn}}</div>
                         <div>投诉类型：<span v-if="item.type == 0">配送问题</span><span v-if="item.type == 1">餐品质量</span><span v-if="item.type == 2">平台服务</span></div>
                     </div>
-                    <div class="reply pd20 fs24">
+                    <div class="reply pd20 fs24" v-if="item.reply">
                         客服回复：{{item.reply}}
                     </div>
                     
@@ -82,6 +82,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
     .complaint-list
+        margin-top 13.66vw
         ul
             .item
                 padding-bottom 0.5vw

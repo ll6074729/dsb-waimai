@@ -1,7 +1,7 @@
 <template>
     <div>
         <head-back :title="title"></head-back>
-        <div class="order-sn df">
+        <div class="order-sn df" style="margin-top:13.66vw">
             <div>订单号</div>
             <div>{{order_sn}}</div>
         </div>

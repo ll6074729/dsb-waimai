@@ -20,7 +20,7 @@
         <recommend :list="Recommend" v-if="Recommend"></recommend>
         <hr class="hr20">
         <!-- 商家列表 -->
-        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags" :range="range">
+        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags" :range="range" >
             <div class="title">
                 优选商家
             </div>
@@ -162,8 +162,40 @@ export default {
             }
             this.fullscreenLoading = false
         },
+        // 获取地址
+        getaddressList () {
+            this.$http({
+                method: 'post',
+                // method:'get',
+                url:'mobile/api/q',
+                // url:'api/buyer/list_address',
+                data: {
+                    url:'http://api.dqvip.cc/buyer/list_address',
+                    q_type:'get'
+                },
+            })
+                .then(this.getaddrList)
+                .catch(function (error) {
+                    console.log(error);
+                })
+        },
+        getaddrList (res){
+            const date = eval('('+res.data+')')
+            // let date = res.data
+            let addressList = date.data
+            let area_price = this.$store.state.delivery_cost
+            let delivery_price
+            for(let i in  addressList){
+                if(addressList[i].is_default == 1){
+                    this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
+                    delivery_price = addressList[i].delivery.delivery_price
+                }
+            }
+            this.$store.dispatch("changedeliveryPrice",delivery_price)
+        },
     },
     mounted() {
+        this.getaddressList()
         this._GetDistance()
         this.chooesSchool()
         this.handSearch()

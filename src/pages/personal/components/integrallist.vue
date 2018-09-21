@@ -47,6 +47,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
     .integral
+        margin-top 13.66vw
         .item
             padding 6vw 2.66vw
             border-bottom 1px solid #f7f7f7
