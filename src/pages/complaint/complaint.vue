@@ -120,8 +120,8 @@ export default {
             date.q_type = 'post',
             this.$http({
                 method: 'post',
-                // url: '/mobile/api/q',
-                url:'api/buyer/user_complaint',
+                url: '/mobile/api/q',
+                // url:'api/buyer/user_complaint',
                 data: date
             })
                 .then(this.submitinfo)
@@ -130,17 +130,25 @@ export default {
                 })
         },
         submitinfo (res) {
-            // let res1 = eval('('+res.data+')')
-            let res1 = res.data
+            let res1 = eval('('+res.data+')')
+            // let res1 = res.data
             let that = this
             if(res1.status == 200){
-                 this.$message({
+                this.$message({
                     type:'success',
                     message:'投诉成功，请等待客服联系您'
                 })
                 setTimeout(that.$router.push({path:'/complaintList'}),3000)
+            }else if(res1.status == 422) {
+                this.$message({
+                    type:'error',
+                    message:res1.message
+                })
             }else{
-
+                this.$message({
+                    type:'error',
+                    message:res1.message
+                })
             }
         },
         handexceed (files, fileList) {
@@ -189,8 +197,8 @@ export default {
         newhistoryOrder () {
             this.$http({
                 method: 'post',
-                // url: '/mobile/api/q',
-                url:'api/buyer/history_order',
+                url: '/mobile/api/q',
+                // url:'api/buyer/history_order',
                 data: {
                     url:'http://api.dqvip.cc/buyer/history_order',
                     page_size:300,
@@ -204,8 +212,8 @@ export default {
         },
         gethistoryOrder (res) {
             let timer = Date.parse(new Date())/1000 - 86400 * 7;
-            // let date1 = eval('('+res.data+')')
-            let date1 = res.data
+            let date1 = eval('('+res.data+')')
+            // let date1 = res.data
             let date = date1.data.data
             let order = []
             for(let i in date){

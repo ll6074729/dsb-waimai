@@ -275,7 +275,7 @@ export default {
     img 
         width 66.66vw
         height 66.66vw 
-        margin-top 21.33vw    
+        margin-top 10.33vw    
         margin-bottom 5vw    
 .boxfixed
     position fixed!important

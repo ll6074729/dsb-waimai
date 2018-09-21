@@ -1,6 +1,11 @@
 <template>
     <div v-loading.fullscreen.lock="fullscreenLoading">
-        <div v-if="latestOrder.length ==0 && historyOrder.length == 0" style="text-align:center;margin-top:3vw">暂无订单,请您快去购买哟~！</div>
+        <div v-if="latestOrder.length ==0 && historyOrder.length == 0" class="no">
+            <img src="../../assets/img/noorder.png" alt="" >
+            <div>
+                亲,你还没有想吃的么 ╥﹏╥
+            </div>
+        </div>
         <div v-if="latestOrder.length != 0" :class="{'history':historyOrder.length == 0}">   
             <div class="title">订单列表</div>
             <shop-info :list="latestOrder" @orderlist="orderlist"></shop-info>
@@ -94,6 +99,14 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+    .no
+        text-align center     
+        color #999
+        img 
+            width 66.66vw
+            height 66.66vw 
+            margin-top 10.33vw    
+            margin-bottom 5vw    
     .history
         padding-bottom 13.33vw    
         .title
