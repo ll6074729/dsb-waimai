@@ -64,7 +64,7 @@ export default {
         lng:localStorage.lng,
         lat:localStorage.lat,
         range:[],
-        fullscreenLoading: true
+        fullscreenLoading: false
     }
   },
     methods:{

@@ -124,8 +124,7 @@ export default {
             if(date.status ==200){
                 this.cartbox = []
                 this.closeGoodsInfo()
-                this.$emit('AglinCart')
-                
+                this.$emit('AglinCart',date)
             }
         },
         // 关闭当前面板

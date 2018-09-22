@@ -121,8 +121,9 @@ export default {
         },
         // 购物车增加商品
         setgoodsnum (goods_num,goods_id,status,cart_id,spec_id) {
+            let _this = this
             if(status == 'plus'){
-                var goods_num = goods_num+1
+                var goods_num = parseInt(goods_num) + 1
             }else{
                 var goods_num = goods_num-1
             }
@@ -158,7 +159,7 @@ export default {
                     // url:'api/buyer/cart_change',
                     data: data,
                 })
-                .then(this.$parent.AglinCart)
+                .then(this.$parent.getCart)
                 .catch(function (error) {
                     console.log(error);
                 })
@@ -211,7 +212,7 @@ export default {
                 // url:'api/buyer/cart_clear',
                 data:date,
             })
-                .then(this.$parent.AglinCart)
+                .then(this.$parent.getCart)
                 .catch(function (error) {
                     console.log(error);
                 })
@@ -223,14 +224,22 @@ export default {
     watch:{
         cart () {
             let goods_val = 0
+            // console.log(this.cart,9999)
             for(let i in this.cart){
                 goods_val += this.cart[i].goods_num
-                let img 
-                for(var j = 0;j<this.cart.length;j++){
-                    img = this.cart[i].goods.details_figure.split(',')
+                let img = []
+                console.log(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1))
+                if(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1) == ","){
+                    console.log('liu')
+                    for(var j = 0;j<this.cart.length;j++){
+                        img = this.cart[i].goods.details_figure.split(',')
+                    }
+                }else{
+                    img[0] = this.cart[i].goods.details_figure
                 }
                 this.cart[i].pic = img
             }
+            console.log(this.cart)
             this.value = goods_val
         },
         isBuy () {

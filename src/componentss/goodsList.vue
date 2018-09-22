@@ -3,14 +3,17 @@
         <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search' && isheader}">
             <slot ref="homeTitle"></slot>
             <div class="tab" ref="tab">
+                <!-- 0销量  1好评 2 热门新店 -->
+                <div class="item-tab" :class="{'active':sort == 3}" @click="chooes(3)">综合排序</div>
+                <div class="item-tab" :class="{'active':sort == 4}" @click="chooes(4)">速度最快</div>
                 <div class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</div>
-                <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">评分优先</div>
+                <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">好评优先</div>
                 <div class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</div>
             </div>
         </div>
         <div ref="shopList" class="shop" :class="page" >
             <ul :class="{'shop-height':isgoods}">
-                <li  v-for="(item,index) in shopList" :key="item.shop_id" class="shop-list">
+                <li  v-for="(item,index) in shopList" :key="index" class="shop-list">
                     <router-link class="shop-list-item" :to="'/shop/'+item.shop_id" tag="div">
                         <div class="shop-left">
                             <img :src="item.logo" alt="" class="shop-img" :onerror="defaultImg">
@@ -40,8 +43,14 @@
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
-                                    <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
-                                    <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong>
+                                    20元起送 | 配送费 <span v-if="parseFloat(item.custom_delivery) != 0">
+                                    {{parseFloat(item.custom_delivery) + parseFloat(delivery_price)}}
+                                </span>
+                                <span v-if="parseFloat(item.custom_delivery) == 0">
+                                    {{parseFloat(delivery_cost) + parseFloat(delivery_price)}}
+                                </span>
+                                    <!-- <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span> -->
+                                    <!-- <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong> -->
                                 </div>
                                 <div class="shop-label-right">
                                     <span class="label-status">
@@ -51,8 +60,21 @@
                             </div>
                         </div>
                     </router-link>
+                    <div class="tagBox">
+                        <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
+                    </div>
                     <div class="shop-prom">
-                        <div class="activity" @click="showtitle(index)">
+                        <span class="span1">到店自提</span>
+                        <span class="span2" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
+                            {{promitem.title}}
+                        </span>
+                        <span class="span3" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 0">
+                            {{promitem.title}}
+                        </span>
+                        <span class="span4" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 1">
+                            {{promitem.title}}
+                        </span>
+                        <!-- <div class="activity" @click="showtitle(index)">
                             <div class="list-item" v-if="parseFloat(item.custom_delivery) != 0 || parseFloat(delivery_cost) != 0 ">
                                 <span class="list-item-left">
                                     <div class="shop-label-activity shop-label-type4">
@@ -103,7 +125,8 @@
                                     </span>
                                 </span>
                             </div>
-                        </div>
+                        </div> -->
+
                     </div>
                 </li>
             </ul>
@@ -175,6 +198,10 @@ export default {
                 data.store_ratings = 'desc'
             }else if(sort == 2){
                 data.is_new = 1
+            }else if(sort == 3){
+                
+            }else if (sort ==4){
+
             }
             this.$http({
                 method: 'post',
@@ -307,7 +334,7 @@ export default {
         box-shadow 0px -5px 20px 0px rgba(0,0,0,0.1)
     .tab
         display flex
-        padding 0 6vw
+        // padding 0 6vw
         // border-bottom 1px solid #f7f7f7
         .item-tab
             text-align center
@@ -315,6 +342,7 @@ export default {
             height 10.6vw
             line-height 10.6vw
             color #999
+            font-size 2.93vw
         .active
             color #469afe
             font-weight bold
@@ -400,61 +428,96 @@ export default {
                     .shop-foot
                         display flex
                         justify-content space-between
+                        margin-top 2vw
                         .shop-label-left 
-                            span 
-                                display inline-block
-                                font-size 2.1vw
-                                color #999
-                                border 1px solid #dbdbdb
-                                padding 0.8vw 2vw
-                                margin-right 2.66vw
-                                border-radius 0.8vw
+                            color #999
+                            font-size 2.93vw
+                            // span 
+                            //     display inline-block
+                            //     font-size 2.1vw
+                            //     color #999
+                            //     border 1px solid #dbdbdb
+                            //     padding 0.8vw 2vw
+                            //     margin-right 2.66vw
+                            //     border-radius 0.8vw
                         .shop-label-right 
                             span 
                                 font-size 2.4vw
                                 background #469afe
                                 padding 0.8vw 2vw
                                 color #fff
+            .tagBox
+                padding-left 21.32vw     
+                span
+                    text-align center  
+                    padding 1vw 2.93vw 
+                    color #999
+                    border 1px solid #dbdbdb
+                    border-radius 5vw
+                    margin-right 2vw
+                    display inline-block
+                    font-size 2.93vw
             .shop-prom
                 padding-left 21.32vw
                 margin-bottom 2.66vw
-                .activity
-                    .list-item
-                        display flex
-                        margin 2.66vw 0
-                        position relative
-                        &:last-child
-                            margin-bottom 0
-                        .list-item-left 
-                            // width 8.66vw
-                            margin-right 1.33vw
-                            .shop-label-activity
-                                font-size 1.6vw
-                                width 100%
-                                box-sizing border-box
-                                padding 2px
-                                border-radius 3px
-                            .shop-label-type1
-                                color #ff7373 
-                                background-color #ffe1e1
-                                border solid 1px #ffa6a6
-                            .shop-label-type2
-                                color #f0af53
-                                background-color #fffae1
-                                border solid 1px #f0af53
-                            .shop-label-type3
-                                color #43ce56
-                                background-color #e2ffe1
-                                border solid 1px #7ccc87
-                            .shop-label-type4
-                                color #81a2ff
-                                background-color #e1efff
-                                border solid 1px #a6bdff
-                        .list-item-right
-                            flex 1
-                            font-size 2.93vw
-                            line-height 5vw
-                            margin-top -.5vw
-                            max-width 65vw
-                            ellipsis()
+                margin-top 2vw
+                span
+                    border 1px solid #dbdbdb
+                    font-size 2.93vw
+                    color #999
+                    padding 1.2vw 2vw
+                    margin-right 1.2vw
+                    margin-bottom 1.5vw
+                    display inline-block
+                .span1
+                    color #43ce56
+                    border-color #7ccc87
+                .span2 
+                    color #469afe
+                    border-color #a6bdff 
+                .span3
+                    color #ff7373
+                    border-color #ffa6a6
+                .span4
+                    color #43ce56
+                    border-color #43ce56    
+                // .activity
+                //     .list-item
+                //         display flex
+                //         margin 2.66vw 0
+                //         position relative
+                //         &:last-child
+                //             margin-bottom 0
+                //         .list-item-left 
+                //             // width 8.66vw
+                //             margin-right 1.33vw
+                //             .shop-label-activity
+                //                 font-size 1.6vw
+                //                 width 100%
+                //                 box-sizing border-box
+                //                 padding 2px
+                //                 border-radius 3px
+                //             .shop-label-type1
+                //                 color #ff7373 
+                //                 background-color #ffe1e1
+                //                 border solid 1px #ffa6a6
+                //             .shop-label-type2
+                //                 color #f0af53
+                //                 background-color #fffae1
+                //                 border solid 1px #f0af53
+                //             .shop-label-type3
+                //                 color #43ce56
+                //                 background-color #e2ffe1
+                //                 border solid 1px #7ccc87
+                //             .shop-label-type4
+                //                 color #81a2ff
+                //                 background-color #e1efff
+                //                 border solid 1px #a6bdff
+                //         .list-item-right
+                //             flex 1
+                //             font-size 2.93vw
+                //             line-height 5vw
+                //             margin-top -.5vw
+                //             max-width 65vw
+                //             ellipsis()
 </style>

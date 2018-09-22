@@ -96,7 +96,7 @@ export default {
                         q_type:'delete',
                     },
                 })
-                    .then(this.$parent.AglinCart)
+                    .then(this.$parent.getCart)
                     .catch(function (error) {
                         console.log(error);
                     })
@@ -127,7 +127,7 @@ export default {
             for(let i in this.cart){
                 if(this.cart[i].goods_id == GoodId){
                     cart_id = this.cart[i].cart_id
-                    goods_num = this.cart[i].goods_num +1
+                    goods_num = parseInt(this.cart[i].goods_num) +1
                     break
                 }
             }
@@ -153,6 +153,7 @@ export default {
             // let date = res.data
             let date = eval('('+res.data+')')
             let data ;
+            let _this = this
             if(cart_id){
                 data =  {
                         url:'http://api.dqvip.cc/buyer/cart_change',
@@ -178,7 +179,12 @@ export default {
                     // url:'api/buyer/cart_change',
                     data: data,
                 })
-                .then(this.emitCart)
+                .then(function(res){
+                    let date = eval('('+res.data+')')
+                    // let date = res.data
+                    console.log(date)
+                    _this.$emit('AglinCart',date)
+                })
                 .catch(function (error) {
                     console.log(error);
                 })
