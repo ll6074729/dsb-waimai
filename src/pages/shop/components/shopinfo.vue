@@ -157,7 +157,6 @@ export default {
                 },
             })
                 .then(function(response){
-                    console.log(response,6665656)
                     that.getCart(response,GoodId,goods_num,cart_id)
                 })
                 .catch(function (error) {
@@ -187,7 +186,6 @@ export default {
                 },
             })
                 .then(function(response){
-                    console.log(response,999)
                     let date = eval('('+response.data+')')
                     // let date = response.data
                     if(date.status == 200){

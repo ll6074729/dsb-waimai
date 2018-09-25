@@ -87,9 +87,9 @@ export default {
             console.log(goods_num,cart_id)
             if(goods_num == 0){
                 this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
+                    method: 'delete',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_clear',
                     data:{
                         cart_id:cart_id,
                          url:"http://api.dqvip.cc/buyer/cart_clear",
@@ -105,8 +105,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -134,8 +134,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -150,8 +150,8 @@ export default {
                 })
         },
         getCart (res,GoodId,goods_num,cart_id) {
-            // let date = res.data
-            let date = eval('('+res.data+')')
+            let date = res.data
+            // let date = eval('('+res.data+')')
             let data ;
             let _this = this
             if(cart_id){
@@ -175,13 +175,13 @@ export default {
             if(date.data.spec.length == 0){
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
+                    // let date = eval('('+res.data+')')
+                    let date = res.data
                     console.log(date)
                     _this.$emit('AglinCart',date)
                 })
@@ -196,8 +196,8 @@ export default {
             
         },
         emitCart (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.data == ''){
                 this.$emit('AglinCart','1')
             }else{

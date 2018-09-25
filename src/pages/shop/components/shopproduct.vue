@@ -133,10 +133,10 @@ export default {
             if(goods_num == 0){
                 
                 this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
+                    // method:'post',
+                    method: 'delete',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_clear',
                     data:{
                         cart_id:cart_id,
                         url:"http://api.dqvip.cc/buyer/cart_clear",
@@ -152,8 +152,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -171,7 +171,6 @@ export default {
             const that = this
             var goods_num = 1
             var cart_id 
-            
             for(let i in this.cart){
                 if(this.cart[i].goods_id == GoodId){
                     cart_id = this.cart[i].cart_id
@@ -179,12 +178,11 @@ export default {
                     break
                 }
             }
-            console.log(this.cart,goods_num)
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:'http://api.dqvip.cc/goods_info',
                     q_type:'post',
@@ -199,8 +197,8 @@ export default {
                 })
         },
         getCart (res,GoodId,goods_num,cart_id) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             let data ;
             let _this = this
             if(cart_id){
@@ -225,13 +223,13 @@ export default {
             if(date.data.spec.length == 0){
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
+                    // let date = eval('('+res.data+')')
+                    let date = res.data
                     console.log(date)
                     _this.$emit('AglinCart',date)
                 })
@@ -323,4 +321,23 @@ export default {
                                     line-height 5.33vw
                                 .plus
                                     line-height 5.33vw     
+
+                                 #animation{
+                                    -webkit-animation:tada 1s .2s ease both;
+                                    -moz-animation:tada 1s .2s ease both;
+                                    }
+                                    @-webkit-keyframes tada{
+                                        0%{-webkit-transform:scale(1)}
+                                        10%,20%{-webkit-transform:scale(0.9) rotate(-3deg)}
+                                        30%,50%,70%,90%{-webkit-transform:scale(1.1) rotate(3deg)}
+                                        40%,60%,80%{-webkit-transform:scale(1.1) rotate(-3deg)}
+                                        100%{-webkit-transform:scale(1) rotate(0)}
+                                    }
+                                    @-moz-keyframes tada{
+                                        0%{-moz-transform:scale(1)}
+                                        10%,20%{-moz-transform:scale(0.9) rotate(-3deg)}
+                                        30%,50%,70%,90%{-moz-transform:scale(1.1) rotate(3deg)}
+                                        40%,60%,80%{-moz-transform:scale(1.1) rotate(-3deg)}
+                                        100%{-moz-transform:scale(1) rotate(0)}
+                                    }   
 </style>

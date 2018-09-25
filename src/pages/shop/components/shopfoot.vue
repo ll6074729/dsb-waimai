@@ -24,8 +24,11 @@
                 请先设置默认收货地址
             </router-link>
         </div>
-        <div class="buybtn" @click="buybtn" v-if="shop_status !=0">
+        <div class="buybtn" @click="buybtn" v-if="shop_status !=0 && costPrice > take_off">
             立即下单
+        </div>
+        <div class="buybtn" @click="buybtn1" :class="{'buy-db':costPrice < 10}" v-if="costPrice < 10 && shop_status != 0">
+            满10元起送
         </div>
         <div class="buybtn" v-if="shop_status ==0" :class="{'buy-db':shop_status ==0}">
             店铺休息
@@ -82,7 +85,8 @@ export default {
         addressList:Array,
         delivery_price:Number,
         shop_status:Number,
-        custom_delivery:String
+        custom_delivery:String,
+        take_off:Number
     },
     mounted() {
         this.getDelivery()
@@ -103,6 +107,12 @@ export default {
         }
     },
     methods:{
+        buybtn1() {
+            this.$message({
+                type:'warning',
+                message: '亲,该店铺要满'+this.take_off+'才能下单哟',
+            })
+        },
         // 去结算界面
         buybtn () {
             if(this.cart.length < 1){
@@ -155,8 +165,8 @@ export default {
                 }
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(this.$parent.getCart)
@@ -186,8 +196,8 @@ export default {
         },
         // 公共配置
         getDeliveryList (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             let Distribution = parseFloat(date.data[0].value)
             this.delivery_cost = Distribution.toFixed(2)
         },
@@ -207,9 +217,9 @@ export default {
             date.url = 'http://api.dqvip.cc/buyer/cart_clear'
             date.q_type = 'delete'
             this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/cart_clear',
+                method: 'delete',
+                // url: 'mobile/api/q',
+                url:'api/buyer/cart_clear',
                 data:date,
             })
                 .then(this.$parent.getCart)
@@ -223,14 +233,14 @@ export default {
     },
     watch:{
         cart () {
+            console.log(this.cart)
+            console.log(this.costPrice,444)
             let goods_val = 0
-            // console.log(this.cart,9999)
             for(let i in this.cart){
                 goods_val += this.cart[i].goods_num
                 let img = []
                 console.log(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1))
                 if(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1) == ","){
-                    console.log('liu')
                     for(var j = 0;j<this.cart.length;j++){
                         img = this.cart[i].goods.details_figure.split(',')
                     }
@@ -239,11 +249,10 @@ export default {
                 }
                 this.cart[i].pic = img
             }
-            console.log(this.cart)
             this.value = goods_val
         },
         isBuy () {
-            console.log(this.swiper,999)
+            // console.log(this.swiper,999)
             if(this.isBuy){
                 document.body.style.overflow='hidden';
                 document.body.style.height = window.screen.height + 'px';

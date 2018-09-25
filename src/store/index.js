@@ -18,10 +18,16 @@ let shopprom //店铺的优惠活动
 let order_id //当前订单id
 let order_sn //当前订单编号
 let delivery_price = '0' //楼层配送送
+let process_date //校区配送时间
 /**
  * 登录接口需要的参数
  * 
  */
+try{
+    if(localStorage.process_date){
+        process_date = localStorage.process_date
+    }
+}catch (e){}
 try{
     if(localStorage.delivery_price){
         delivery_price = localStorage.delivery_price
@@ -98,8 +104,12 @@ export default new Vuex.Store({
         order_sn,
         order_id,
         delivery_price,
+        process_date
     },
     actions:{
+        changeprocess(ctx,process_date){
+            ctx.commit('changeprocess',process_date)
+        },
         changedeliveryPrice(ctx,delivery_price){
             ctx.commit('changedeliveryPrice',delivery_price)
         },
@@ -138,6 +148,13 @@ export default new Vuex.Store({
         }
     },
     mutations:{
+        changeprocess(state,process_date){
+            state.process_date = process_date
+            try {
+                localStorage.process_date = process_date
+            }catch (e){
+            }
+        },
         changedeliveryPrice(state,delivery_price){
             state.delivery_price = delivery_price
             try {

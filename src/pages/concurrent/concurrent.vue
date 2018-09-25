@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="positiopn:relative">
         <head-top></head-top>
         <div class="formlist">
             <form-list :page="page"></form-list>
@@ -26,5 +26,5 @@ export default {
     .formlist
         position absolute
         width 100%
-        top 97%
+        top 12rem
 </style>

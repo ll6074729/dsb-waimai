@@ -136,6 +136,7 @@
                     :delivery_price="delivery_price"
                     :shop_status="shop.status"
                     :custom_delivery="shop.custom_delivery"
+                    :take_off="shop.take_off"
                     ></shop-foot>
                 <shop-buy 
                 :isBuy="isBuy" 
@@ -295,22 +296,20 @@ export default {
         },
         // 再次请求购物车  新增的数据有了
         AglinCart (msg) {
-            this.getCart()
+            
             // let cartId = []
             // for(let i in this.cart){
             //     cartId.push(this.cart[i].cart_id)
 
             // }
-            // console.log(cartId)
-            // console.log(this.cart)
-            // console.log(cartId.indexOf(msg.data.cart_id),6666)
             // if(cartId.indexOf(msg.data.cart_id) == -1){
             //     this.cart.push(msg.data)
             // }else{
             //     this.cart[cartId.indexOf(msg.data.cart_id)].goods_num = msg.data.goods_num
             // }
             // console.log(this.cart)
-            // this.cart = msg.data
+            // this.getCart()
+            this.cart = msg.data
         },
         buygoodsinfo (msg) {
             this.goodsinfo = msg
@@ -333,10 +332,10 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                method: 'post',
-                // method:'get',
-                url:'mobile/api/q',
-                // url:'api/buyer/list_address',
+                // method: 'post',
+                method:'get',
+                // url:'mobile/api/q',
+                url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
@@ -348,8 +347,8 @@ export default {
                 })
         },
         getaddrList (res){
-            const date = eval('('+res.data+')')
-            // let date = res.data
+            // const date = eval('('+res.data+')')
+            let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -376,8 +375,8 @@ export default {
             // 更改收藏状态
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/collect_shop',
+                // url: 'mobile/api/q',
+                url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
@@ -391,8 +390,8 @@ export default {
                 })
         },
         collect (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.status == 200){
                 if(date.message  != 'false'){
                     this.$message({
@@ -420,8 +419,8 @@ export default {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/shop_info',
+                // url: 'mobile/api/q',
+                url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
@@ -434,8 +433,8 @@ export default {
                 })
         },
         getlistbox(res){
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.shop = date.data
             this.GetDistance()
             if(this.shop.is_collect == 1){
@@ -466,8 +465,8 @@ export default {
             // 获取购物车信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/cart_list',
+                // url: 'mobile/api/q',
+                url:'api/buyer/cart_list',
                 data: {
                     url:'http://api.dqvip.cc/buyer/cart_list',
                     shop_id:this.$route.params.id,
@@ -480,8 +479,8 @@ export default {
                 })
         },
         getCartList (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.cart = date.data
         },
         // 固定在顶部
@@ -515,8 +514,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -531,8 +530,8 @@ export default {
                 })
         },
         getaddCart (res,GoodId,goods_num,cart_id) {
-            // let date = res.data
-            let date = eval('('+res.data+')')
+            let date = res.data
+            // let date = eval('('+res.data+')')
             let _this = this
             let data ;
             if(cart_id){
@@ -556,13 +555,13 @@ export default {
             if(date.data.spec.length == 0){
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
+                    // let date = eval('('+res.data+')')
+                    let date = res.data
                     console.log(date)
                     _this.AglinCart(date)
                 })
@@ -576,8 +575,8 @@ export default {
             
         },
         emitCart (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.data == ''){
                 this.cart = date.data
                 this.AglinCart()
@@ -605,10 +604,10 @@ export default {
             if(goods_num == 0){
                 
                 this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
+                    // method:'post',
+                    method: 'delete',
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/cart_clear',
                     data:{
                         cart_id:cart_id,
                         url:"http://api.dqvip.cc/buyer/cart_clear",
@@ -624,8 +623,8 @@ export default {
             // 获取当前商品的信息  规格  
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
                 data: {
                     url:"http://api.dqvip.cc/goods_info",
                     q_type:'post',
@@ -702,8 +701,9 @@ export default {
             }
             this.$store.dispatch("changeProm",JSON.stringify(this.shopprom))
             this.shoptitle = title
-
-
+            if(this.shopprom[0].length < 1){
+                this.showtitle = true
+            }
             // 商品列表
             for(let i in this.shop.cate){
                 if(this.shop.cate[i].goods){
@@ -714,6 +714,8 @@ export default {
             }
         },
         cart () {
+            console.log(this.cart,333)
+            console.log(this.costPrice,444)
             let cart = this.cart
             let total = 0
             for(let i in cart){

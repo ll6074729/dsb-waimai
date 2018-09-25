@@ -1,5 +1,5 @@
 <template>
-    <div class="box" :class="{merchant:page == 2}">
+    <div class="box" :class="{merchant:page == 2,concurrentBox:page == 0}">
         <div class="df pd20 box-item">
             <div class="list-name">
                 姓名
@@ -192,6 +192,8 @@ export default {
     background-color #f7f7f7
     .ps
         color #333!important
+.concurrentBox
+    padding 0!important   
 .box
     padding-top 7vw
     padding-bottom 8vw

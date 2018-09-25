@@ -7,7 +7,7 @@
             <swiper :options="swiperOption"> 
                 <swiper-slide v-for="item in list" :key="item.shop_id">
                     <router-link tag="div" :to="'/shop/'+item.shop_id">
-                         <img :src="item.logo" alt="" srcset="" :onerror="defaultImg">
+                        <img :src="item.logo" alt="" srcset="" :onerror="defaultImg">
                         <p>{{item.shop_name}}</p>
                         <span v-if="item.status == '0'" class="status0">
                             休息中

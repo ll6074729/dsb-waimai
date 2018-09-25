@@ -101,7 +101,7 @@ export default {
             // let date = res.data
             this.evaluation = date.data.data
             let compic
-            console.log(this.evaluation,555)
+            // console.log(this.evaluation,555)
             for (let i in this.evaluation){
                 let compic2 = new Array()
                 if(this.evaluation[i].img  != null){
@@ -113,7 +113,7 @@ export default {
                     this.evaluation[i].pic = compic2
                 }    
             }
-            console.log(this.evaluation,666)
+            // console.log(this.evaluation,666)
         },
     },
     watch :{
@@ -156,6 +156,7 @@ export default {
         .no
             text-align center     
             color #999
+            margin-bottom 20vw
             img 
                 width 33.33vw
                 height 33.33vw

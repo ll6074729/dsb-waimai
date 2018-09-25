@@ -73,7 +73,7 @@ export default{
                //处理验证失败的信息
             wx.error(function (res) {
                 console.log(res)
-                alert(res)
+                // alert(res)
             });
               //处理验证成功的信息
             wx.ready(function () {
@@ -111,7 +111,7 @@ export default{
 				 if(res.err_msg == "get_brand_wcpay_request:ok") {
                     location.href='/#/pay/true';
 				 }else{
-				 	alert(res.err_code+res.err_desc+res.err_msg);
+				 	// alert(res.err_code+res.err_desc+res.err_msg);
                     location.href='/#/pay/false';
 				 }
 			}

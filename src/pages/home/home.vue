@@ -64,7 +64,7 @@ export default {
         lng:localStorage.lng,
         lat:localStorage.lat,
         range:[],
-        fullscreenLoading: false
+        fullscreenLoading: true
     }
   },
     methods:{
@@ -102,6 +102,7 @@ export default {
             this.swiperTab = date.data.shop_type // 分类按钮
             this.notice = date.data.notice //通告
             this.Recommend = date.data.recommend_shop //大牌推荐
+            this.fullscreenLoading = false
         },
         handSearch () {
             this.$http({

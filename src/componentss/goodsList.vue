@@ -1,15 +1,17 @@
 <template>
     <div class="box" ref="goodslist"   v-loading.fullscreen.lock="fullscreenLoading">
-        <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search' && isheader}">
+        <div :class="{'box-head':isgoods,'box-head-search':page == 'shop-search' && isheader}" ref="tab">
             <slot ref="homeTitle"></slot>
-            <div class="tab" ref="tab">
+            <!-- <div > -->
                 <!-- 0销量  1好评 2 热门新店 -->
-                <div class="item-tab" :class="{'active':sort == 3}" @click="chooes(3)">综合排序</div>
-                <div class="item-tab" :class="{'active':sort == 4}" @click="chooes(4)">速度最快</div>
-                <div class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</div>
-                <div class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">好评优先</div>
-                <div class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</div>
-            </div>
+                <swiper :options="swiperOption" class="tab"> 
+                    <swiper-slide class="item-tab" :class="{'active':sort == 3}" @click="chooes(3)">综合排序</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 4}" @click="chooes(4)">速度最快</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">好评优先</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</swiper-slide>
+                </swiper>    
+            <!-- </div> -->
         </div>
         <div ref="shopList" class="shop" :class="page" >
             <ul :class="{'shop-height':isgoods}">
@@ -34,16 +36,18 @@
                                         show-score
                                         void-color="#ff3800"
                                         text-color="#333"
-                                        score-template="{value}">
+                                        score-template="{value}"
+                                        style="display:inline-block"
+                                        >
                                     </el-rate>
-
+                                    <span class="shop-sale" style="margin-left:3vw;font-size:10px;display:inline-block;margin-top:-1vw">销量 {{item.sales}}</span>   
                                 </div>
-                                <!--  -->
-                                <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | 销量 {{item.sales}}</div>
+                                <!--  {{parseInt(item.sell_time) + parseInt(this.$store.state.process_date)}}-->
+                                <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | {{parseInt(item.sell_time) + parseInt(process_date)}}分钟</div>
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
-                                    20元起送 | 配送费 <span v-if="parseFloat(item.custom_delivery) != 0">
+                                    {{item.take_off}}元起送 | 配送费 <span v-if="parseFloat(item.custom_delivery) != 0">
                                     {{parseFloat(item.custom_delivery) + parseFloat(delivery_price)}}
                                 </span>
                                 <span v-if="parseFloat(item.custom_delivery) == 0">
@@ -63,8 +67,9 @@
                     <div class="tagBox">
                         <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
                     </div>
-                    <div class="shop-prom">
-                        <span class="span1">到店自提</span>
+                    <!-- :class="{'arrow-up':item.arrow_up == true}" -->
+                    <div class="shop-prom" :ref="index" >
+                        <span class="span1" v-if="item.picked_up == 1">到店自提</span>
                         <span class="span2" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
                             {{promitem.title}}
                         </span>
@@ -126,8 +131,8 @@
                                 </span>
                             </div>
                         </div> -->
-
                     </div>
+                    <!-- <img src="../assets/img/down_black.png" alt="" v-if="item.arrow_up == true" class="down" @click="up(index)"> -->
                 </li>
             </ul>
         </div>
@@ -163,7 +168,15 @@ export default {
             defaultImg: 'this.src="' + require('../assets/img/defaultshop.png') + '"',
             lng:localStorage.lng,
             lat:localStorage.lat,
-            delivery_price:this.$store.state.delivery_price || 0.00
+            process_date:this.$store.state.process_date || 0,
+            delivery_price:this.$store.state.delivery_price || 0.00,
+            swiperOption: {
+                // autoplay: true,
+                slidesPerView : 3.5,
+                scrollbar: {
+                    el: '.swiper-scrollbar',
+                },
+            },
         }
     },
     methods : {
@@ -237,7 +250,7 @@ export default {
                     this.isheader = true
                 }
             }else{
-                if(scrollTop < 740){
+                if(scrollTop < 700){
                     this.isgoods = false
                 }else{
                     this.isgoods = true
@@ -246,6 +259,21 @@ export default {
             // console.log(this.$refs.goodslist.getBoundingClientRect().top,93)
             // console.log(scrollTop,123)
         },
+        up(index){
+
+            this.shopList[index].arrow_up = !this.shopList[index].arrow_up
+            console.log(this.shopList[index])
+        },
+        // 隐藏标签
+        isshow () {
+            for(let i = 0; i < this.shopList.length; i++){
+                if(this.$refs[i][0].children.length > 2){
+                    this.shopList[i].arrow_up = true
+                }else{
+                    this.shopList[i].arrow_up = false
+                }
+            }
+        }
     },
     watch :{
         shopList () {
@@ -295,6 +323,7 @@ export default {
         // this.scroll = new BScroll(this.$refs.shopList,{
         //     click:true
         // })
+        this.isshow()
     },
 }
 </script>
@@ -338,7 +367,7 @@ export default {
         // border-bottom 1px solid #f7f7f7
         .item-tab
             text-align center
-            flex 1
+            // width 29.33vw
             height 10.6vw
             line-height 10.6vw
             color #999
@@ -364,6 +393,7 @@ export default {
         .shop-height
             padding-top 23.96vw    
         .shop-list
+            position relative
             .shop-list-item
                 border-top 1px solid #f7f7f7
                 display flex
@@ -425,6 +455,7 @@ export default {
                         .shop-sale
                             color #999
                             font-size 2.93vw
+                            line-height 4vw
                     .shop-foot
                         display flex
                         justify-content space-between
@@ -456,31 +487,46 @@ export default {
                     border-radius 5vw
                     margin-right 2vw
                     display inline-block
-                    font-size 2.93vw
+                    font-size 3.46vw
+            .down
+                position absolute
+                right 5vw
+                bottom 2vw
+                width 9px
+                height 5px
+                margin-top 5px
+                transform rotate(0deg)      
+            .arrow-up
+                display -webkit-box
+                -webkit-box-orient vertical
+                -webkit-line-clamp 1
+                overflow hidden        
             .shop-prom
                 padding-left 21.32vw
                 margin-bottom 2.66vw
                 margin-top 2vw
+                padding-right 10vw
+                position relative
                 span
                     border 1px solid #dbdbdb
-                    font-size 2.93vw
+                    font-size 10px
                     color #999
-                    padding 1.2vw 2vw
+                    padding 0.8rem 1.5vw
                     margin-right 1.2vw
                     margin-bottom 1.5vw
                     display inline-block
                 .span1
-                    color #43ce56
-                    border-color #7ccc87
+                    color #538acc
+                    border-color #77a4d9
                 .span2 
-                    color #469afe
-                    border-color #a6bdff 
+                    color #41a76c
+                    border-color #83c09d 
                 .span3
-                    color #ff7373
+                    color #cc4646
                     border-color #ffa6a6
                 .span4
-                    color #43ce56
-                    border-color #43ce56    
+                    color #a668a4
+                    border-color #c79fcd    
                 // .activity
                 //     .list-item
                 //         display flex

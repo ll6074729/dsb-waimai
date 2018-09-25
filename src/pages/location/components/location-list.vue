@@ -13,7 +13,7 @@
                         </p>
                     </div>
                     <div class="list-item" 
-                        @click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense)"
+                        @click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date)"
                         v-for="(item,index) in nearbySchool" 
                         :key="index">
                         {{item.address}}
@@ -25,7 +25,7 @@
                     </div>
                     <ul>
                         <li class="list-item"
-                            v-on:click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense)"
+                            v-on:click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date)"
                             v-for="(item,index) in allSchool" 
                             :key="index">
                             {{item.address}}
@@ -56,9 +56,10 @@ export default {
         })
     },
     methods:{
-        handClickSchool (school,area_id,delivery_cost,packing_expense) {
+        handClickSchool (school,area_id,delivery_cost,packing_expense,process_date) {
             this.$store.dispatch("changeSchool",school)
             this.$store.dispatch("changearea",area_id)
+            this.$store.dispatch("changeprocess",process_date)
             this.$store.dispatch("changepacking",parseFloat(packing_expense).toFixed(2))
             this.$store.dispatch("changedelivery",parseFloat(delivery_cost).toFixed(2))
             this.$http({
