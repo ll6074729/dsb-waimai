@@ -48,10 +48,10 @@
                         </div>
                     </div>
                 </li>
-                <li v-if="this.collect.length == 0" style="text-align:center;margin-top:3vw">
-                    <img src="../../assets/img/noaddress.png" alt="" >
+                <li v-if="this.collect.length == 0" class="no">
+                    <img src="../../assets/img/nocollection.png" alt="" >
                     <div>
-                        你不喜欢我们的商家么( Ĭ ^ Ĭ )  快去收藏一个吧
+                        你不喜欢我们的商家么( Ĭ ^ Ĭ )  快去撸一个吧
                     </div>
                 </li>
             </ul>
@@ -157,6 +157,14 @@ export default {
         font-size 2.86vw!important
     .collect-list
         margin-top 13.66vw
+        .no
+            text-align center     
+            color #999
+            img 
+                width 66.66vw
+                height 66.66vw 
+                margin-top 21.33vw    
+                margin-bottom 5vw
         .item
             height 26.66vw
             background-color #ffffff

@@ -47,10 +47,13 @@
                 map.addOverlay(markers)
                 map.panTo(r.point)
                 map.centerAndZoom(r.point, 16)
+          }else{
+            this.$emit("lodingS","flase")
+            this.$emit('handMap',1)
+            // this.$store.dispatch("changeCity",this.BMap_address)
           }
         }, { enableHighAccuracy: true })
       },
-     
     }
   }
 </script>

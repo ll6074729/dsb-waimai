@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div v-if="evaluation.length == 0" class="no">
-                <img src="../../../assets/img/noaddress.png" alt="" >
+                <img src="../../../assets/img/nocomment.png" alt="" >
                 <div>
                     ( • ̀ω•́ )✧  暂无评论
                 </div>

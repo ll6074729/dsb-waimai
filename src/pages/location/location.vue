@@ -49,26 +49,33 @@ export default {
         },
         // 坐标
         handMap (msg) {
-            this.$http({
-                method: 'post',
-                url: '/mobile/api/q',
-                // url:'api/buyer/area_list',
-                data: {
-                    long_and_lat:msg,
-                    url:'http://api.dqvip.cc/buyer/area_list',
-                    q_type:'post',
-                },
-            })
-            .then(this.getSchool)
-            .catch(function (error) {
-                console.log(error);
-            });
+            if(msg == 1){
+                this.$message({
+                    type:'warning',
+                    message: '没有获取到定位信息,您可以点击重新定位',
+                })
+            }else{
+                this.$http({
+                    method: 'post',
+                    url: '/mobile/api/q',
+                    // url:'api/buyer/area_list',
+                    data: {
+                        long_and_lat:msg,
+                        url:'http://api.dqvip.cc/buyer/area_list',
+                        q_type:'post',
+                    },
+                })
+                .then(this.getSchool)
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
         },
         // 坐标
         getSchool (res) {
             const date = eval('(' + res.data + ')')
             // let date = res.data
-            console.log(date)
+            // console.log(date)
             this.nearbySchool = date.data
         },
         // 所有学校

@@ -24,7 +24,7 @@
                 请先设置默认收货地址
             </router-link>
         </div>
-        <div class="buybtn" @click="buybtn" v-if="shop_status !=0 && costPrice > take_off">
+        <div class="buybtn" @click="buybtn" v-if="shop_status !=0 && costPrice >= take_off">
             立即下单
         </div>
         <div class="buybtn" @click="buybtn1" :class="{'buy-db':costPrice < 10}" v-if="costPrice < 10 && shop_status != 0">
@@ -165,8 +165,8 @@ export default {
                 }
                 this.$http({
                     method: 'post',
-                    // url: 'mobile/api/q',
-                    url:'api/buyer/cart_change',
+                    url: 'mobile/api/q',
+                    // url:'api/buyer/cart_change',
                     data: data,
                 })
                 .then(this.$parent.getCart)
@@ -196,8 +196,8 @@ export default {
         },
         // 公共配置
         getDeliveryList (res) {
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             let Distribution = parseFloat(date.data[0].value)
             this.delivery_cost = Distribution.toFixed(2)
         },
@@ -217,9 +217,9 @@ export default {
             date.url = 'http://api.dqvip.cc/buyer/cart_clear'
             date.q_type = 'delete'
             this.$http({
-                method: 'delete',
-                // url: 'mobile/api/q',
-                url:'api/buyer/cart_clear',
+                method: 'post',
+                url: 'mobile/api/q',
+                // url:'api/buyer/cart_clear',
                 data:date,
             })
                 .then(this.$parent.getCart)

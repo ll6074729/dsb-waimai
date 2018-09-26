@@ -97,7 +97,7 @@ export default {
                 })
             }else{
                 this.area_name = index[0].value
-                this.area_id = this.school_list[index[0].index].area_id
+                this.area_id = this.school_list[index[0].index - 1].area_id
             }
         },
          // 所有学校

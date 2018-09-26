@@ -21,7 +21,7 @@
                     </div>
                 </li> 
                 <li v-if="couponList.length < 1" class="no">
-                    <img src="../../assets/img/noaddress.png" alt="" >
+                    <img src="../../assets/img/nocoupon.png" alt="" >
                     <div>
                         您还没有获得优惠券哟(〃'▽'〃)
                     </div>

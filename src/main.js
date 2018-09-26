@@ -45,7 +45,9 @@ Vue.use(BaiduMap, {
 Vue.config.productionTip = false
 Vue.prototype.styleIndex = styleIndex
 Vue.prototype.$http = axios
-
+router.afterEach((to,from,next) => {
+  window.scrollTo(0,0);
+})
 Vue.prototype.$wx = wx
 // Vue.prototype.WXconfig = WXconfig
 /* eslint-disable no-new */

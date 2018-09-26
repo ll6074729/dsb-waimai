@@ -5,11 +5,11 @@
             <!-- <div > -->
                 <!-- 0销量  1好评 2 热门新店 -->
                 <swiper :options="swiperOption" class="tab"> 
-                    <swiper-slide class="item-tab" :class="{'active':sort == 3}" @click="chooes(3)">综合排序</swiper-slide>
-                    <swiper-slide class="item-tab" :class="{'active':sort == 4}" @click="chooes(4)">速度最快</swiper-slide>
-                    <swiper-slide class="item-tab" :class="{'active':sort == 0}" @click="chooes(0)">销量优先</swiper-slide>
-                    <swiper-slide class="item-tab" :class="{'active':sort == 1}" @click="chooes(1)">好评优先</swiper-slide>
-                    <swiper-slide class="item-tab" :class="{'active':sort == 2}" @click="chooes(2)">热门新店</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 0}">综合排序</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 1}">速度最快</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 2}">销量优先</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 3}">好评优先</swiper-slide>
+                    <swiper-slide class="item-tab" :class="{'active':sort == 4}">热门新店</swiper-slide>
                 </swiper>    
             <!-- </div> -->
         </div>
@@ -43,7 +43,7 @@
                                     <span class="shop-sale" style="margin-left:3vw;font-size:10px;display:inline-block;margin-top:-1vw">销量 {{item.sales}}</span>   
                                 </div>
                                 <!--  {{parseInt(item.sell_time) + parseInt(this.$store.state.process_date)}}-->
-                                <div class="shop-sale"> <span >{{range[item.shop_id]}}m</span> | {{parseInt(item.sell_time) + parseInt(process_date)}}分钟</div>
+                                <div class="shop-sale"> <span v-if="range[item.shop_id] < 1000">{{range[item.shop_id]}}m</span> <span v-if="range[item.shop_id] > 999">{{(range[item.shop_id]/1000).toFixed(2)}}km</span> | {{parseInt(item.sell_time) + parseInt(process_date)}}分钟</div>
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
@@ -57,8 +57,8 @@
                                     <!-- <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong> -->
                                 </div>
                                 <div class="shop-label-right">
-                                    <span class="label-status">
-                                        送到寝室
+                                    <span class="label-status" v-if="item.delivery_label">
+                                        {{item.delivery_label}}
                                     </span>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                         <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
                     </div>
                     <!-- :class="{'arrow-up':item.arrow_up == true}" -->
-                    <div class="shop-prom" :ref="index" >
+                    <div class="shop-prom" :ref="index" :class="{'arrow-up':item.arrow_up == 1}">
                         <span class="span1" v-if="item.picked_up == 1">到店自提</span>
                         <span class="span2" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
                             {{promitem.title}}
@@ -132,12 +132,13 @@
                             </div>
                         </div> -->
                     </div>
-                    <!-- <img src="../assets/img/down_black.png" alt="" v-if="item.arrow_up == true" class="down" @click="up(index)"> -->
+                    <!-- <img src="../assets/img/down_black.png" alt="" v-if="item.arrow_up" class="down" :class="{'arrow_down':item.arrow_down == 2}" @click="up(index)"> -->
                 </li>
             </ul>
+            <div style="text-align: center;font-size: 2.93vw;color: #999;">没有更多商家咯~！</div>
         </div>
         <div v-if="shopList.length < 1" class="shop-no">
-            <img src="../assets/img/noaddress.png" alt="" >
+            <img src="../assets/img/noshop.png" alt="" >
             <div>
                 真对不起,商家们不知道哪里去了 ╥﹏╥
             </div>
@@ -146,6 +147,7 @@
     </div>
 </template>
 <script>
+var vm = null
 import BMap from 'BMap'
 // import  BScroll from 'better-scroll'
 export default {
@@ -176,6 +178,12 @@ export default {
                 scrollbar: {
                     el: '.swiper-scrollbar',
                 },
+                on:{
+                    click:function () {
+                        const realIndex = this.clickedIndex;
+                        vm.chooes(realIndex);
+                    }
+                }
             },
         }
     },
@@ -205,15 +213,15 @@ export default {
                 area_id : this.$store.state.area_id,
                 search_name:this.input10
             }
-            if(sort == 0){
+            if(sort == 2){
                 data.sales = 'desc'
-            }else if(sort == 1){
-                data.store_ratings = 'desc'
-            }else if(sort == 2){
-                data.is_new = 1
             }else if(sort == 3){
+                data.store_ratings = 'desc'
+            }else if(sort == 4){
+                data.is_new = 1
+            }else if(sort == 0){
                 
-            }else if (sort ==4){
+            }else if (sort ==1){
 
             }
             this.$http({
@@ -256,27 +264,30 @@ export default {
                     this.isgoods = true
                 }
             }
-            // console.log(this.$refs.goodslist.getBoundingClientRect().top,93)
-            // console.log(scrollTop,123)
         },
         up(index){
-
-            this.shopList[index].arrow_up = !this.shopList[index].arrow_up
-            console.log(this.shopList[index])
+            // this.shopList[0].arrow_up = !this.shopList[0].arrow_up
+            if(this.shopList[index].arrow_up == 2){
+                this.shopList[index].arrow_up = 1
+                this.$set(this.shopList[index],'arrow_up',1)
+            }else{
+                this.shopList[index].arrow_up = 2
+                this.$set(this.shopList[index],'arrow_up',2)
+            } 
         },
         // 隐藏标签
         isshow () {
             for(let i = 0; i < this.shopList.length; i++){
-                if(this.$refs[i][0].children.length > 2){
-                    this.shopList[i].arrow_up = true
-                }else{
-                    this.shopList[i].arrow_up = false
+                if(this.$refs[i][0].clientHeight > 25){
+                    this.shopList[i].arrow_up = 1
+                    // this.shopList[i].arrow_down = false
                 }
             }
         }
     },
     watch :{
         shopList () {
+            this.isshow()
             this.shopprom = []
             for (var i = 0; i < this.shopList.length;i++) {
                 this.shopList[i].showtitle = false
@@ -300,6 +311,7 @@ export default {
                     this.shopprom[this.shopList[i].shop_id].order = 0
                 }
             }
+            // 店铺距离
             for(let i in this.shopList){
                 if(this.shopList[i].tags){
                     let tag = this.shopList[i].tags
@@ -308,7 +320,7 @@ export default {
                 if(this.shopList[i].longitude && this.shopList[i].latitude){
                     var pointA = new BMap.Point(this.lng, this.lat)
                     var pointB = new BMap.Point(this.shopList[i].longitude, this.shopList[i].latitude)
-                    this.range[this.shopList[i].shop_id] = parseInt(window.map.getDistance(pointA,pointB))
+                    let distance = parseInt(window.map.getDistance(pointA,pointB))
                 }else{
                     this.range[this.shopList[i].shop_id] = 0
                 }
@@ -317,13 +329,14 @@ export default {
     },
     created () {
         this._GetDistance()
+        vm = this
     },
     mounted (){
+        this.isshow()
         window.addEventListener("scroll",this.handleTop)
         // this.scroll = new BScroll(this.$refs.shopList,{
         //     click:true
         // })
-        this.isshow()
     },
 }
 </script>
@@ -371,7 +384,7 @@ export default {
             height 10.6vw
             line-height 10.6vw
             color #999
-            font-size 2.93vw
+            font-size 3.46vw
         .active
             color #469afe
             font-weight bold
@@ -487,14 +500,15 @@ export default {
                     border-radius 5vw
                     margin-right 2vw
                     display inline-block
-                    font-size 3.46vw
+                    font-size 10px
+            .arrow_down
+                transform rotate(180deg)
             .down
                 position absolute
                 right 5vw
-                bottom 2vw
+                top 32vw
                 width 9px
                 height 5px
-                margin-top 5px
                 transform rotate(0deg)      
             .arrow-up
                 display -webkit-box
@@ -511,13 +525,13 @@ export default {
                     border 1px solid #dbdbdb
                     font-size 10px
                     color #999
-                    padding 0.8rem 1.5vw
-                    margin-right 1.2vw
+                    padding 0.03rem 1.5vw
+                    margin-right 0.6vw
                     margin-bottom 1.5vw
                     display inline-block
                 .span1
-                    color #538acc
-                    border-color #77a4d9
+                    color #28b6a7
+                    border-color #28b6a7
                 .span2 
                     color #41a76c
                     border-color #83c09d 
