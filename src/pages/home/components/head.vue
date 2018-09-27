@@ -1,5 +1,6 @@
 <template>
-    <div class="head" :class="{ishead:ishead}" ref="head">
+<div>
+    <div class="head"  ref="head" >
         <div class="address">
             <router-link to="/Location" tag="a">
                 <i class="icon-address icon">
@@ -15,13 +16,18 @@
             <input type="text" placeholder="输入搜索内容" maxlength="22">
         </router-link>
     </div>
+    <div class="head-bg" :style="opacitystyle"></div>
+</div>
+    
 </template>
 <script>
 export default {
     name:'Homehead',
     data () {
         return {
-            ishead:false
+            opacitystyle:{
+                opacity:0
+            }
         }
     },
     mounted () {
@@ -30,17 +36,22 @@ export default {
     methods : {
         handleTop () {
             var scrollTop = this.styleIndex.handleScroll()
-            if(scrollTop >= 180){
-                this.ishead = true
-            }else{
-                this.ishead = false
-            }
+            // if(scrollTop > 60){
+                let opacity = scrollTop /180
+                opacity = opacity >1 ? 1 :opacity
+                this.opacitystyle = { opacity }
+            // }
         },
     }
 }
 </script>
 <style lang="stylus" scoped>
-    .ishead
+    .head-bg
+        position fixed
+        top 0vw
+        z-index 99
+        width 100%
+        height 12vw
         background #469af1
     .head
         position fixed
@@ -80,4 +91,5 @@ export default {
                 border-radius 30px
                 text-indent 10vw
                 font-size 2.9vw
+                 
 </style>
