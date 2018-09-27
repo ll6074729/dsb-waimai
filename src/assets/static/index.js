@@ -58,6 +58,10 @@ export default{
             'askUrl':encodeURIComponent(location.href.split('#')[0]) 
         }).then(function(res) {
             let wxArray = res.data
+            if(res.data == null || res.data == ''){
+                alert('请求微信配置失败,请重新打开公众号')
+                return false
+            }
             wx.config({
                 debug: false,
                 appId: wxArray.appId, // 和获取Ticke的必须一样------必填，公众号的唯一标识

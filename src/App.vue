@@ -34,8 +34,5 @@ export default {
 </script>
 
 <style>
-.app{
-  width: 375px!important;
-  height: 667px!important;
-}
+
 </style>
