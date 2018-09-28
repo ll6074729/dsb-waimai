@@ -47,21 +47,24 @@ export default{
         window.localStorage.lng = lng;
         window.localStorage.lat = lat;
     },
-
     /**
      * 拿到用户信息  token_type   expires_in  过期时间    access_token 后台请求需要的
      */
     wxShowMenu () {
         // this.GetQueryString(location.href)
         var _this = this
-        axios.post('/index.php?m=Mobile&c=Index&a=ajaxGetWxConfig&t='+Math.random(),{
+        axios.post('http://wm.dqvip.cc/index.php?m=Mobile&c=Index&a=ajaxGetWxConfig&t='+Math.random(),{
             'askUrl':encodeURIComponent(location.href.split('#')[0]) 
         }).then(function(res) {
-            let wxArray = res.data
+           
             if(res.data == null || res.data == ''){
                 alert('请求微信配置失败,请重新打开公众号')
                 return false
             }
+            let wxArray = res.data
+            console.log(res.data)
+            localStorage.user_id = res.data.user.user_id
+            localStorage.token = res.data.user.access_token
             wx.config({
                 debug: false,
                 appId: wxArray.appId, // 和获取Ticke的必须一样------必填，公众号的唯一标识
@@ -69,8 +72,12 @@ export default{
                 nonceStr: wxArray.nonceStr, // 必填，生成签名的随机串
                 signature: wxArray.signature,// 必填，签名，见附录1
                 jsApiList: [
-                  'chooseWXPay',
-                  'getLocation'
+                  'chooseWXPay', //支付
+                  'getLocation', //获取地理位置
+                  'updateAppMessageShareData', //新的分享朋友
+                  'updateTimelineShareData',//新的分享朋友圈
+                  'onMenuShareTimeline', //老的分享朋友圈
+                  'onMenuShareAppMessage'
                 ]
 
             });
@@ -81,6 +88,7 @@ export default{
             });
               //处理验证成功的信息
             wx.ready(function () {
+                //获取坐标
                 wx.getLocation({
                     type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
                     success: function (res) {
@@ -91,16 +99,28 @@ export default{
                         _this.getmap(longitude,latitude)
                     }
                 })
-                // wx.chooseWXPay({
-                //     timestamp: 0, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-                //     nonceStr: '', // 支付签名随机串，不长于 32 位
-                //     package: '', // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
-                //     signType: '', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                //     paySign: '', // 支付签名
-                //     success: function (res) {
-                //     // 支付成功后的回调函数
-                //     }
-                // });
+                //分享朋友圈（1.4）
+                var link = window.location.origin+ '/?uid='+localStorage.user_id+'/'+window.location.hash
+                console.log(link)
+                wx.onMenuShareTimeline({ 
+                    title: '高波波666', // 分享标题
+                    link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: '', // 分享图标
+                }, function(res) { 
+                //这里是回调函数 
+                    alert(JSON.stringify(res))
+                }); 
+                wx.onMenuShareAppMessage({
+                    title: '高波波666', // 分享标题
+                    desc: '高波波666,屌大的很', // 分享描述
+                    link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: '', // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    success: function () {
+                    // 用户点击了分享后执行的回调函数
+                    }
+                });
             })
         })
  
