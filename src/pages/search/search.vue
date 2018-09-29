@@ -35,6 +35,8 @@ export default {
             page:'shop-search',
             tags:[],
             range:[],
+            lng:localStorage.lng,
+            lat:localStorage.lat,
         }
     },
     created () {

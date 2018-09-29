@@ -1,4 +1,5 @@
 <template>
+<keep-alive>
     <div class="header"  v-loading.fullscreen.lock="fullscreenLoading">
         <!-- 头部轮播 -->
         <homeswiper-banner :banner="banner"></homeswiper-banner>
@@ -20,7 +21,7 @@
         <recommend :list="Recommend" v-if="Recommend"></recommend>
         <hr class="hr20">
         <!-- 商家列表 -->
-        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags" :range="range" >
+        <goods-list :shopList="shopList" :page="page" :shopprom="shopprom" v-if="shopprom" :tags="tags" :range="range">
             <div class="title">
                 优选商家
             </div>
@@ -29,6 +30,8 @@
         <!-- <all-map></all-map> -->
         <div id="allmap" style="display:none"></div>
     </div>
+</keep-alive>
+    
 </template>
 <script>
 import BMap from 'BMap'
@@ -75,7 +78,7 @@ export default {
             }
         },
         chooesSchool () {
-            if(this.$store.state.area_id == undefined){
+            if(this.$store.state.area_id == undefined || this.$store.state.delivery_price == NaN){
                 this.$router.push({path:"/Location"})
             }else{
                 this.$http({

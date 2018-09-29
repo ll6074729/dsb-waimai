@@ -45,7 +45,7 @@
                                 score-template="{value}">
                             </el-rate>
                         </div>
-                        <div class="shop-sale"> <span v-if="this.range != 0">{{this.range}}m | </span> 销量 {{shop.sales}}</div>
+                        <div class="shop-sale"> <span v-if="this.range != 0 && this.range < 1000">{{this.range}}m | </span><span v-if="this.range != 0 && this.range > 999">{{this.range/1000}}km | </span> 销量 {{shop.sales}}</div>
                     </div>
                     <div class="shop-foot">
                         {{shop.addr}}
@@ -108,7 +108,7 @@
             </div>
             <div class="tab-box" :class="{'tab-box-ab':ishead}" >
                 <div class="shop-buy" v-show="isshowtab == 0">
-                    <shop-menu :cate="shop.cate" :ishead="ishead" @changeNum="changeNum" :num="num" :fullmoney="fullmoney"></shop-menu>
+                    <shop-menu v-if="shop.cate.length > 0" :cate="shop.cate" :ishead="ishead" @changeNum="changeNum" :num="num" :fullmoney="fullmoney"></shop-menu>
                     <shop-product 
                         :goods="shop.cate" 
                         :cart="cart" 
@@ -122,8 +122,16 @@
                         @buygoodsinfo="buygoodsinfo"
                         @changeNum="changeNum"
                         @showgoods="showgoods"
+                        v-if="shop.cate.length > 0"
                         ></shop-product>
+                    <div v-if="shop.cate.length < 1" class="goodno">
+                        <img src="../../assets/img/nogoods.png" alt="" >
+                        <div>
+                            商家很懒,还没有上传商品哟~！
+                        </div>
+                    </div>    
                 </div>
+
                 <div class="shop-comment" v-show="isshowtab == 1">
                     <shop-comment :shop="shop" ></shop-comment>
                 </div>
@@ -648,6 +656,16 @@ export default {
                     console.log(error);
                 })
         },
+        // 判断是否有选中商品
+        getshopid () {
+            if(this.$route.params.good){
+                for(let i in this.goods){
+                    if(this.goods[i].goods_id == this.$route.params.good){
+                        this.goods_feel = i
+                    }
+                }
+            }
+        },
     },
     watch : {
         shop () {
@@ -722,10 +740,11 @@ export default {
                     }
                 }
             }
+            this.getshopid()
         },
         cart () {
-            console.log(this.cart,333)
-            console.log(this.costPrice,444)
+            // console.log(this.cart,333)
+            // console.log(this.costPrice,444)
             let cart = this.cart
             let total = 0
             for(let i in cart){
@@ -796,7 +815,7 @@ export default {
                 }
                 this.searchlist = result
             },100)
-        }   
+        },
     },
     computed :{
         // shopprom () {
@@ -811,6 +830,7 @@ export default {
         this.getaddressList()
         this.getCart()
         window.addEventListener('scroll',this.handleTop)
+        
     }
 }
 </script>
@@ -828,7 +848,7 @@ export default {
         border-radius 0.5rem
         background-color #f5f7fa
         border none
-        color #fff
+        color #999
     .shop-head
         display flex
         justify-content space-between
@@ -886,7 +906,7 @@ export default {
                     border-radius 5px
             .shop-right 
                 flex 1 auto    
-                overflow-x hidden
+                // overflow-x hidden
                 .shop-title
                     width 100%
                     display flex
@@ -976,6 +996,15 @@ export default {
             .shop-buy
                 display flex
                 position relative
+                .goodno
+                    text-align center     
+                    color #999
+                    width 100%
+                    img 
+                        width 66.66vw
+                        height 66.66vw 
+                        margin-top 5.33vw    
+                        margin-bottom 5vw     
             .shop-comment
                 background-color #fff    
         .tab-box-ab

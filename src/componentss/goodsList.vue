@@ -43,7 +43,7 @@
                                     <span class="shop-sale" style="margin-left:3vw;font-size:10px;display:inline-block;margin-top:-1vw">销量 {{item.sales}}</span>   
                                 </div>
                                 <!--  {{parseInt(item.sell_time) + parseInt(this.$store.state.process_date)}}-->
-                                <div class="shop-sale"> <span v-if="range[item.shop_id] < 1000">{{range[item.shop_id]}}m</span> <span v-if="range[item.shop_id] > 999">{{(range[item.shop_id]/1000).toFixed(2)}}km</span> | {{parseInt(item.sell_time) + parseInt(process_date)}}分钟</div>
+                                <div class="shop-sale"> <span v-if="range[item.shop_id] < 1000">{{range[item.shop_id]}}m | </span> <span v-if="range[item.shop_id] > 999">{{(range[item.shop_id]/1000).toFixed(2)}}km |</span>  {{parseInt(item.sell_time) + parseInt(process_date)}}分钟</div>
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
@@ -191,6 +191,7 @@ export default {
         showtitle(index){
             console.log(index)
             this.shopList[index].showtitle = true
+            
         },
         _GetDistance() {
             if(localStorage.lat || localStorage.lng){
@@ -220,9 +221,9 @@ export default {
             }else if(sort == 4){
                 data.is_new = 1
             }else if(sort == 0){
-                
-            }else if (sort ==1){
-
+                data.sort = 'desc'
+            }else if (sort == 1){
+                data.avg_minute = 'desc'
             }
             this.$http({
                 method: 'post',
@@ -489,6 +490,7 @@ export default {
                                 font-size 2.4vw
                                 background #469afe
                                 padding 0.8vw 2vw
+                                padding-bottom 0.4vw
                                 color #fff
             .tagBox
                 padding-left 21.32vw     
@@ -525,7 +527,8 @@ export default {
                     border 1px solid #dbdbdb
                     font-size 10px
                     color #999
-                    padding 0.03rem 1.5vw
+                    padding 0.1rem 1.5vw
+                    padding-bottom 0.05rem
                     margin-right 0.6vw
                     margin-bottom 1.5vw
                     display inline-block

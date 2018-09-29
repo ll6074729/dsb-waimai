@@ -13,7 +13,7 @@
                 手机号
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的联系方式" maxlength="11" v-model="mobile">
+                <input type="number" placeholder="请输入您的联系方式" maxlength="11" v-model="mobile" pattern="[0-9]*">
             </div>
         </div>
     </div>

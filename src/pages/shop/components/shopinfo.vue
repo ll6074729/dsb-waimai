@@ -65,7 +65,7 @@ export default {
         goods_feel:Number,
     },
     mounted () {
-        
+        this._goodsFeel()
     },
     data () {
         return {
@@ -87,15 +87,16 @@ export default {
     watch: {
         goods_feel () {
             if(this.goods_feel){
-                document.body.style.overflow='hidden';
-                document.body.style.height = window.screen.height + 'px';
+            //     document.body.style.overflow='hidden';
+            //     document.body.style.height = window.screen.height + 'px';
+                console.log('gaoboi')
                 this.$nextTick(() => {
                     this.$refs.mySwiper.swiper.slideTo(this.goods_feel, 0, false)
                 })
                 
             }else{
-                document.body.style.overflow='auto';
-                document.body.style.height = '100%';
+            //     document.body.style.overflow='auto';
+            //     document.body.style.height = '100%';
             }
                
         },
@@ -241,6 +242,11 @@ export default {
             }
             
         },
+        _goodsFeel () {
+            if(this.goods_feel){
+                this.$refs.mySwiper.swiper.slideTo(this.goods_feel, 0, false)
+            }
+        }
     },
 
 }

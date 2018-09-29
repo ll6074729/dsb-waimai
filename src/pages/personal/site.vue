@@ -23,7 +23,7 @@
                     手机号
                 </div>
                 <div class="list-input">
-                    <input type="text" placeholder="联系人手机号" maxlength="11" v-model="mobile">
+                    <input type="number" placeholder="联系人手机号" maxlength="11" v-model="mobile" pattern="[0-9]*">
                 </div>
             </div>
             <hr class="hr20">
@@ -82,26 +82,23 @@ export default {
             address_list:this.$store.state.addressList,
             picker: {
                 textConfirm:"确定",
-                data: [{
-                    value: this.$store.state.defaultSchool,
-                    children:[
+                data: [
                     {
                         value: 'A',
                         children: [
-                            { value: 'A-a'},
-                            { value: 'A-b'},
-                            { value: 'A-c'}
+                        { value: 'A-a' },
+                        { value: 'A-b' },
+                        { value: 'A-c' }
                         ]
                     },
                     {
                         value: 'B',
                         children: [
-                            { value: 'b-a'},
-                            { value: 'b-b'},
-                            { value: 'b-c'}
+                        { value: 'B-a' },
+                        { value: 'B-b' }
                         ]
-                    }],
-                }],
+                    },
+                ]
             },
             build_name:[],
             build:[]

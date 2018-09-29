@@ -5,13 +5,15 @@
                 为你推荐
             </div>
             <div class="goods-list">
-                <router-link tag="div" :to="'/shop/'+item.shop_id" class="goods-item" v-for="item in regood" :key="item.goods_id">
+                <div class="goods-item" v-for="item in regood" :key="item.goods_id" @click="shopGood(item.shop_id,item.goods_id)">
                     <img :src="item.details_figure" :alt="item.title" :onerror="defaultImg">
                     <div class="goods-info">
                         <p>{{item.title}}</p>
                         <p class="goods-price">￥{{item.price}}</p>
                     </div>
-                </router-link>
+                </div>
+                <!-- <router-link tag="div" :to="'/shop/'+item.shop_id+'/'+item.goods_id" class="goods-item" v-for="item in regood" :key="item.goods_id"> -->
+                <!-- </router-link> -->
             </div>
         </div>
     </div>
@@ -25,6 +27,16 @@ export default {
     data () {
         return {
             defaultImg:'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
+        }
+    },
+    methods: {
+        shopGood (shop_id,good_id) {
+            this.$router.push({
+                name:'Shop',
+                params:{
+                    id:shop_id,good:good_id
+                }
+            })
         }
     }
 }

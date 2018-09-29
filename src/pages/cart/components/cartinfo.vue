@@ -114,7 +114,7 @@ export default {
                 .goods-name
                     font-size 4.266vw
                     font-weight bold
-                    ellipsis()
+                    // ellipsis()
                 .goods-type
                     margin-top 4.66vw
                     font-size 3.2vw

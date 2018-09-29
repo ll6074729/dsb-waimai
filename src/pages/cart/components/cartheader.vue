@@ -33,11 +33,18 @@
                 <strong class="fl">
                     送达时间
                 </strong>
-                <span class="fr">尽快送达，预计{{parseInt(timer.value)}}分钟</span>    
+                <span class="fr" @click="show()" ref="timers">尽快送达，预计{{parseInt(timer.value)}}分钟</span>    
             </div>
-            <!-- <div class="delivery-right fr">
+            <awesome-picker
+                ref="picker"
+                :data="picker.data"
+                :textConfirm="picker.textConfirm"
+                @confirm="handlePickerConfirm"
+                >
+            </awesome-picker>
+            <div class="delivery-right fr" @click="show()">
                 <img src="../../../assets/img/right_f7.png" alt="">
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
@@ -45,18 +52,111 @@
 export default {
     name:"cartheader",
     props:{
-        timer:String
+        timer:Object,
+        business_hours:String
     },
     data () {
         return {
-            defaultAddress:[]
+            defaultAddress:[],
+            Servicetime:'',
+            picker: {
+                textConfirm:"确定",
+                data: [
+                    {
+                        value: 'A',
+                        children: [
+                        { value: 'A-a' },
+                        { value: 'A-b' },
+                        { value: 'A-c' }
+                        ]
+                    },
+                    {
+                        value: 'B',
+                        children: [
+                        { value: 'B-a' },
+                        { value: 'B-b' }
+                        ]
+                    },
+                ]
+            },
         } 
     },
     mounted () {
         this.initAddress()
         this.init()
+        this.coumputertime()
     },
     methods:{
+        handlePickerConfirm (index,value) {
+            if(index[0].value == '立即送出'){
+                this.$refs.timers.innerText = '尽快送达，预计'+parseInt(this.timer.value)+'分钟'
+                 this.Servicetime = 0
+            }else{
+                this.$refs.timers.innerText = '预定送达时间'+index[0].value+':'+index[1].value
+                this.Servicetime = index[0].value+':'+index[1].value
+            }
+        },
+        coumputertime () {
+            //把所有时间加入到picker 里面
+            let nowtime = (Date.parse(new Date())/1000 + this.timer.value * 60)*1000
+            var nowhours = new Date(nowtime)
+            let timefirst = []
+            let endtime = this.business_hours.substring(9,11)//结束小时
+            // 设置立即送达
+            timefirst[0] = {}
+            timefirst[0].value = '立即送出'
+            timefirst[0].children = []
+            timefirst[0].children[0] = {}
+            timefirst[0].children[0].value = '立即送出'
+            for (let i = 1;i <= endtime ;i++){
+                timefirst[i] = {}
+                timefirst[i].value = i
+                timefirst[i].children = []
+                for(var k = 0; k < 6; k++){
+                    if(i == endtime){
+                        timefirst[i].children[0] = {}
+                        timefirst[i].children[0].value = '00'
+                    }else{
+                        timefirst[i].children[k] = {}
+                        timefirst[i].children[k].value = k+'0'
+                    }
+                    
+                }
+            }
+            console.log(timefirst)
+            // 获得店铺营业时间
+            let starttime = this.business_hours.substring(0,2)
+            // 开始时间(小时)
+            if(nowhours.getHours() > starttime && nowhours.getHours() < endtime){
+                timefirst.splice(1,nowhours.getHours()-1) //第一个是立即送出
+                if(nowhours.getMinutes() > 50){
+                    // timefirst.splice(1,2)
+                }
+            }else{
+                // 大于结束时间
+                timefirst.splice(1,endtime)
+            }
+            console.log(timefirst)
+            //开始时间(分钟)
+            if(timefirst.length ==1){
+
+            }else{
+                let second = 0
+                for(let i = 0 ;i < timefirst[1].children.length; i++){
+                    console.log(parseInt(timefirst[1].children[i].value))
+                    console.log(parseInt(nowhours.getMinutes()))
+                    if(parseInt(timefirst[1].children[i].value) < parseInt(nowhours.getMinutes())){
+                        second ++
+                    }
+                }
+                timefirst[1].children = timefirst[1].children.splice(second,6)
+            }
+        
+            this.picker.data = timefirst
+        },
+        show () {
+            this.$refs.picker.show();
+        },
         back () {
             this.$router.go(-1)
         },

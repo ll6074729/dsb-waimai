@@ -13,7 +13,7 @@
                 手机
             </div>
             <div class="list-input">
-                <input type="text" placeholder="请输入您的联系方式" v-model="mobile" maxlength="11" minlength="6">
+                <input type="number" placeholder="请输入您的联系方式" v-model="mobile" maxlength="11" minlength="6" pattern="[0-9]*">
             </div>
         </div>
         <!-- <div class="df pd20 box-item">
@@ -97,8 +97,15 @@ export default {
                 })
             }else{
                 this.area_name = index[0].value
-                this.area_id = this.school_list[index[0].index - 1].area_id
+                console.log(this.school_list)
+                for(let i in this.school_list){
+                    if(this.school_list[i].address == index[0].value){
+                        this.area_id = this.school_list[i].area_id
+                    }
+                }
+                // this.area_id = this.school_list[index[0].index - 1].area_id
             }
+            console.log(this.area_id,6666666666666666)
         },
          // 所有学校
         AllSchool () {
@@ -122,10 +129,12 @@ export default {
             let date = eval('('+res.data+')')
 
             this.school_list = date.data
-            for(let i in  date.data){
-                this.picker.data[0][date.data[i].area_id] = date.data[i].address
-            }
             
+            for(let i in  date.data){
+                // this.picker.data[0][date.data[i].area_id] = date.data[i].address
+                this.picker.data[0][i] = date.data[i].address
+            }
+            console.log(this.picker.data[0])
         },
         back () {
             this.$router.go(-1)
@@ -162,7 +171,6 @@ export default {
                 })
         },
         submitinfo (res) {
-            console.log(res)
             // let date = res.data
             let date = eval('('+res.data+')')
             if(date.status == 200){

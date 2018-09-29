@@ -1,7 +1,7 @@
 <template>
     <div>
         <head-back :title="title"></head-back>
-        <hr class="hr20">
+        <hr class="hr20" style="margin-top:10.66vw">
         <assess-take 
             :page='take'
             :takeinfo="takeinfo"

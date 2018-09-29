@@ -1,6 +1,6 @@
 <template>
     <div v-loading.fullscreen.lock="fullscreenLoading">
-        <cart-header :timer="delivery_cost[2]"></cart-header>
+        <cart-header :timer="delivery_cost[2]" :business_hours="shopinfo.business_hours" v-if="shopinfo.business_hours"></cart-header>
         <hr class="hr20">
         <cart-info :cart="cart" :shopinfo="shopinfo" :page="page"></cart-info>
         <cost 
@@ -260,7 +260,7 @@ export default {
                 console.log(i)
                 total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num)
             }
-            console.log(total,55555555)
+            // console.log(total,55555555)
             // 加楼层费   楼层费在最外层的cart 组件中已计算
             // if(parseFloat(this.$store.state.delivery_price) > 0){
             //     total += parseFloat(this.$store.state.delivery_price)
@@ -406,6 +406,7 @@ export default {
             this.shopinfo = date.data
             this.custom_delivery = date.data.custom_delivery
             this.custom = date.data.custom
+            
             this.money()
         },
         // 获取配置文件
