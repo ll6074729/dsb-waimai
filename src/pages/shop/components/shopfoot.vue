@@ -27,8 +27,8 @@
         <div class="buybtn" @click="buybtn" v-if="shop_status !=0 && costPrice >= take_off">
             立即下单
         </div>
-        <div class="buybtn" @click="buybtn1" :class="{'buy-db':costPrice < 10}" v-if="costPrice < 10 && shop_status != 0">
-            满10元起送
+        <div class="buybtn" @click="buybtn1" :class="{'buy-db':costPrice < take_off}" v-if="costPrice < take_off && shop_status != 0">
+            满{{take_off}}元起送
         </div>
         <div class="buybtn" v-if="shop_status ==0" :class="{'buy-db':shop_status ==0}">
             店铺休息
@@ -45,7 +45,7 @@
                     <li class="isgoods-item" v-for="item in cart" :key="item.cart_id">
                         <div class="isgood-left">
                             <div class="isgood-img">
-                                <img :src="item.pic[0]" alt="" :onerror="defaultImg">
+                                <img :src="productImg[item.goods_id][0]" alt="" :onerror="defaultImg">
                             </div>
                         </div>
                         <div class="isgood-right">
@@ -86,7 +86,8 @@ export default {
         delivery_price:Number,
         shop_status:Number,
         custom_delivery:String,
-        take_off:Number
+        take_off:Number,
+        productImg:Array,
     },
     mounted() {
         this.getDelivery()
@@ -233,8 +234,6 @@ export default {
     },
     watch:{
         cart () {
-            console.log(this.cart)
-            console.log(this.costPrice,444)
             let goods_val = 0
             for(let i in this.cart){
                 goods_val += this.cart[i].goods_num

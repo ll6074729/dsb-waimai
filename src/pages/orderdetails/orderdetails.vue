@@ -24,7 +24,8 @@
         <hr class="hr20">
         <cart-info :cart="cart" :page="page" :shopinfo="shop" ></cart-info>
         <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2" :shopinfo="shop" :floor_amount="floor_amount"></expen-ses>
-        <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity>
+        <!-- <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity> -->
+       <aciti-vity :shopprom="shopprom" v-if="shopprom"></aciti-vity>
         <div class="df">
             <div class="list-name">
                 实付款
@@ -52,7 +53,7 @@ import OrderBtn from "../order/components/orderbtn"
 import TakeOut from "./components/takeout"
 import CartInfo from "../cart/components/cartinfo"
 import ExpenSes from "./components/expensess"
-import AcitiVity from "../cart/components/activity"
+import AcitiVity from "./components/activity"
 import MessAge from "./components/message"
 export default {
     name:"OrderDetails",
@@ -121,6 +122,7 @@ export default {
             let date = eval('('+res.data+')')
             // let date = res.data
             console.log(date)
+            this.shopprom = date.data.order_shop_prom
             this.consignee = date.data.consignee
             this.address = date.data.address
             this.user_mobile = date.data.mobile
@@ -153,7 +155,8 @@ export default {
             this.shop = date.data.order_shop
             this.delivery_cost1 = {desc:'配送费',value:date.data.delivery_cost,name:"delivery_cost"}
             this.delivery_cost2 = {desc:'打包费',value:date.data.packing_expense,name:"delivery_cost"}
-            this.shopprom = JSON.parse(this.$store.state.shopprom)
+            
+
         }
     },
 }

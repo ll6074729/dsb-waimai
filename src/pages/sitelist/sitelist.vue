@@ -10,7 +10,7 @@
         </div>
         <div class="siteBox">
             <div class="sitelist" v-show="isshow" v-for="(item,index) in list" :key="item.address_id">
-                <div class="site-item">
+                <div class="site-item" v-if="item.area_id == area_id">
                     <hr class="hr20">
                     <div class="siteinfo">
                         <div class="userinfo">
@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <div class="sitename fs24">
-                            {{item.address}}
+                            {{item.area.address}}{{item.building}}{{item.address}}
                         </div>
                     </div>
                     <div class="df">
@@ -60,11 +60,11 @@ export default {
         return {
             isshow:'',
             list:[],
+            area_id:this.$store.state.area_id
         }
     },
     methods: {
         edit_address (num) {
-            // console.log(num)
             this.$router.push({path:'/site',query:{address_num:num,page:this.$route.query.page}})
         },
         defaultAddress () {
@@ -121,6 +121,7 @@ export default {
         getaddrList (res){
             const date = eval('('+res.data+')')
             // let date = res.data
+            console.log(date)
             this.$store.dispatch('addressList',date.data)
             if(date.data == ''){
                 this.isshow = false
@@ -163,7 +164,6 @@ export default {
             })
         },
         issuccess (res) {
-            
             let date = eval('('+res.data+')')
             // let date = res.data
             if(date.status == 200 ){

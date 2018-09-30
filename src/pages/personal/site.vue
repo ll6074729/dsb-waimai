@@ -84,20 +84,13 @@ export default {
                 textConfirm:"确定",
                 data: [
                     {
-                        value: 'A',
+                        value: localStorage.defaultSchool,
                         children: [
                         { value: 'A-a' },
                         { value: 'A-b' },
                         { value: 'A-c' }
                         ]
-                    },
-                    {
-                        value: 'B',
-                        children: [
-                        { value: 'B-a' },
-                        { value: 'B-b' }
-                        ]
-                    },
+                    }
                 ]
             },
             build_name:[],
@@ -137,7 +130,7 @@ export default {
                 delivery_id:this.delivery_id,
                 is_default:this.is_default,
             }
-            if(this.$route.query.address_num){
+            if(this.$route.query.address_num || this.$route.query.address_num ==0){
                 date.address_id = this.address_id
             }
             this.$http({

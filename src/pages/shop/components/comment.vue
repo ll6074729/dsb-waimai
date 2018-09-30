@@ -160,7 +160,7 @@ export default {
             img 
                 width 33.33vw
                 height 33.33vw
-                margin-top 5vw
+                margin-top 21vw
                 margin-bottom 5vw
         .list-item
             padding 5.33vw 2.66vw

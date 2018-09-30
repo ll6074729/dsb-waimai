@@ -148,6 +148,7 @@
                     :addressList="addressList"
                     :delivery_price="delivery_price"
                     :shop_status="shop.status"
+                    :productImg="productImg"
                     :custom_delivery="shop.custom_delivery"
                     :take_off="shop.take_off"
                     ></shop-foot>
@@ -166,7 +167,7 @@
                 <li class="item" v-for="itemList in this.searchlist" :key="itemList.goods_id">
                     <div class="shop-left">
                         <div class="shop-img">
-                            <img :src="'http://wm.dqvip.cc/'+productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">
+                            <img :src="productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">
                             <!-- <img :src="productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">   -->
                         </div>
                     </div>
@@ -1001,9 +1002,9 @@ export default {
                     color #999
                     width 100%
                     img 
-                        width 66.66vw
-                        height 66.66vw 
-                        margin-top 5.33vw    
+                        width 48vw
+                        height 29.6vw 
+                        margin-top 20.33vw    
                         margin-bottom 5vw     
             .shop-comment
                 background-color #fff    

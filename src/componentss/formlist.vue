@@ -90,22 +90,21 @@ export default {
     },
     methods:{
         PickerConfirm(index) {      
-            if(index[0].index == 0){
-                this.$message({
-                    type: 'warning',
-                    message:'请选择正确的校区'
-                })
-            }else{
+            // if(index[0].index == 0){
+            //     this.$message({
+            //         type: 'warning',
+            //         message:'请选择正确的校区'
+            //     })
+            // }else{
                 this.area_name = index[0].value
                 console.log(this.school_list)
                 for(let i in this.school_list){
                     if(this.school_list[i].address == index[0].value){
                         this.area_id = this.school_list[i].area_id
                     }
-                }
+                // }
                 // this.area_id = this.school_list[index[0].index - 1].area_id
             }
-            console.log(this.area_id,6666666666666666)
         },
          // 所有学校
         AllSchool () {

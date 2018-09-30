@@ -9,7 +9,7 @@
                             <!-- <img src="../../../assets/img/food.jpg" alt="" style="width:100%"> -->
                             <swiper :options="swiperImg" >
                                 <swiper-slide v-for="itemimg in productImg[item.goods_id]" :key="itemimg">
-                                    <img :src="itemimg" alt=""   style="width:100%;max-height:85vw">
+                                    <img :src="itemimg" alt=""   style="width:100%;max-height:70vw">
                                 </swiper-slide>
                                 <div class="swiper-paginationimg" style="text-align:center" slot="pagination"></div>
                             </swiper>    
@@ -28,7 +28,6 @@
                                         <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
                                         <div class="plus" @click="addCart(item.goods_id)">+</div> -->
-
                                         <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
                                         <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
                                         <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>

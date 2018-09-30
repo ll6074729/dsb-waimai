@@ -14,7 +14,7 @@
             <!-- </div> -->
         </div>
         <div ref="shopList" class="shop" :class="page" >
-            <ul :class="{'shop-height':isgoods}">
+            <ul :class="{'shop-height':isgoods}" v-if="shopList.length > 0">
                 <li  v-for="(item,index) in shopList" :key="index" class="shop-list">
                     <router-link class="shop-list-item" :to="'/shop/'+item.shop_id" tag="div">
                         <div class="shop-left">
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </router-link>
-                    <div class="tagBox">
+                    <div class="tagBox" v-if="tags[item.shop_id]">
                         <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
                     </div>
                     <!-- :class="{'arrow-up':item.arrow_up == true}" -->
@@ -174,7 +174,7 @@ export default {
             delivery_price:this.$store.state.delivery_price || 0.00,
             swiperOption: {
                 // autoplay: true,
-                slidesPerView : 3.5,
+                slidesPerView : 4.5,
                 scrollbar: {
                     el: '.swiper-scrollbar',
                 },
@@ -493,15 +493,18 @@ export default {
                                 padding-bottom 0.4vw
                                 color #fff
             .tagBox
-                padding-left 21.32vw     
+                padding-left 21.32vw    
+                margin-bottom 2vw 
                 span
                     text-align center  
-                    padding 1vw 2.93vw 
-                    color #999
-                    border 1px solid #dbdbdb
-                    border-radius 5vw
-                    margin-right 2vw
+                    // padding 1vw 2.93vw 
+                    color #4ea1ff
+                    padding .1rem .1rem .05rem
+                    // border 1px solid #dbdbdb
+                    border-radius 3px
+                    margin-right 5px
                     display inline-block
+                    background #eaf1ff
                     font-size 10px
             .arrow_down
                 transform rotate(180deg)
@@ -520,30 +523,30 @@ export default {
             .shop-prom
                 padding-left 21.32vw
                 margin-bottom 2.66vw
-                margin-top 2vw
+                // margin-top 2vw
                 padding-right 10vw
                 position relative
                 span
                     border 1px solid #dbdbdb
                     font-size 10px
                     color #999
-                    padding 0.1rem 1.5vw
-                    padding-bottom 0.05rem
+                    padding 0.08rem 1.5vw
+                    padding-bottom 0.04rem
                     margin-right 0.6vw
                     margin-bottom 1.5vw
                     display inline-block
                 .span1
-                    color #28b6a7
-                    border-color #28b6a7
+                    color #30b9aa
+                    border-color #d6f4f1
                 .span2 
-                    color #41a76c
-                    border-color #83c09d 
+                    color #4ea1ff
+                    border-color #eaf1ff 
                 .span3
-                    color #cc4646
-                    border-color #ffa6a6
+                    color #fa6056
+                    border-color #fcdfdd
                 .span4
-                    color #a668a4
-                    border-color #c79fcd    
+                    color #4ea1ff
+                    border-color #eaf1ff    
                 // .activity
                 //     .list-item
                 //         display flex

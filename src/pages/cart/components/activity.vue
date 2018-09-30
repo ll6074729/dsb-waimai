@@ -27,7 +27,7 @@
         <div class="cost-activity df" v-if="shopprom[2][0]">
             <div class="activity-type type2">首单</div>
             <div class="activity-name" v-if="page != 'center'" >{{shopprom[2][0].title}}</div>
-            <div class="activity-name" v-if="page == 'center'" >{{shopprom[2][0].deduction_money}}</div>
+            <div class="activity-name" v-if="page == 'center'" >-{{shopprom[2][0].money}}</div>
         </div>
     </div>
 </template>

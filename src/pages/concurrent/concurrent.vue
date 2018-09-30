@@ -26,5 +26,6 @@ export default {
     .formlist
         position absolute
         width 100%
-        top 12rem
+        background: #469afe;
+        padding-bottom: 1rem;
 </style>

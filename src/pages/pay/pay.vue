@@ -40,13 +40,13 @@ export default {
             console.log(this.$route.params,6)
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/recommend',
+                url: 'mobile/api/q',
+                // url:'api/buyer/recommend',
                 data: {
                     url:'http://api.dqvip.cc/buyer/recommend',
                     q_type:'post',
-                    order_id:32,
-                    // order_id:this.order_id,
+                    // order_id:32,
+                    order_id:this.order_id,
                     order_sn:this.order_sn
                 },
             })
@@ -56,8 +56,8 @@ export default {
                 })
         },
         _recommend (res) {
-            // let date = eval ('('+res.data+')')
-            let date = res.data
+            let date = eval ('('+res.data+')')
+            // let date = res.data
             this.regood = date.data
         },
         // coupon_list () {

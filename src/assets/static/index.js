@@ -100,21 +100,23 @@ export default{
                     }
                 })
                 //分享朋友圈（1.4）
+                var title = localStorage.defaultSchool + '迪速帮'
                 var link = window.location.origin+ '/?uid='+localStorage.user_id+'/'+window.location.hash
+                var imgUrl = window.location.origin + '/public/upload/logo/2018/09-30/920390a840b925c51cd3bf84c954deaf.png'
                 console.log(link)
                 wx.onMenuShareTimeline({ 
-                    title: '高波波666', // 分享标题
+                    title: title, // 分享标题
                     link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl: '', // 分享图标
+                    imgUrl: imgUrl, // 分享图标
                 }, function(res) { 
                 //这里是回调函数 
                     alert(JSON.stringify(res))
                 }); 
                 wx.onMenuShareAppMessage({
-                    title: '高波波666', // 分享标题
-                    desc: '高波波666,屌大的很', // 分享描述
+                    title: title, // 分享标题
+                    desc: '迪速帮高校服务平台，专注于为校园师生提供最优质的服务，分享多多，优惠多多，一起行动吧！', // 分享描述
                     link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl: '', // 分享图标
+                    imgUrl: imgUrl, // 分享图标
                     type: '', // 分享类型,music、video或link，不填默认为link
                     dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                     success: function () {

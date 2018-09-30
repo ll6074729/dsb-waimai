@@ -14,7 +14,7 @@
             </div>
             <div class="address-content db">
                 <div class="address-top">
-                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}楼
+                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}-{{defaultAddress.address}}
                 </div>
                 <div class="address-info">
                     <strong>{{defaultAddress.consignee}}</strong>
@@ -63,20 +63,11 @@ export default {
                 textConfirm:"确定",
                 data: [
                     {
-                        value: 'A',
+                        value: '立即送出',
                         children: [
-                        { value: 'A-a' },
-                        { value: 'A-b' },
-                        { value: 'A-c' }
+                            { value: '立即送出' }
                         ]
-                    },
-                    {
-                        value: 'B',
-                        children: [
-                        { value: 'B-a' },
-                        { value: 'B-b' }
-                        ]
-                    },
+                    }
                 ]
             },
         } 
@@ -90,18 +81,22 @@ export default {
         handlePickerConfirm (index,value) {
             if(index[0].value == '立即送出'){
                 this.$refs.timers.innerText = '尽快送达，预计'+parseInt(this.timer.value)+'分钟'
-                 this.Servicetime = 0
+                this.Servicetime = 0
+                this.$emit('estimated',0)
             }else{
                 this.$refs.timers.innerText = '预定送达时间'+index[0].value+':'+index[1].value
                 this.Servicetime = index[0].value+':'+index[1].value
+                this.$emit('estimated',index[0].value+':'+index[1].value)
             }
         },
         coumputertime () {
             //把所有时间加入到picker 里面
-            let nowtime = (Date.parse(new Date())/1000 + this.timer.value * 60)*1000
+            // console.log(this.timer,9998888)
+            let nowtime = (Date.parse(new Date())/1000 + parseInt(this.timer.value) * 60)*1000
             var nowhours = new Date(nowtime)
             let timefirst = []
-            let endtime = this.business_hours.substring(9,11)//结束小时
+            let endtime = this.business_hours.substring(this.business_hours.length-8,this.business_hours.length-6)//结束小时
+
             // 设置立即送达
             timefirst[0] = {}
             timefirst[0].value = '立即送出'
@@ -123,7 +118,7 @@ export default {
                     
                 }
             }
-            console.log(timefirst)
+            // console.log(timefirst)
             // 获得店铺营业时间
             let starttime = this.business_hours.substring(0,2)
             // 开始时间(小时)
@@ -136,15 +131,15 @@ export default {
                 // 大于结束时间
                 timefirst.splice(1,endtime)
             }
-            console.log(timefirst)
+            // console.log(timefirst)
             //开始时间(分钟)
             if(timefirst.length ==1){
 
             }else{
                 let second = 0
                 for(let i = 0 ;i < timefirst[1].children.length; i++){
-                    console.log(parseInt(timefirst[1].children[i].value))
-                    console.log(parseInt(nowhours.getMinutes()))
+                    // console.log(parseInt(timefirst[1].children[i].value))
+                    // console.log(parseInt(nowhours.getMinutes()))
                     if(parseInt(timefirst[1].children[i].value) < parseInt(nowhours.getMinutes())){
                         second ++
                     }

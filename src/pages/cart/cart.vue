@@ -1,6 +1,11 @@
 <template>
     <div v-loading.fullscreen.lock="fullscreenLoading">
-        <cart-header :timer="delivery_cost[2]" :business_hours="shopinfo.business_hours" v-if="shopinfo.business_hours"></cart-header>
+        <cart-header 
+            :timer="delivery_cost[2]" 
+            :business_hours="shopinfo.business_hours" 
+            v-if="shopinfo.business_hours"
+            @estimated="estimated"
+            ></cart-header>
         <hr class="hr20">
         <cart-info :cart="cart" :shopinfo="shopinfo" :page="page"></cart-info>
         <cost 
@@ -85,7 +90,8 @@ export default {
             integral_num:'',
             custom:0,
             custom_delivery:0,
-            fullscreenLoading: true
+            fullscreenLoading: true,
+            estimated_delivery:0,
         }
     },
     mounted () {
@@ -154,6 +160,9 @@ export default {
         // }
     },
     methods:{
+        estimated (msg) {
+            this.estimated_delivery = msg
+        },
         // 可使用的余额
         getbalance_money (msg) {
             this.balance_money = parseFloat(msg)
@@ -193,7 +202,8 @@ export default {
                     user_money:balance_money,
                     integral:integral_num,
                     c_id:this.coupon_id,
-                    q_type:'post'
+                    q_type:'post',
+                    estimated_delivery:this.estimated_delivery
                 },
             })
             .then(this.buybtnafter)
@@ -284,7 +294,7 @@ export default {
                 } 
                 shopprom[0].sort(compare)
                 // console.log(shopprom[0],156464343)
-                if(this.costPrice > parseFloat(shopprom[0][i].condition)){
+                if(this.costPrice >= parseFloat(shopprom[0][i].condition)){
                     let Rprice = parseFloat(this.costPrice) - parseFloat(shopprom[0][i].money)
                     this.rulingPrice = Rprice.toFixed(2)
                     this.cartprom[0] = shopprom[0][i]
@@ -296,11 +306,12 @@ export default {
                     this.cartprom[1] = shopprom[1][0]
                 }
             }
-            // 首单
+            // 首单is_first
             // 优惠券价钱是所有价钱算完了之后再计算的  watch 中的 coupon 方法
-            if(this.shopinfo.is_first < 1){
+            if(this.shopinfo.is_first < 1 ){
                 if(this.shopprom[2][0]){
-                    this.rulingPrice = this.rulingPrice - parseFloat(this.shopprom[2][0].money) - parseFloat(this.$store.state.delivery_cost) - parseFloat(this.$store.state.packing_expense) -parseFloat(this.$store.state.delivery_price)
+                   
+                    this.rulingPrice = this.rulingPrice - parseFloat(this.shopprom[2][0].money) - parseFloat(this.$store.state.delivery_cost) - parseFloat(this.$store.state.packing_expense) - parseFloat(this.$store.state.delivery_price)
                     if(this.rulingPrice < 0){
                         this.rulingPrice = parseFloat(this.$store.state.delivery_cost) + parseFloat(this.$store.state.packing_expense) + parseFloat(this.$store.state.delivery_price) 
                     }else{
@@ -310,10 +321,13 @@ export default {
                 }else{
                     this.rulingPrice_money = this.rulingPrice
                 }
+            }else if(this.shopinfo.is_first == undefined ){
+                this.rulingPrice_money = this.rulingPrice
             }else{
                 this.shopprom[2][0] = null
                 this.rulingPrice_money = this.rulingPrice
             }
+            console.log(this.rulingPrice,6544545)
              // 加配送费
             /**
               * custom_delivery 店铺配送费
@@ -327,32 +341,37 @@ export default {
             // }else{
                 if(this.shopinfo != undefined){
                     if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) != 0){
-                        // alert(1)
-                        let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
-                        this.costPrice = (parseFloat(custom_money) + parseFloat(this.costPrice)).toFixed(2)
-                        this.rulingPrice = (parseFloat(custom_money) + parseFloat(this.rulingPrice)).toFixed(2)
+                        if(total < parseFloat(this.shopprom[2][0].money)){
+                            this.rulingPrice = (parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)).toFixed(2)
+                        }else{
+                            let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
+                            this.costPrice = (parseFloat(custom_money) + parseFloat(this.costPrice)).toFixed(2)
+                            this.rulingPrice = (parseFloat(custom_money) + parseFloat(this.rulingPrice)).toFixed(2)
+                        }
                     }else if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) == 0){
-                        let delivery_price = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.delivery_cost[1].value)
+                        let delivery_price = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.delivery_cost[1].value) +parseFloat(this.$store.state.delivery_price)
                         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
                         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                        console.log(this.rulingPrice,2)
                     }else if(parseFloat(this.shopinfo.custom_delivery) == 0 && parseFloat(this.shopinfo.custom) != 0){
                         let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.shopinfo.custom)
                         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
                         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                        console.log(this.rulingPrice,3)
                     }else{
-                        // alert(2)
                         let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
                         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
                         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                        console.log(this.rulingPrice,4)
                     }
                 }else{
-                    // alert(3)
-                        let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
-                        this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                        this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
+                    this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
+                    this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
+                    console.log(this.rulingPrice,5)
                 }
             // }
-
+            console.log(this.rulingPrice,1111)
             this.fullscreenLoading = false
             // 如果是首单的话  只计算商品的钱   配送及打包 还是要算的
         },

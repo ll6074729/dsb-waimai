@@ -187,13 +187,20 @@ export default {
         getaddrList (res){
             const date = eval('('+res.data+')')
             // let date = res.data
+            
             let addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
             for(let i in  addressList){
-                if(addressList[i].is_default == 1){
-                    this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
-                    delivery_price = addressList[i].delivery.delivery_price
+                // 判断校区是否相同
+                if(addressList[i].area_id == this.$store.state.area_id){
+                    if(addressList[i].is_default == 1 ){
+                        this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
+                        delivery_price = addressList[i].delivery.delivery_price
+                        return
+                    }
+                }else{
+                    this.$store.dispatch("defaultAddress","")
                 }
             }
             this.$store.dispatch("changedeliveryPrice",delivery_price)
