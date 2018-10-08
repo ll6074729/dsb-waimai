@@ -22,7 +22,8 @@
                             </div>
                         </div>
                         <div class="sitename fs24">
-                            {{item.area.address}}{{item.building}}{{item.address}}
+                            <!-- {{item.area.address}} -->
+                            {{item.building}}{{item.address}}
                         </div>
                     </div>
                     <div class="df">

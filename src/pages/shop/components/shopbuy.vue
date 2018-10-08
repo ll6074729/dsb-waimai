@@ -167,8 +167,10 @@ export default {
     },
     watch:{
         goodsinfo () {
-            let img = this.goodsinfo.goods_info.details_figure.split(',')
-            this.imgurl = img[0]
+            if(this.goodsinfo.goods_info.details_figure){
+                let img = this.goodsinfo.goods_info.details_figure.split(',')
+                this.imgurl = img[0]
+            }
             // this.$refs.goodsPrice.innerHTML = this.goodsinfo.goods_info.price
         },
         cartbox () {

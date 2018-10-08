@@ -465,6 +465,8 @@ export default {
             for(let i in this.shop.recommend_goods){
                 this.recommendImg[i] = new Array()
                 for(let j in this.shop.recommend_goods[i]){
+                    this.$set(this.shop.recommend_goods[i],'show',true)
+                    this.$set(this.shop.recommend_goods[i],'showMinus',true)
                     if(this.shop.recommend_goods[i].details_figure)
                         this.recommendImg[i] = this.shop.recommend_goods[i].details_figure.split(',')
                 }
@@ -472,6 +474,8 @@ export default {
             // 列表商品的图片
             for(let i in this.shop.cate){
                 for(let j = 0;j <this.shop.cate[i].goods.length;j++){
+                    this.$set(this.shop.cate[i].goods[j],'show',true)
+                    this.$set(this.shop.cate[i].goods[j],'showMinus',true)
                     if(this.shop.cate[i].goods[j].details_figure){
                         this.productImg[this.shop.cate[i].goods[j].goods_id] = this.shop.cate[i].goods[j].details_figure.split(',')
                     }

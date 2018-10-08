@@ -8,7 +8,7 @@
                     >
                     <div class="cate-title" v-if="!(item.goods.length ==0)"> {{item.cate_name}}</div>
                     <div class="item-list">
-                        <div class="item" v-for="itemList in item.goods" :key="itemList.cate_id">
+                        <div class="item" v-for="(itemList,itemNum) in item.goods" :key="itemList.cate_id">
                             <div class="shop-left" @click="showgoods(itemList.goods_id)">
                                 <div class="shop-img">
                                     <!-- <img :src="'http://wm.dqvip.cc/'+productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg"> -->
@@ -30,21 +30,18 @@
                                         ￥{{itemList.price}}
                                     </div>
                                     <div class="shop-num">
-                                        <!-- <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">-</div>
-                                        <div class="minus" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">-</div>
-                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
-                                        <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
-                                        <div class="plus" @click="addCart(itemList.goods_id)">+</div> -->
-
                                         <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">
-                                        <img class="minus" src="../../../assets/img/minus@3x.png" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">
+                                        <transition name="bounce">
+                                            <img class="minus" src="../../../assets/img/minus@3x.png" @click="minus(itemList.goods_id,index,itemNum)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0" v-show="itemList.showMinus">
+                                        </transition>
                                         <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
-                                        <img class="plus" src="../../../assets/img/add@3x.png" @click="addCart(itemList.goods_id)">
+                                        <transition name="bounce">
+                                            <img class="plus" v-if="itemList.show" src="../../../assets/img/add@3x.png" @click="addCart(itemList.goods_id,index,itemNum)">
+                                        </transition>
                                     </div>
                                 </div>
                             </div>
-                             
                         </div>
                     </div>
                 </li>
@@ -75,6 +72,7 @@ export default {
         return {
             defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
             goods_spec:[],
+            show:true
         }
     },
     watch :{
@@ -95,7 +93,11 @@ export default {
     },
     methods:{
         handleTop (){
+
             for(let i = 0;i<this.goods.length;i++){
+                if(!this.$refs[i][0].getBoundingClientRect()){
+                    return
+                }
                 var mheight = this.$refs[i][0].getBoundingClientRect().top
                 if(mheight){
                     if(mheight > 30 && mheight <52){
@@ -114,7 +116,8 @@ export default {
                 type: 'warning'
             });
         },
-        minus(GoodId){
+        minus(GoodId,index,itemNum){
+            this.goods[index].goods[itemNum].showMinus = false
             const that = this
             let goods_num
             let cart_id
@@ -129,9 +132,7 @@ export default {
                     cart_id = this.cart[i].cart_id
                 }
             }
-            console.log(goods_num,cart_id)
             if(goods_num == 0){
-                
                 this.$http({
                     method:'post',
                     // method: 'delete',
@@ -161,13 +162,14 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id)
+                    that.getCart(response,GoodId,goods_num,cart_id,index,itemNum)
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        addCart (GoodId) {
+        addCart (GoodId,index,itemNum) {
+            this.goods[index].goods[itemNum].show = false
             const that = this
             var goods_num = 1
             var cart_id 
@@ -190,13 +192,13 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id)
+                    that.getCart(response,GoodId,goods_num,cart_id,index,itemNum)
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        getCart (res,GoodId,goods_num,cart_id) {
+        getCart (res,GoodId,goods_num,cart_id,index,itemNum) {
             let date = eval('('+res.data+')')
             // let date = res.data
             let data ;
@@ -240,7 +242,8 @@ export default {
                 this.$emit('upup',true)
                 this.$emit('buygoodsinfo',date.data)
             }
-            
+            this.goods[index].goods[itemNum].show = true
+            this.goods[index].goods[itemNum].showMinus = true
         },
     }
 }
@@ -321,8 +324,22 @@ export default {
                                     line-height 5.33vw
                                 .plus
                                     line-height 5.33vw     
-
-                                 #animation{
+                                .bounce-enter-active 
+                                    animation bounce-in .5s
+                                .bounce-leave-active 
+                                    animation bounce-in .5s reverse
+                                @keyframes bounce-in {
+                                    0% {
+                                        transform: scale(0.5);
+                                    }
+                                    50% {
+                                        transform: scale(1.5);
+                                    }
+                                    100% {
+                                        transform: scale(1);
+                                    }
+                                }
+                                #animation{
                                     -webkit-animation:tada 1s .2s ease both;
                                     -moz-animation:tada 1s .2s ease both;
                                     }

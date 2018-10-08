@@ -42,7 +42,7 @@
             </div>
             <div class="isgoods" ref="isgoods" v-if="cart.length>=1">
                 <ul>
-                    <li class="isgoods-item" v-for="item in cart" :key="item.cart_id">
+                    <li class="isgoods-item" v-for="(item,index) in cart" :key="item.cart_id">
                         <div class="isgood-left">
                             <div class="isgood-img">
                                 <img :src="productImg[item.goods_id][0]" alt="" :onerror="defaultImg">
@@ -56,9 +56,18 @@
                             <div class="isgood-foot">
                                 <div class="isgood-price">￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}</div>
                                 <div class="isgood-num">
-                                    <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key)">
+                                    <transition name="bounce">
+                                        <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  
+                                            @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key,index)"
+                                            v-if="item.showMinus"                                            >
+                                    </transition>    
                                     <span>{{item.goods_num}}</span>
-                                    <img class="plus" src="../../../assets/img/add@3x.png" alt="" @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key)">
+                                    <transition name="bounce">
+                                        <img class="plus" src="../../../assets/img/add@3x.png" alt="" 
+                                            @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key,index)"
+                                            v-if="item.show"
+                                            >
+                                    </transition>        
                                 </div>
                             </div>
                         </div>
@@ -131,12 +140,14 @@ export default {
             }
         },
         // 购物车增加商品
-        setgoodsnum (goods_num,goods_id,status,cart_id,spec_id) {
+        setgoodsnum (goods_num,goods_id,status,cart_id,spec_id,index) {
             let _this = this
             if(status == 'plus'){
                 var goods_num = parseInt(goods_num) + 1
+                this.cart[index].show = false
             }else{
                 var goods_num = goods_num-1
+                this.cart[index].showMinus = false
             }
             // 判断数量是否大于0
             if(goods_num < 1){
@@ -175,6 +186,8 @@ export default {
                     console.log(error);
                 })
             }
+            this.cart[index].showMinus = true
+            this.cart[index].show = true
         },
         // 获取全局配置
         getDelivery () {
@@ -236,6 +249,8 @@ export default {
         cart () {
             let goods_val = 0
             for(let i in this.cart){
+                this.cart[i].show = true
+                this.cart[i].showMinus = true
                 goods_val += this.cart[i].goods_num
                 let img = []
                 console.log(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1))
@@ -363,6 +378,21 @@ export default {
                             .minus,.plus
                                 width 5.33vw
                                 height 5.33vw
+                            .bounce-enter-active 
+                                animation bounce-in .5s
+                            .bounce-leave-active 
+                                animation bounce-in .5s reverse
+                            @keyframes bounce-in {
+                                0% {
+                                    transform: scale(0.5);
+                                }
+                                50% {
+                                    transform: scale(1.5);
+                                }
+                                100% {
+                                    transform: scale(1);
+                                }
+                            }        
         .isshop
             text-align center
             padding 5vw

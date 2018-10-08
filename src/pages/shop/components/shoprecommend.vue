@@ -15,10 +15,14 @@
                         </div>
                         <div class="box-right-foot">
                             <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
-                            <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
+                            <transition name="bounce">
+                                <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id,index)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0" v-show="item.showMinus">
+                            </transition>
                             <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                             <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                            <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id)">
+                            <transition name="bounce">
+                                <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id,index)" v-if="item.show">
+                            </transition>    
                         </div>
                     </div>
                 </div>
@@ -69,7 +73,9 @@ export default {
                 type: 'warning'
             });
         },
-        minus(GoodId){
+        minus(GoodId,index){
+            console.log(index)
+            this.food[index].showMinus = false
             const that = this
             let goods_num
             let cart_id
@@ -114,13 +120,15 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id)
+                    that.getCart(response,GoodId,goods_num,cart_id,index)
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
+
         },
-        addCart (GoodId) {
+        addCart (GoodId,index) {
+            this.food[index].show = false
             const that = this
             var goods_num = 1
             var cart_id
@@ -143,13 +151,13 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id)
+                    that.getCart(response,GoodId,goods_num,cart_id,index)
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        getCart (res,GoodId,goods_num,cart_id) {
+        getCart (res,GoodId,goods_num,cart_id,index) {
             // let date = res.data
             let date = eval('('+res.data+')')
             let data ;
@@ -193,7 +201,8 @@ export default {
                 this.$emit('buygoodsinfo',date.data)
                 // this.$root.bus.$emit('goodsinfo',date.data)
             }
-            
+            this.food[index].showMinus = true
+            this.food[index].show = true
         },
         emitCart (res) {
             let date = eval('('+res.data+')')
@@ -255,4 +264,19 @@ export default {
                         position absolute  
                         right 5vw
                         bottom 2.8vw
+                    .bounce-enter-active 
+                        animation bounce-in .5s
+                    .bounce-leave-active 
+                        animation bounce-in .5s reverse
+                    @keyframes bounce-in {
+                        0% {
+                            transform: scale(0.5);
+                        }
+                        50% {
+                            transform: scale(1.5);
+                        }
+                        100% {
+                            transform: scale(1);
+                        }
+                    }    
 </style>

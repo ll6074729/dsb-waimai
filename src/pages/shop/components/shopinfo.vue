@@ -5,7 +5,7 @@
                 <div class="shopbox-item" ref="liu">
                     <img src="../../../assets/img/close@3x.png" alt="" class="close" @click="close">
                     <swiper :options="swiperOption" class="swiper-warp" ref="mySwiper">
-                        <swiper-slide v-for="item in goods" :key="item.goods_id" class="swiper-item">
+                        <swiper-slide v-for="(item,index) in goods" :key="item.goods_id" class="swiper-item">
                             <!-- <img src="../../../assets/img/food.jpg" alt="" style="width:100%"> -->
                             <swiper :options="swiperImg" >
                                 <swiper-slide v-for="itemimg in productImg[item.goods_id]" :key="itemimg">
@@ -23,16 +23,21 @@
                                 <div class="goods-num df">
                                     <div>￥{{item.price}}</div>
                                     <div class="shop-num">
-                                        <!-- <div class="minus minus_spec" @click="minusSpec" v-if="goods_spec[item.goods_id]">-</div>
-                                        <div class="minus" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">-</div>
-                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
-                                        <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                                        <div class="plus" @click="addCart(item.goods_id)">+</div> -->
                                         <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
-                                        <img src="../../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(item.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">
+                                        <transition name="bounce">
+                                            <img src="../../../assets/img/minus@3x.png" class="minus" alt="" 
+                                                @click="minus(item.goods_id,index)" 
+                                                v-for="cartlist in cart" 
+                                                :key="cartlist.goods_id" 
+                                                v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0"
+                                                v-show="item.showMinus"
+                                            >
+                                        </transition>
                                         <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
-                                        <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id)">
+                                        <transition name="bounce">
+                                            <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id,index)" v-show="item.show">
+                                        </transition>
                                     </div>
                                 </div>
                                 <div class="goods-laud">
@@ -110,7 +115,8 @@ export default {
                 type: 'warning'
             });
         },
-        minus(GoodId){
+        minus(GoodId,index){
+            this.goods[index].showMinus = false
             const that = this
             let goods_num
             let cart_id
@@ -157,13 +163,20 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id)
+                    let date = eval('('+response.data+')')
+                    // let date = response.data
+                    if(date.status == 200){
+                        that.getCart(date,GoodId,goods_num,cart_id,index)
+                    }
+                    
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        addCart (GoodId) {
+        addCart (GoodId,index) {
+            console.log(index)
+            this.goods[index].show = false
             const that = this
             var goods_num = 1
             var cart_id 
@@ -189,14 +202,14 @@ export default {
                     let date = eval('('+response.data+')')
                     // let date = response.data
                     if(date.status == 200){
-                        that.getCart(date,GoodId,goods_num,cart_id)
+                        that.getCart(date,GoodId,goods_num,cart_id,index)
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        getCart (date,GoodId,goods_num,cart_id) {
+        getCart (date,GoodId,goods_num,cart_id,index) {
             let data ;
             let _this = this
             if(cart_id){
@@ -217,7 +230,7 @@ export default {
                     q_type:'post'
                 }
             }
-            console.log(date.data.spec.length)
+            // console.log(date.data)
             if(date.data.spec.length == 0){
                 this.$http({
                     method: 'post',
@@ -239,7 +252,8 @@ export default {
                 this.$emit('upup',true)
                 this.$emit('buygoodsinfo',date.data)
             }
-            
+            this.goods[index].showMinus = true
+            this.goods[index].show = true
         },
         _goodsFeel () {
             if(this.goods_feel){
@@ -302,11 +316,26 @@ export default {
                                 span 
                                     line-height 5vw
                                     margin 0 4vw
-                                 .minus,.plus
+                                .minus,.plus
                                     width 5.33vw
                                     height 5.33vw
                                     box-sizing border-box
                                     display inline-block
+                                .bounce-enter-active 
+                                    animation bounce-in .5s
+                                .bounce-leave-active 
+                                    animation bounce-in .5s reverse
+                                @keyframes bounce-in {
+                                    0% {
+                                        transform: scale(0.5);
+                                    }
+                                    50% {
+                                        transform: scale(1.5);
+                                    }
+                                    100% {
+                                        transform: scale(1);
+                                    }
+                                }       
                         .goods-laud
                             div
                                 display inline-block
