@@ -99,6 +99,7 @@ export default {
             const date = eval('(' + res.data + ')')
             // let date = res.data
             this.allSchool = date.data
+            this.fullscreenLoading =  false
         }
     }
 }

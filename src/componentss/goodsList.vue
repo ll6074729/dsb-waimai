@@ -68,7 +68,7 @@
                         <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span>
                     </div>
                     <!-- :class="{'arrow-up':item.arrow_up == true}" -->
-                    <div class="shop-prom" :ref="index" :class="{'arrow-up':item.arrow_up == 1}">
+                    <div class="shop-prom" :ref="index" :class="{'arrow-up':item.arrow_up == 2}" @click="up(index)">
                         <span class="span1" v-if="item.picked_up == 1">到店自提</span>
                         <span class="span2" v-for="promitem in item.prom" :key="promitem.prom_id" v-if="promitem.type == 2">
                             {{promitem.title}}
@@ -132,7 +132,7 @@
                             </div>
                         </div> -->
                     </div>
-                    <!-- <img src="../assets/img/down_black.png" alt="" v-if="item.arrow_up" class="down" :class="{'arrow_down':item.arrow_down == 2}" @click="up(index)"> -->
+                    <img src="../assets/img/down_black.png" alt="" v-if="item.arrow_up" class="down" :class="{'arrow_down':item.arrow_up == 2,'arrow-tag':!tags[item.shop_id]}" @click="up(index)">
                 </li>
             </ul>
             <div style="text-align: center;font-size: 2.93vw;color: #999;">没有更多商家咯~！</div>
@@ -267,19 +267,22 @@ export default {
             }
         },
         up(index){
+            this.$forceUpdate();
             // this.shopList[0].arrow_up = !this.shopList[0].arrow_up
             if(this.shopList[index].arrow_up == 2){
                 this.shopList[index].arrow_up = 1
                 this.$set(this.shopList[index],'arrow_up',1)
-            }else{
+            }else if(this.shopList[index].arrow_up == 1){
                 this.shopList[index].arrow_up = 2
                 this.$set(this.shopList[index],'arrow_up',2)
             } 
         },
         // 隐藏标签
         isshow () {
+            
             for(let i = 0; i < this.shopList.length; i++){
-                if(this.$refs[i][0].clientHeight > 25){
+                console.log(this.$refs[i][0].innerText.length)
+                if(this.$refs[i][0].innerText.length > 25){
                     this.shopList[i].arrow_up = 1
                     // this.shopList[i].arrow_down = false
                 }
@@ -506,8 +509,10 @@ export default {
                     display inline-block
                     background #eaf1ff
                     font-size 10px
+            .arrow-tag
+                top 24.2vw!important
             .arrow_down
-                transform rotate(180deg)
+                transform rotate(180deg)!important
             .down
                 position absolute
                 right 5vw
@@ -516,13 +521,15 @@ export default {
                 height 5px
                 transform rotate(0deg)      
             .arrow-up
-                display -webkit-box
-                -webkit-box-orient vertical
-                -webkit-line-clamp 1
-                overflow hidden        
+                // display -webkit-box
+                // -webkit-box-orient vertical
+                // -webkit-line-clamp 1
+                height auto!important
             .shop-prom
                 padding-left 21.32vw
                 margin-bottom 2.66vw
+                height 5.466vw
+                overflow hidden
                 // margin-top 2vw
                 padding-right 10vw
                 position relative
