@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/home/home'
+import Text from '@/pages/text/text'
 import Search from '@/pages/search/search'
 import Shop from '@/pages/shop/shop'
 import Cart from '@/pages/cart/cart'
@@ -33,6 +34,14 @@ export default new Router({
       component: Home,
       meta:{
         title:'首页'
+      }
+    },
+    {
+      path: '/text',
+      name: 'Text',
+      component: Text,
+      meta:{
+        title:'测试'
       }
     },
     {

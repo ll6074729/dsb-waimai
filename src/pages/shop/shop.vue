@@ -85,6 +85,16 @@
                                         <span class="list-item-right">{{shoptitle[2]}}</span>
                                     </div>
                                 </div>
+                                <div v-if="!showtitle1 && !shoptitle[1] && shoptitle[2]">
+                                    <div class="list-item">
+                                        <span class="list-item-left" >
+                                            <div class="shop-label-activity shop-label-type2">
+                                                首单
+                                            </div>
+                                        </span>
+                                        <span class="list-item-right">{{shoptitle[2]}}</span>
+                                    </div>
+                                </div>
                             </el-collapse-transition>    
                         </div>
                     </el-collapse-transition>
@@ -164,7 +174,7 @@
         </div>
         <div class="search-box" ref="searchBox" v-if="searchstatus">
             <ul>
-                <li class="item" v-for="itemList in this.searchlist" :key="itemList.goods_id">
+                <li class="item" v-for="(itemList,index) in this.searchlist" :key="itemList.goods_id">
                     <div class="shop-left">
                         <div class="shop-img">
                             <img :src="productImg[itemList.goods_id][0]" alt="" :onerror="defaultImg">
@@ -187,10 +197,14 @@
                             </div>
                             <div class="shop-num">
                                 <img class="minus" src="../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">
-                                <img src="../../assets/img/minus@3x.png" class="minus" alt="" @click="minus(itemList.goods_id)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">
+                                <transition name="bounce">
+                                    <img src="../../assets/img/minus@3x.png"  v-show="itemList.showMinus" class="minus" alt="" @click="minus(itemList.goods_id,index)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">
+                                </transition>
                                 <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
                                 <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
-                                <img class="plus" src="../../assets/img/add@3x.png" alt=""  @click="addCart(itemList.goods_id)">
+                                <transition name="bounce">
+                                    <img class="plus" src="../../assets/img/add@3x.png" alt=""  @click="addCart(itemList.goods_id,index)" v-if="itemList.show">
+                                </transition>
                             </div>
                         </div>
                     </div>   
@@ -523,7 +537,8 @@ export default {
                 this.ishead = true
             }
         },
-        addCart (GoodId) {
+        addCart (GoodId,index) {
+            this.searchlist[index].show = false
             const that = this
             var goods_num = 1
             var cart_id
@@ -546,13 +561,13 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getaddCart(response,GoodId,goods_num,cart_id)
+                    that.getaddCart(response,GoodId,goods_num,cart_id,index)
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
         },
-        getaddCart (res,GoodId,goods_num,cart_id) {
+        getaddCart (res,GoodId,goods_num,cart_id,index) {
             // let date = res.data
             let date = eval('('+res.data+')')
             let _this = this
@@ -595,7 +610,8 @@ export default {
                 this.changeBuy(true)
                 this.buygoodsinfo(date.data)
             }
-            
+            this.searchlist[index].showMinus = true
+            this.searchlist[index].show = true
         },
         emitCart (res) {
             let date = eval('('+res.data+')')
@@ -608,7 +624,8 @@ export default {
             }
 
         },
-        minus(GoodId){
+        minus(GoodId,index){
+            this.searchlist[index].showMinus = false
             const that = this
             let goods_num
             let cart_id
@@ -655,7 +672,7 @@ export default {
                 },
             })
                 .then(function(response){
-                    that.getaddCart(response,GoodId,goods_num,cart_id)
+                    that.getaddCart(response,GoodId,goods_num,cart_id,index)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -795,12 +812,12 @@ export default {
         },
         keyword () {
             if(this.keyword.length > 0){
-                document.body.style.overflow='hidden';
-                document.body.style.height = window.screen.height + 'px';
+                // document.body.style.overflow='hidden';
+                // document.body.style.height = window.screen.height + 'px';
                 this.searchstatus = true
             }else{
-                document.body.style.overflow='auto';
-                document.body.style.height = '100%';
+                // document.body.style.overflow='auto';
+                // document.body.style.height = '100%';
                 this.searchstatus = false
             }
 
@@ -1087,4 +1104,19 @@ export default {
                             height 5.33vw
                             box-sizing border-box
                             display inline-block
+                        .bounce-enter-active 
+                                animation bounce-in .5s
+                        .bounce-leave-active 
+                            animation bounce-in .5s reverse
+                        @keyframes bounce-in {
+                            0% {
+                                transform: scale(0.5);
+                            }
+                            50% {
+                                transform: scale(1.5);
+                            }
+                            100% {
+                                transform: scale(1);
+                            }
+                        }        
 </style>

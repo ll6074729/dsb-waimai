@@ -4,7 +4,7 @@
         <pay-success v-if="ispay"></pay-success>
         <div class="btn df">
             <router-link tag="div" to="/">继续点餐</router-link>
-            <div @click="order">订单详情 </div>
+            <div @click="order">订单详情--{{order_id}} </div>
             <!-- <router-link tag="div" to="/orderdetails">订单详情</router-link> -->
         </div>
         <!-- <pay-share></pay-share> -->

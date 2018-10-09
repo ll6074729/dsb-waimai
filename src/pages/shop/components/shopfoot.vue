@@ -13,12 +13,12 @@
                 <span class="price2" v-if="costPrice != 0">￥{{costPrice}}</span>
             </div>
             <div class="distribution" v-if="addressList.length >0">
-                <span v-if="parseFloat(custom_delivery) !=0">
+                <span >
                     配送费: ￥{{(parseFloat(custom_delivery) + parseFloat(delivery_price)).toFixed(2)}}
                 </span>
-                <span v-if="!parseFloat(custom_delivery) || parseFloat(custom_delivery) ==0">
+                <!-- <span v-if="!parseFloat(custom_delivery) || parseFloat(custom_delivery) ==0">
                     配送费: ￥{{(parseFloat(delivery_cost) + parseFloat(delivery_price)).toFixed(2)}}
-                </span>
+                </span> -->
             </div>
             <router-link tag="div" class="distribution" v-if="addressList.length == 0" to="/sitelist">
                 请先设置默认收货地址
@@ -142,12 +142,13 @@ export default {
         // 购物车增加商品
         setgoodsnum (goods_num,goods_id,status,cart_id,spec_id,index) {
             let _this = this
+            this.$forceUpdate();
             if(status == 'plus'){
                 var goods_num = parseInt(goods_num) + 1
-                this.cart[index].show = false
+                this.$set(this.cart[index],'show',false)
             }else{
                 var goods_num = goods_num-1
-                this.cart[index].showMinus = false
+                this.$set(this.cart[index],'showMinus',false)
             }
             // 判断数量是否大于0
             if(goods_num < 1){
@@ -186,8 +187,8 @@ export default {
                     console.log(error);
                 })
             }
-            this.cart[index].showMinus = true
-            this.cart[index].show = true
+            // this.$set(this.cart[index],'showMinus',true)
+            // this.$set(this.cart[index],'show',true)
         },
         // 获取全局配置
         getDelivery () {
@@ -206,7 +207,6 @@ export default {
                         console.log(error);
                     })
             }
-            console.log(this.addressList,169)
         },
         // 公共配置
         getDeliveryList (res) {
@@ -267,13 +267,13 @@ export default {
         },
         isBuy () {
             // console.log(this.swiper,999)
-            if(this.isBuy){
-                document.body.style.overflow='hidden';
-                document.body.style.height = window.screen.height + 'px';
-            }else{
-                document.body.style.overflow='auto';
-                document.body.style.height = '100%';
-            }
+            // if(this.isBuy){
+            //     document.body.style.overflow='hidden';
+            //     document.body.style.height = window.screen.height + 'px';
+            // }else{
+            //     document.body.style.overflow='auto';
+            //     document.body.style.height = '100%';
+            // }
         },
     }
 }

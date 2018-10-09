@@ -21,7 +21,7 @@
                 <div class="category" ref="categoryList">
                     <ul>
                         <li class="category-item" v-for="(item,index) in goodsinfo.spec" :key="index">
-                            <div class="category-name">{{item.name}}：</div>
+                            <div class="category-name" v-if="item.item.length > 0">{{item.name}}：</div>
                             <div class="category-list" >
                                 <div class="item" 
                                     v-for="(itemList,index) of item.item" 
@@ -86,7 +86,6 @@ export default {
                 }
             }
             // 判断 规格是否都选中了一个
-            // console.log()
             if(spec.length < this.goodsinfo.spec.length){
                 this.$message({
                     message: '请在所有规格下至少选一项',
@@ -105,6 +104,7 @@ export default {
                     data.goods_num = this.cart[i].goods_num +1
                 }
             }
+            this.closeGoodsInfo()
             data.url = 'http://api.dqvip.cc/buyer/cart_change'
             data.q_type = 'post'
             this.$http({
@@ -123,7 +123,6 @@ export default {
             let date = eval('('+res.data+')')
             if(date.status ==200){
                 this.cartbox = []
-                this.closeGoodsInfo()
                 this.$emit('AglinCart',date)
             }
         },
@@ -167,6 +166,7 @@ export default {
     },
     watch:{
         goodsinfo () {
+            console.log(this.goodsinfo)
             if(this.goodsinfo.goods_info.details_figure){
                 let img = this.goodsinfo.goods_info.details_figure.split(',')
                 this.imgurl = img[0]
@@ -179,13 +179,13 @@ export default {
         },
         isBuy () {
             console.log(this.swiper,999)
-            if(this.isBuy){
-                document.body.style.overflow='hidden';
-                document.body.style.height = window.screen.height + 'px';
-            }else{
-                document.body.style.overflow='auto';
-                document.body.style.height = '100%';
-            }
+            // if(this.isBuy){
+            //     document.body.style.overflow='hidden';
+            //     document.body.style.height = window.screen.height + 'px';
+            // }else{
+            //     document.body.style.overflow='auto';
+            //     document.body.style.height = '100%';
+            // }
                
         },
 

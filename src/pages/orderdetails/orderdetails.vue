@@ -26,6 +26,22 @@
         <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2" :shopinfo="shop" :floor_amount="floor_amount"></expen-ses>
         <!-- <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity> -->
        <aciti-vity :shopprom="shopprom" v-if="shopprom"></aciti-vity>
+       <div class="df" v-if="parseFloat(integral) > 0">
+           <div class="list-name-act">
+                积分抵扣
+            </div>
+            <div class="price-act">
+                -￥{{integral}}
+            </div>
+       </div>
+       <div class="df" v-if="parseFloat(user_money) > 0">
+           <div class="list-name-act">
+                余额抵扣
+            </div>
+            <div class="price-act">
+                -￥{{user_money}}
+            </div>
+       </div>
         <div class="df">
             <div class="list-name">
                 实付款
@@ -131,7 +147,7 @@ export default {
             this.coupon = parseFloat(date.data.coupon_price)
             this.order_amount = parseFloat(date.data.order_amount)
             this.user_money = parseFloat(date.data.user_money)
-            this.integral = parseFloat(date.data.integral)
+            this.integral = parseFloat(date.data.integral_money)
             this.order_status = date.data.order_status
             this.order_sn = date.data.order_sn
             this.pay_status = date.data.pay_status
@@ -166,8 +182,14 @@ export default {
         padding 0 5.33vw
         height 13.33vw
         line-height 13.33vw
+        border-bottom: 1px solid #f7f7f7;
         font-size 4.26vw
-        font-weight bold
+        .list-name
+            font-weight bold
+        .list-name-act
+            font-size 3.8vw    
         .price
             color #469afe
+        .price-act
+            font-weight 700
 </style>

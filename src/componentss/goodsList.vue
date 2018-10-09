@@ -47,14 +47,11 @@
                             </div>
                             <div class="shop-foot">
                                 <div class="shop-label-left">
-                                    {{item.take_off}}元起送 | 配送费 <span v-if="parseFloat(item.custom_delivery) != 0">
-                                    {{parseFloat(item.custom_delivery) + parseFloat(delivery_price)}}
+                                    {{item.take_off}}元起送 | 配送费 <span>{{parseFloat(item.custom_delivery) + parseFloat(delivery_price)}}
                                 </span>
-                                <span v-if="parseFloat(item.custom_delivery) == 0">
+                                <!-- <span v-if="parseFloat(item.custom_delivery) == 0">
                                     {{parseFloat(delivery_cost) + parseFloat(delivery_price)}}
-                                </span>
-                                    <!-- <span  v-for="label in tags[item.shop_id]" :key="label"  v-if="tags[item.shop_id]">{{label}}</span> -->
-                                    <!-- <strong v-if="!tags[item.shop_id]" style="font-size:2.93vw">{{item.addr}}</strong> -->
+                                </span> -->
                                 </div>
                                 <div class="shop-label-right">
                                     <span class="label-status" v-if="item.delivery_label">
@@ -171,7 +168,7 @@ export default {
             lng:localStorage.lng,
             lat:localStorage.lat,
             process_date:this.$store.state.process_date || 0,
-            delivery_price:this.$store.state.delivery_price || 0.00,
+            delivery_price:this.$store.state.delivery_price || 0.00, //地址的配送费
             swiperOption: {
                 // autoplay: true,
                 slidesPerView : 4.5,
@@ -510,13 +507,13 @@ export default {
                     background #eaf1ff
                     font-size 10px
             .arrow-tag
-                top 24.2vw!important
+                top 23.5vw!important
             .arrow_down
                 transform rotate(180deg)!important
             .down
                 position absolute
                 right 5vw
-                top 32vw
+                top 2.38rem
                 width 9px
                 height 5px
                 transform rotate(0deg)      
