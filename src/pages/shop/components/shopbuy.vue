@@ -26,7 +26,7 @@
                                 <div class="item" 
                                     v-for="(itemList,index) of item.item" 
                                     :key="itemList.item_id"
-                                    @click="chooesItem(index,itemList.item_id,itemList.goods_id,itemList.spec_id,itemList.price)"
+                                    @click="chooesItem(index,itemList.item,itemList.item_id,itemList.goods_id,itemList.spec_id,itemList.price)"
                                     :ref="itemList.spec_id"
                                     >
                                     {{itemList.item}} 
@@ -75,16 +75,20 @@ export default {
             var cartspec_key = ''
             var data = {}
             let spec = []
+            let spec_name = ''
             data.goods_num = 1
             data.shop_id = this.$route.params.id
             // 循环当前多规格的数组
             for(let i in this.cartbox){
+                console.log(this.cartbox)
                 if(this.cartbox[i]){
                     spec.push(this.cartbox[i].item_id)
+                    spec_name += this.cartbox[i].spec_name +' '
                     data.goods_id = this.cartbox[i].goods_id    
                     data.spec_key = spec
                 }
             }
+
             // 判断 规格是否都选中了一个
             if(spec.length < this.goodsinfo.spec.length){
                 this.$message({
@@ -98,33 +102,46 @@ export default {
                 cartspec_key += this.cartbox[i].item_id +"_"
             }
             cartspec_key = cartspec_key.slice(0,-1)
-            for(let i in this.cart){
-                if(cartspec_key == this.cart[i].spec_key){
-                    data.cart_id = this.cart[i].cart_id
-                    data.goods_num = this.cart[i].goods_num +1
+            for(let i in this.cartbox){
+                if(cartspec_key == this.cartbox[i].spec_key){
+                    data.cart_id = this.cartbox[i].cart_id
+                    data.goods_num = this.cartbox[i].goods_num +1
                 }
             }
-            this.closeGoodsInfo()
-            data.url = 'http://api.dqvip.cc/buyer/cart_change'
-            data.q_type = 'post'
-            this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
-                    data: data,
-                })
-                .then(this.emitCart)
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        emitCart (res) {
-            // let date = res.data
-            let date = eval('('+res.data+')')
-            if(date.status ==200){
-                this.cartbox = []
-                this.$emit('AglinCart',date)
+            // 商品的规格参数
+            
+            let shopId = this.$route.params.id
+            let goodsId = this.goodsinfo.goods_info.goods_id
+            var jsonarray = eval('('+localStorage[shopId]+')')
+            this.$set(this.goodsinfo.goods_info,'spec_name',spec_name)
+            this.$set(this.goodsinfo.goods_info,'spec_key',cartspec_key)
+
+            //给动画效果加的
+            this.$set(this.goodsinfo.goods_info,'showMinus',true)
+            this.$set(this.goodsinfo.goods_info,'show',true)
+
+            
+            for(let k in jsonarray){  //循环购物车是否有当前商品
+                if(goodsId == jsonarray[k].goods_id){
+                    if(jsonarray[k].spec_key == cartspec_key){ //判断是否有相同规格的商品
+                        console.log('1597')
+                        jsonarray[k].goods_num ++
+                        console.log(jsonarray,4444)
+                        this.$emit('makeCart',jsonarray)
+                        localStorage[shopId] = JSON.stringify(jsonarray)
+                        this.closeGoodsInfo()
+                        return
+                    }   
+                }
             }
+            console.log('1596')
+            this.$set(this.goodsinfo.goods_info,'goods_num',1)
+            jsonarray.push(this.goodsinfo.goods_info)
+            this.$emit('makeCart',jsonarray)
+            localStorage[shopId] = JSON.stringify(jsonarray)
+            // this.goodsinfo.goods_info.spec_name= spec_name
+            // this.goodsinfo.goods_info.spec_key= cartspec_key
+            this.closeGoodsInfo()
         },
         // 关闭当前面板
         closeGoodsInfo (){
@@ -132,15 +149,16 @@ export default {
             this.$emit('closeGoodsInfo',false)
             this.$emit('buygoodsinfo',[])
         },
-        // 选择规格
-        chooesItem (index,item_id,goods_id,spec_id,spec_price) {
-
+        // 选择规格 计算商品的价钱
+        chooesItem (index,item_name,item_id,goods_id,spec_id,spec_price) {
+            let spec_name = ''
             this.cartlist = {}
             this.cartlist.goods_id = goods_id
             this.cartlist.index = index
             this.cartlist.item_id = item_id
             this.cartlist.spec_id = spec_id
             this.cartlist.spec_price = spec_price
+            this.cartlist.spec_name = item_name
             this.cartbox[spec_id] = this.cartlist
             // console.log(this.$refs[spec_id],0)
             // this.$refs[spec_id][index].
@@ -162,6 +180,8 @@ export default {
             }
             this.$refs.goodsPrice.innerHTML = '￥'+ (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
             // this.goodsinfo.goods_info.price = (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
+            this.$forceUpdate()
+            this.$set(this.goodsinfo.goods_info,'spec_price',(parseFloat(foodprice)).toFixed(2))
         }
     },
     watch:{
@@ -172,10 +192,6 @@ export default {
                 this.imgurl = img[0]
             }
             // this.$refs.goodsPrice.innerHTML = this.goodsinfo.goods_info.price
-        },
-        cartbox () {
-            console.log(1111)
-            console.log(this.cartbox)
         },
         isBuy () {
             console.log(this.swiper,999)

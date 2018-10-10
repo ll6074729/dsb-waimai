@@ -3,7 +3,7 @@
     <div class="backg" @click="iscartstatus" v-show="iscartshow"></div>
     <div class="shop-foot"  >
         <div  class="item" @click="iscartstatus">
-            <el-badge :max="99" :value="value">
+            <el-badge :max="99" :value="this.goods_val">
                 <img src="../../../assets/img/shoppingcart.png" alt="">
             </el-badge>
         </div>
@@ -40,31 +40,31 @@
                 <div class="cart-title">购物车</div>
                 <div class="cart-clean" @click="cleanCart">清空</div>
             </div>
-            <div class="isgoods" ref="isgoods" v-if="cart.length>=1">
+            <div class="isgoods" ref="isgoods" v-if="cartBox.length>=1">
                 <ul>
-                    <li class="isgoods-item" v-for="(item,index) in cart" :key="item.cart_id">
+                    <li class="isgoods-item" v-for="(item,index) in cartBox" :key="item.cart_id">
                         <div class="isgood-left">
                             <div class="isgood-img">
                                 <img :src="productImg[item.goods_id][0]" alt="" :onerror="defaultImg">
                             </div>
                         </div>
                         <div class="isgood-right">
-                            <div class="isgood-name">{{item.goods.title}}</div>
+                            <div class="isgood-name">{{item.title}}</div>
                             <div class="isgood-attr">
-                                {{item.spec_key_name}}
+                                {{item.spec_name}}
                             </div>
                             <div class="isgood-foot">
-                                <div class="isgood-price">￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}</div>
+                                <div class="isgood-price">￥{{parseFloat(item.price) + parseFloat(item.spec_price) || parseFloat(item.price)}}</div>
                                 <div class="isgood-num">
                                     <transition name="bounce">
                                         <img class="minus" src="../../../assets/img/minus@3x.png" alt=""  
-                                            @click="setgoodsnum(item.goods_num,item.goods_id,'minus',item.cart_id,item.spec_key,index)"
+                                            @click="_minusCart(item.goods_id,index,item.spec_key)"
                                             v-if="item.showMinus"                                            >
                                     </transition>    
                                     <span>{{item.goods_num}}</span>
                                     <transition name="bounce">
                                         <img class="plus" src="../../../assets/img/add@3x.png" alt="" 
-                                            @click="setgoodsnum(item.goods_num,item.goods_id,'plus',item.cart_id,item.spec_key,index)"
+                                            @click="_addCart(item.goods_id,index,item.spec_key)"
                                             v-if="item.show"
                                             >
                                     </transition>        
@@ -74,7 +74,7 @@
                     </li>
                 </ul>
             </div>
-            <div v-if="cart.length<1" class="isshop">
+            <div v-if="cartBox.length<1" class="isshop">
                 暂时没有
             </div>
         </div>
@@ -97,6 +97,8 @@ export default {
         custom_delivery:String,
         take_off:Number,
         productImg:Array,
+        cartBox:Array,
+        goods_val:Number,
     },
     mounted() {
         this.getDelivery()
@@ -111,12 +113,17 @@ export default {
         return{
             iscartshow:false,
             delivery_cost:this.$store.state.delivery_cost,
-            value:0,
             defaultImg: 'this.src="' + require('../../../assets/img/defaultshop.png') + '"',
             imgurl:[],
         }
     },
     methods:{
+        _minusCart(goodsId,index,spec_key){
+            this.$emit('childMinusCart',[goodsId,index,spec_key])
+        },
+        _addCart(goodsId,index,spec_key){
+            this.$emit('childAddCart',[goodsId,index,spec_key])
+        },
         buybtn1() {
             this.$message({
                 type:'warning',
@@ -125,7 +132,7 @@ export default {
         },
         // 去结算界面
         buybtn () {
-            if(this.cart.length < 1){
+            if(this.cartBox.length < 1){
                 this.$message({
                     type:'warning',
                     message: '亲,请您至少选择一件商品',
@@ -136,60 +143,23 @@ export default {
                     message: '没有目的地,外卖要送给小哥么~。~！',
                 })
             }else{
-                this.$router.push({name:'Cart',params:{shop_id:this.$route.params.id}})
-            }
-        },
-        // 购物车增加商品
-        setgoodsnum (goods_num,goods_id,status,cart_id,spec_id,index) {
-            let _this = this
-            this.$forceUpdate();
-            if(status == 'plus'){
-                var goods_num = parseInt(goods_num) + 1
-                this.$set(this.cart[index],'show',false)
-            }else{
-                var goods_num = goods_num-1
-                this.$set(this.cart[index],'showMinus',false)
-            }
-            // 判断数量是否大于0
-            if(goods_num < 1){
-                this.cleanCart(cart_id)
-            }else{
-                // 判断是否是多选规格的商品
-                if(spec_id == ''){
-                    var data = {
-                        url:'http://api.dqvip.cc/buyer/cart_change',
-                        goods_id:goods_id,
-                        shop_id:this.$route.params.id,
-                        goods_num:goods_num,
-                        cart_id:cart_id,
-                        q_type:'post'
-                    }
-                }else{
-                    var sepc = spec_id.split("_")
-                    var data = {
-                        url:'http://api.dqvip.cc/buyer/cart_change',
-                        goods_id:goods_id,
-                        shop_id:this.$route.params.id,
-                        goods_num:goods_num,
-                        spec_key:sepc,
-                        cart_id:cart_id,
-                        q_type:'post'
-                    }
-                }
+                // 把本地购物车传给服务器
                 this.$http({
                     method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
-                    data: data,
+                    // url: 'mobile/api/q',
+                    url:'api/buyer/confirm_order',
+                    data: {
+                        url:'http://api.dqvip.cc/goods_info',
+                        q_type:'post',
+                        shop_id:this.$route.params.id,
+                        goods_row:localStorage[this.$route.params.id],
+                    },
                 })
-                .then(this.$parent.getCart)
-                .catch(function (error) {
-                    console.log(error);
-                })
+                .then(this.$router.push({name:'Cart',params:{shop_id:this.$route.params.id}}))
+                
             }
-            // this.$set(this.cart[index],'showMinus',true)
-            // this.$set(this.cart[index],'show',true)
         },
+
         // 获取全局配置
         getDelivery () {
             if(this.$store.state.delivery_cost == null || this.$store.state.delivery_cost == undefined || this.$store.state.delivery_cost == NaN){
@@ -220,48 +190,31 @@ export default {
             this.iscartshow = !this.iscartshow
         },
         // 清空购物车
-        cleanCart (cart_id) {
-            var cart_type = typeof(cart_id)
-            if(cart_type == 'number'){
-                var cart_id = cart_id
-                var date = {cart_id:cart_id}
-            }else{
-                var date = {}
-            }
-            date.url = 'http://api.dqvip.cc/buyer/cart_clear'
-            date.q_type = 'delete'
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/cart_clear',
-                data:date,
-            })
-                .then(this.$parent.getCart)
-                .catch(function (error) {
-                    console.log(error);
-                })
+        cleanCart () {
+            
+            this.$emit('claerCart')
+            
         },
     },
     computed :{
       
     },
     watch:{
-        cart () {
+        cartBox () {
             let goods_val = 0
-            for(let i in this.cart){
-                this.cart[i].show = true
-                this.cart[i].showMinus = true
-                goods_val += this.cart[i].goods_num
-                let img = []
-                console.log(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1))
-                if(this.cart[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1) == ","){
-                    for(var j = 0;j<this.cart.length;j++){
-                        img = this.cart[i].goods.details_figure.split(',')
-                    }
-                }else{
-                    img[0] = this.cart[i].goods.details_figure
-                }
-                this.cart[i].pic = img
+            for(let i in this.cartBox){
+                this.cartBox[i].show = true
+                this.cartBox[i].showMinus = true
+                goods_val += this.cartBox[i].goods_num
+                // let img = []
+                // if(this.cartBox[i].goods.details_figure.charAt(this.cart[i].goods.details_figure.length - 1) == ","){
+                //     for(var j = 0;j<this.cartBox.length;j++){
+                //         img = this.cartBox[i].goods.details_figure.split(',')
+                //     }
+                // }else{
+                //     img[0] = this.cartBox[i].goods.details_figure
+                // }
+                // this.cartBox[i].pic = img
             }
             this.value = goods_val
         },

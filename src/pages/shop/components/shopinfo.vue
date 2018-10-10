@@ -212,16 +212,16 @@ export default {
         getCart (date,GoodId,goods_num,cart_id,index) {
             let data ;
             let _this = this
-            if(cart_id){
-                data =  {
-                    url:'http://api.dqvip.cc/buyer/cart_change',
-                    goods_id:GoodId,
-                    shop_id:this.$route.params.id,
-                    goods_num:goods_num,
-                    cart_id: cart_id,
-                    q_type:'post'
-                }
-            }else{
+            // if(cart_id){
+            //     data =  {
+            //         url:'http://api.dqvip.cc/buyer/cart_change',
+            //         goods_id:GoodId,
+            //         shop_id:this.$route.params.id,
+            //         goods_num:goods_num,
+            //         cart_id: cart_id,
+            //         q_type:'post'
+            //     }
+            // }else{
                 data = {
                     url:'http://api.dqvip.cc/buyer/cart_change',
                     goods_id:GoodId,
@@ -229,7 +229,7 @@ export default {
                     goods_num:goods_num,
                     q_type:'post'
                 }
-            }
+            // }
             // console.log(date.data)
             if(date.data.spec.length == 0){
                 this.$http({

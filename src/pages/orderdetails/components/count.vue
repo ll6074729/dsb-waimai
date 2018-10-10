@@ -50,6 +50,7 @@
                 </span>
             </p>
             <p v-if="order_status == 5">商家已取消订单,请联系商家</p>
+            <p v-if="order_status == 6">订单退款中</p>
         </div>
     </div>
 </template>

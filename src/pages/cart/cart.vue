@@ -7,7 +7,7 @@
             @estimated="estimated"
             ></cart-header>
         <hr class="hr20">
-        <cart-info :cart="cart" :shopinfo="shopinfo" :page="page"></cart-info>
+        <cart-info :cartBox="cartBox" :shopinfo="shopinfo" :page="page"></cart-info>
         <cost 
             :delivery_cost="delivery_cost" 
             :coupon="coupon" 
@@ -69,6 +69,7 @@ export default {
     data () {
         return {
             cart:[],
+            cartBox:JSON.parse(localStorage[this.$route.params.id]),
             page:'cart',
             shopinfo:Object,
             delivery_cost:[],
@@ -91,7 +92,7 @@ export default {
             custom:0,
             custom_delivery:0,
             fullscreenLoading: true,
-            estimated_delivery:0,
+            estimated_delivery:'',
         }
     },
     mounted () {
@@ -163,8 +164,14 @@ export default {
         // }
     },
     methods:{
+        //送达时间
         estimated (msg) {
-            this.estimated_delivery = msg
+            let time = new Date()
+            let year = time.getFullYear()
+            let month = time.getMonth() + 1
+            let day = time.getDate()
+            let timer = year+'-'+month+'-'+day+' '+msg+':00'
+            this.estimated_delivery = timer
         },
         // 可使用的余额
         getbalance_money (msg) {
@@ -265,14 +272,15 @@ export default {
         },
         // 计算价钱
         money () {
-            let cart = this.cart
+            let cart = this.cartBox
             let total = 0
             // 优惠信息
             let shopprom = JSON.parse(this.$store.state.shopprom)
             for(let i in cart){
                 console.log(i)
-                total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num)
+                total += ((parseFloat(cart[i].price) + parseFloat(cart[i].spec_price || 0)) * cart[i].goods_num)
             }
+            console.log(total,888888888)
             this.costPrice = total.toFixed(2) 
             this.rulingPrice = total.toFixed(2) || 0
             this.cartprom = []
@@ -296,12 +304,14 @@ export default {
                     this.cartprom[0] = shopprom[0][i]
                 }
             }
+            console.log()
             // 赠品 只有一个
             if(shopprom[1][0]){
                 if(this.costPrice > parseFloat(shopprom[1][0].condition)){
                     this.cartprom[1] = shopprom[1][0]
                 }
             }
+            
             // 首单is_first
             // 优惠券价钱是所有价钱算完了之后再计算的  watch 中的 coupon 方法
             if(this.shopinfo.is_first < 1 ){
@@ -322,6 +332,7 @@ export default {
                 this.shopprom[2][0] = null
                 this.rulingPrice_money = this.rulingPrice || 0
             }
+            console.log(this.rulingPrice)
              // 加配送费
             /**
               * custom_delivery 店铺配送费

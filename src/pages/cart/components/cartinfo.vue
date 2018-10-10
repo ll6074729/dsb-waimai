@@ -12,12 +12,12 @@
             </div>
         </div>
         <div class="goods-list">
-            <div class="goods-list-item" v-for="(item,index) in cart" :key="index">
+            <div class="goods-list-item" v-for="(item,index) in cartBox" :key="index">
                 <div class="goods-img">
                     <img :src="item.pic[0]" alt="" :onerror="defaultImg">
                 </div>
                 <div class="goods-info">
-                    <div class="goods-name" v-if="page != 'center'">{{item.goods.title}}</div>
+                    <div class="goods-name" v-if="page != 'center'">{{item.title}}</div>
                     <div class="goods-name" v-if="page == 'center'">{{item.goods_name}}</div>
                     <div class="goods-type">
                         <span>{{item.spec_key_name}}</span>
@@ -27,10 +27,10 @@
                     x{{item.goods_num}}
                 </div>
                 <div class="goods-price"  v-if="page != 'center'">
-                    ￥{{parseFloat(item.goods.price) +  parseFloat(item.spec_price)}}
+                    ￥{{parseFloat(item.price) +  parseFloat(item.spec_price || 0)}}
                 </div>
                 <div class="goods-price"  v-if="page == 'center'">
-                    ￥{{parseFloat(item.goods_price) +  parseFloat(item.spec_price)}}
+                    ￥{{parseFloat(item.goods_price) +  parseFloat(item.spec_price || 0)}}
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@ export default {
     name:"CartInfo",
     props:{
         page:String,
-        cart:Array,
+        cartBox:Array,
         shopinfo:Array
     },
     data () {
@@ -49,29 +49,26 @@ export default {
             defaultImg : 'this.src="' + require('../../../assets/img/defaultshop.png') + '"'
         }
     },
-    watch: {
-        cart () {
-            
-            for(let i in this.cart){
+    mounted () {
+        this.cartBoxfc()
+    },
+    methods: {
+        cartBoxfc () {
+            for(let i in this.cartBox){
                 let img = []
-                for(var j = 0;j<this.cart.length;j++){
-                    if(this.page == 'center'){
-                         if(this.cart[i].details_figure.substring(0,this.cart[i].details_figure.length -1) == ','){
-                            img = this.cart[i].details_figure.split(',')
+                console.log('123')
+                for(var j = 0;j<this.cartBox.length;j++){
+
+                        console.log(this.cartBox[i].details_figure)
+                        if(this.cartBox[i].details_figure.substring(0,this.cartBox[i].details_figure.length -1) == ','){
+                            img = this.cartBox[i].details_figure.split(',')
                         }else{
-                            img[0] = this.cart[i].details_figure
+                            img[0] = this.cartBox[i].details_figure
                         }
-                    }else{
-                        if(this.cart[i].goods.details_figure.substring(0,this.cart[i].goods.details_figure.length -1) == ','){
-                            img = this.cart[i].goods.details_figure.split(',')
-                        }else{
-                            img[0] = this.cart[i].goods.details_figure
-                        }
-                    }
-                    
                     
                 }
-                this.cart[i].pic = img
+                // console.log(img,99999999999999999999999999999)
+                this.cartBox[i].pic = img
             }
         }
     }

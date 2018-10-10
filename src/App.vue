@@ -1,6 +1,9 @@
 <template>
   <div id="app" v-cloak class="app">
-    <router-view/>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"/>
+    </keep-alive>  
+    <router-view v-if="!$route.meta.keepAlive" />
   </div>
 </template>
 

@@ -32,12 +32,12 @@
                                     <div class="shop-num">
                                         <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">
                                         <transition name="bounce">
-                                            <img class="minus" src="../../../assets/img/minus@3x.png" @click="minus(itemList.goods_id,index,itemNum)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0" v-show="itemList.showMinus">
+                                            <img class="minus" src="../../../assets/img/minus@3x.png" @click="_minusCart(itemList.goods_id,index,itemNum)" v-for="cartlist in cartBox" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec" v-show="itemList.showMinus">
                                         </transition>
-                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                        <span v-for="cartlist in cartBox" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
                                         <transition name="bounce">
-                                            <img class="plus" v-if="itemList.show" src="../../../assets/img/add@3x.png" @click="addCart(itemList.goods_id,index,itemNum)">
+                                            <img class="plus" v-if="itemList.show" src="../../../assets/img/add@3x.png" @click="_addCart(itemList.goods_id,index,itemNum)">
                                         </transition>
                                     </div>
                                 </div>
@@ -66,7 +66,8 @@ export default {
         ishead:Boolean,
         menuHeight:Number,
         tabTop:Number,
-        fullmoney:Number
+        fullmoney:Number,
+        cartBox:Array,
     },
     data () {
         return {
@@ -89,9 +90,20 @@ export default {
                 }
             }
             this.goods_spec = spec_array
-        }
+        },
+    },
+    mounted () {
+        this.cartBoxfc()
     },
     methods:{
+        _minusCart(goodsId,index){
+            this.$emit('childMinusCart',[goodsId,index])
+        },
+        _addCart(goodsId,index){
+            this.$emit('childAddCart',[goodsId,index])
+        },
+
+
         handleTop (){
 
             for(let i = 0;i<this.goods.length;i++){
@@ -116,135 +128,18 @@ export default {
                 type: 'warning'
             });
         },
-        minus(GoodId,index,itemNum){
-            this.goods[index].goods[itemNum].showMinus = false
-            const that = this
-            let goods_num
-            let cart_id
-            for(let i in this.cart){
-                if(GoodId == this.cart[i].goods_id){
-                    if(this.cart[i].goods_num == 0){
-                        goods_num = this.cart[i].goods_num 
-                    }else{
-                        goods_num = this.cart[i].goods_num -1
-                    }
-                    
-                    cart_id = this.cart[i].cart_id
+        cartBoxfc () {
+            let spec_array = new Array
+            for(let i in this.cartBox){
+                if(!this.cartBox[i].spec){
+                    console.log('55555555555')
+                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                    goods_num += parseInt(this.cartBox[i].goods_num) 
+                    spec_array[this.cartBox[i].goods_id] = goods_num
                 }
             }
-            if(goods_num == 0){
-                this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
-                    data:{
-                        cart_id:cart_id,
-                        url:"http://api.dqvip.cc/buyer/cart_clear",
-                        q_type:'delete',
-                    },
-                })
-                    .then(this.$parent.getCart)
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                return
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:"http://api.dqvip.cc/goods_info",
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id,index,itemNum)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        addCart (GoodId,index,itemNum) {
-            this.goods[index].goods[itemNum].show = false
-            const that = this
-            var goods_num = 1
-            var cart_id 
-            for(let i in this.cart){
-                if(this.cart[i].goods_id == GoodId){
-                    cart_id = this.cart[i].cart_id
-                    goods_num = parseInt(this.cart[i].goods_num) +1
-                    break
-                }
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:'http://api.dqvip.cc/goods_info',
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    that.getCart(response,GoodId,goods_num,cart_id,index,itemNum)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        getCart (res,GoodId,goods_num,cart_id,index,itemNum) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
-            let data ;
-            let _this = this
-            if(cart_id){
-                data =  {
-                    url:'http://api.dqvip.cc/buyer/cart_change',
-                    goods_id:GoodId,
-                    shop_id:this.$route.params.id,
-                    goods_num:goods_num,
-                    cart_id: cart_id,
-                    q_type:'post'
-                }
-            }else{
-                data = {
-                    url:'http://api.dqvip.cc/buyer/cart_change',
-                    goods_id:GoodId,
-                    shop_id:this.$route.params.id,
-                    goods_num:goods_num,
-                    q_type:'post'
-                }
-            }
-
-            if(date.data.spec.length == 0){
-                this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
-                    data: data,
-                })
-                .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
-                    console.log(date)
-                    _this.$emit('AglinCart',date)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            }else{
-                this.$emit('upup',true)
-                this.$emit('buygoodsinfo',date.data)
-            }
-            this.goods[index].goods[itemNum].show = true
-            this.goods[index].goods[itemNum].showMinus = true
-        },
+            this.goods_spec = spec_array
+        }
     }
 }
 </script>

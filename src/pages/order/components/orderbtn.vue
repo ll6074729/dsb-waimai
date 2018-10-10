@@ -80,11 +80,11 @@ export default {
                     console.log(res)
                     let date = eval('('+res.data+')')
                     // alert(res.data)
-                    if(date.status == 422){
+                    if(date.status == 200){
                         _this.$emit('orderlist','0')
                         _this.$message({
                             type: 'success',
-                            message: '取消成功'
+                            message: date.message
                         })
                         _this.$router.push('/order')
                     }else{

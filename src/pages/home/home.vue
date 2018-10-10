@@ -1,5 +1,4 @@
 <template>
-<keep-alive>
     <div class="header"  v-loading.fullscreen.lock="fullscreenLoading">
         <!-- 头部轮播 -->
         <homeswiper-banner :banner="banner"></homeswiper-banner>
@@ -30,8 +29,6 @@
         <!-- <all-map></all-map> -->
         <div id="allmap" style="display:none"></div>
     </div>
-</keep-alive>
-    
 </template>
 <script>
 import BMap from 'BMap'
@@ -78,6 +75,9 @@ export default {
             }
         },
         chooesSchool () {
+            if(localStorage.allshopCart){
+                localStorage.allshopCart=''
+            }
             if(this.$store.state.area_id == undefined || this.$store.state.delivery_price == NaN){
                 this.$router.push({path:"/Location"})
             }else{

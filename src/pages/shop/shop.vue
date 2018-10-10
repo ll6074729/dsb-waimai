@@ -122,6 +122,7 @@
                     <shop-product 
                         :goods="shop.cate" 
                         :cart="cart" 
+                        :cartBox="cartBox"
                         :productImg="productImg"
                         :ishead="ishead"
                         :menuHeight="num"
@@ -132,6 +133,8 @@
                         @buygoodsinfo="buygoodsinfo"
                         @changeNum="changeNum"
                         @showgoods="showgoods"
+                        @childAddCart="childAddCart"
+                        @childMinusCart="childMinusCart"
                         v-if="shop.cate.length > 0"
                         ></shop-product>
                     <div v-if="shop.cate.length < 1" class="goodno">
@@ -153,6 +156,7 @@
                 <shop-foot 
                     :isBuy="!isBuy" 
                     :cart="cart"
+                    :cartBox="cartBox"
                     :costPrice="costPrice" 
                     :rulingPrice="rulingPrice" 
                     :addressList="addressList"
@@ -161,14 +165,19 @@
                     :productImg="productImg"
                     :custom_delivery="shop.custom_delivery"
                     :take_off="shop.take_off"
+                    :goods_val="goods_val"
+                    @childAddCart="childAddCart"
+                    @childMinusCart="childMinusCart"
+                    @claerCart="claerCart"
                     ></shop-foot>
                 <shop-buy 
                 :isBuy="isBuy" 
                 :goodsinfo="goodsinfo"
-                :cart="cart"
+                :cart="cartBox"
                 @AglinCart="AglinCart"
                 @closeGoodsInfo="changeGoodsInfo"
                 @buygoodsinfo="buygoodsinfo"
+                @makeCart="makeCart"
                 ></shop-buy>
             </div>
         </div>
@@ -280,10 +289,145 @@ export default {
             goods_spec:[],
             fullmoney:null,
             goods_feel:null,
-            range:0
+            range:0,
+            cartBox:[],
+            goods_val:0,
         }
     },
     methods:{
+        // 多规格修改vue 的值
+        makeCart(msg){
+            this.cartBox = msg
+        },
+        // 子组件的减少
+        childMinusCart (msg){
+            if(msg[2]){
+                this.minusCart(msg[0],msg[1],this.shop.shop_id,msg[2])
+            }else{
+                this.minusCart(msg[0],msg[1],this.shop.shop_id)
+            }
+            
+        },
+        // 子组件的加入购物车
+        childAddCart (msg){
+            let that = this
+            this.$http({
+                method: 'post',
+                // url: 'mobile/api/q',
+                url:'api/goods_info',
+                data: {
+                    url:'http://api.dqvip.cc/goods_info',
+                    q_type:'post',
+                    goods_id:msg[0],
+                },
+            })
+                .then(function(res){
+                    let date = res.data.data
+                    // let date = eval('('+res.data+')')
+                    if(msg[2]){
+                        that.addCart(msg[0],msg[1],that.shop.shop_id,date,msg[2])
+                    }else{
+                        that.addCart(msg[0],msg[1],that.shop.shop_id,date)
+                    }
+                    
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+            
+        },
+        randomString (len) {
+        　　len = len || 32;
+        　　var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+        　　var maxPos = $chars.length;
+        　　var pwd = '';
+        　　for (let i = 0; i < len; i++) {
+        　　　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+        　　}
+        　　return pwd;
+        },
+        /**
+         * 加入购物车
+         * allshopCart 所有的店铺购物车
+         */
+         
+        addCart(goodsId,index,shopId,date,spec_key){
+                console.log(spec_key)
+            // 判断是否存在
+                if(!localStorage[shopId]){
+                    localStorage[shopId] = "[]"
+                }
+                var jsonarray = eval('('+localStorage[shopId]+')')
+                // 判断购物车是否有商品 有的话直接进
+                for(let k in jsonarray){  //循环购物车是否有当前商品
+                    if(goodsId == jsonarray[k].goods_id){
+                        if(date.spec.length == 0 || date.spec.length == ''){
+                            console.log('1591')
+                            jsonarray[k].goods_num ++
+                            this.cartBox = jsonarray
+                            localStorage[shopId] = JSON.stringify(jsonarray)
+                            
+                        }else{
+                            console.log('1592')
+                            this.isBuy = true
+                            this.goodsinfo = date
+                        }
+                        return
+                    }
+                }
+
+                for(var i = 0;i< this.shop.cate.length;i++){
+                    console.log('1593')
+                    for(var j = 0;j <this.shop.cate[i].goods.length;j++){
+                            //查询购物车中是否存在当前商品
+                        if(this.shop.cate[i].goods[j].goods_id == goodsId){
+                            this.shop.cate[i].goods[j].goods_num = 1
+                            this.shop.cate[i].goods[j].spec = date.spec
+                            // 判断是否是多规格商品
+                            if(date.spec.length == 0 || date.spec.length == ''){
+                                jsonarray.push(this.shop.cate[i].goods[j])
+                            }else{
+                                this.isBuy = true
+                                this.goodsinfo = date
+                            }
+                        }
+                    }
+                }
+                this.cartBox = jsonarray
+                localStorage[shopId] = JSON.stringify(jsonarray) //把购物车信息保存到本地
+                
+        },
+        // 减购物车
+        minusCart(goodsId,index,shopId,spec_key){
+            console.log(spec_key)
+            var jsonarray = eval('('+localStorage[shopId]+')')
+            for(let k in jsonarray){  //循环购物车是否有当前商品
+                if(goodsId == jsonarray[k].goods_id && spec_key == jsonarray[k].spec_key){
+                    //判断商品数量是否大于1  否则删掉记录
+                    if(jsonarray[k].goods_num > 1){
+                        jsonarray[k].goods_num --
+                    }else{
+                        jsonarray.splice(k,1)
+                    }
+                    this.cartBox = jsonarray
+                    localStorage[shopId] = JSON.stringify(jsonarray)
+                    return
+                }
+            }
+        },
+        /**
+         * 清空购物车
+         * 
+         */
+        claerCart () {
+            let shop_id = this.$route.params.id
+            this.cartBox = []
+            localStorage.removeItem(shop_id)
+        },
+
+
+
+
         GetDistance() {
             if(localStorage.lat || localStorage.lng){
                 let map = new BMap.Map('allmap')
@@ -329,19 +473,6 @@ export default {
         },
         // 再次请求购物车  新增的数据有了
         AglinCart (msg) {
-            console.log(msg,888888)
-            // let cartId = []
-            // for(let i in this.cart){
-            //     cartId.push(this.cart[i].cart_id)
-
-            // }
-            // if(cartId.indexOf(msg.data.cart_id) == -1){
-            //     this.cart.push(msg.data)
-            // }else{
-            //     this.cart[cartId.indexOf(msg.data.cart_id)].goods_num = msg.data.goods_num
-            // }
-            // console.log(this.cart)
-            // this.getCart()
             this.cart = msg.data
         },
         buygoodsinfo (msg) {
@@ -365,10 +496,10 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                method: 'post',
-                // method:'get',
-                url:'mobile/api/q',
-                // url:'api/buyer/list_address',
+                // method: 'post',
+                method:'get',
+                // url:'mobile/api/q',
+                url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
@@ -380,8 +511,8 @@ export default {
                 })
         },
         getaddrList (res){
-            const date = eval('('+res.data+')')
-            // let date = res.data
+            // const date = eval('('+res.data+')')
+            let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -408,8 +539,8 @@ export default {
             // 更改收藏状态
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/collect_shop',
+                // url: 'mobile/api/q',
+                url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
@@ -423,8 +554,8 @@ export default {
                 })
         },
         collect (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             if(date.status == 200){
                 if(date.message  != 'false'){
                     this.$message({
@@ -448,12 +579,12 @@ export default {
             }
             
         },
-        getlist () {
+        getlist () {          
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/shop_info',
+                // url: 'mobile/api/q',
+                url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
@@ -466,8 +597,8 @@ export default {
                 })
         },
         getlistbox(res){
-            let date = eval('('+res.data+')')
-            // let date = res.data
+            // let date = eval('('+res.data+')')
+            let date = res.data
             this.shop = date.data
             this.GetDistance()
             if(this.shop.is_collect == 1){
@@ -495,30 +626,7 @@ export default {
                     }
                 }
             }
-        },
-        getCart () {
-            this.$store.dispatch("changeOrderId",'')
-            this.$store.dispatch("changeOrderSn",'')
-            // 获取购物车信息 传一个店铺ID
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/cart_list',
-                data: {
-                    url:'http://api.dqvip.cc/buyer/cart_list',
-                    shop_id:this.$route.params.id,
-                    q_type:'post'
-                },
-            })
-                .then(this.getCartList)
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        getCartList (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
-            this.cart = date.data
+            this.cartBox = JSON.parse(localStorage[this.$route.params.id])
         },
         // 固定在顶部
         handleTop () {
@@ -536,147 +644,6 @@ export default {
             }else{
                 this.ishead = true
             }
-        },
-        addCart (GoodId,index) {
-            this.searchlist[index].show = false
-            const that = this
-            var goods_num = 1
-            var cart_id
-            for(let i in this.cart){
-                if(this.cart[i].goods_id == GoodId){
-                    cart_id = this.cart[i].cart_id
-                    goods_num = parseInt(this.cart[i].goods_num) +1
-                    break
-                }
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:"http://api.dqvip.cc/goods_info",
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    that.getaddCart(response,GoodId,goods_num,cart_id,index)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        getaddCart (res,GoodId,goods_num,cart_id,index) {
-            // let date = res.data
-            let date = eval('('+res.data+')')
-            let _this = this
-            let data ;
-            if(cart_id){
-                data =  {
-                        url:'http://api.dqvip.cc/buyer/cart_change',
-                        goods_id:GoodId,
-                        shop_id:this.$route.params.id,
-                        goods_num:goods_num,
-                        cart_id: cart_id,
-                        q_type:'post'
-                    }
-            }else{
-                data = {
-                        url:'http://api.dqvip.cc/buyer/cart_change',
-                        goods_id:GoodId,
-                        shop_id:this.$route.params.id,
-                        goods_num:goods_num,
-                        q_type:'post'
-                    }
-            }
-            if(date.data.spec.length == 0){
-                this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
-                    data: data,
-                })
-                .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
-                    console.log(date)
-                    _this.AglinCart(date)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            }else{
-                this.changeBuy(true)
-                this.buygoodsinfo(date.data)
-            }
-            this.searchlist[index].showMinus = true
-            this.searchlist[index].show = true
-        },
-        emitCart (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
-            if(date.data == ''){
-                this.cart = date.data
-                this.AglinCart()
-            }else{
-                alert('加入失败')
-            }
-
-        },
-        minus(GoodId,index){
-            this.searchlist[index].showMinus = false
-            const that = this
-            let goods_num
-            let cart_id
-            for(let i in this.cart){
-                if(GoodId == this.cart[i].goods_id){
-                    if(this.cart[i].goods_num == 0){
-                        goods_num = this.cart[i].goods_num 
-                    }else{
-                        goods_num = this.cart[i].goods_num -1
-                    }
-                    
-                    cart_id = this.cart[i].cart_id
-                }
-            }
-            // console.log(goods_num,cart_id)
-            if(goods_num == 0){
-                
-                this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
-                    data:{
-                        cart_id:cart_id,
-                        url:"http://api.dqvip.cc/buyer/cart_clear",
-                        q_type:'delete',
-                    },
-                })
-                    .then(this.getCart())
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                return
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:"http://api.dqvip.cc/goods_info",
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    that.getaddCart(response,GoodId,goods_num,cart_id,index)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
         },
         // 判断是否有选中商品
         getshopid () {
@@ -764,34 +731,27 @@ export default {
             }
             this.getshopid()
         },
-        cart () {
+        cartBox () {
             // console.log(this.cart,333)
             // console.log(this.costPrice,444)
-            let cart = this.cart
+            let cart = this.cartBox
+            console.log(cart)
             let total = 0
             for(let i in cart){
-                total += ((parseFloat(cart[i].goods.price) + parseFloat(cart[i].spec_price)) * cart[i].goods_num) 
+                total += ((parseFloat(cart[i].price) + parseFloat(cart[i].spec_price || 0)) * cart[i].goods_num) 
             }
             
             this.costPrice = total.toFixed(2) //原价
             this.rulingPrice = total.toFixed(2)
-            if(!this.shopprom[0]){
-                this.getCart()
-            }
             if(this.shopprom[0]){
                 let newmoney = this.rulingPrice
                 for(let i in this.shopprom[0]){
                     if(this.costPrice >= parseFloat(this.shopprom[0][i].condition)){
-                        // console.log(parseFloat(this.shopprom[0][i].condition),66565656)
                         let Rprice = parseFloat(this.costPrice) - parseFloat(this.shopprom[0][i].money)
                         this.fullmoney = parseFloat(this.shopprom[0][i].money)
-                        // console.log(this.fullmoney,1)
-                        // console.log(parseFloat(this.shopprom[0][i].money),66565656)
                         newmoney = Rprice.toFixed(2)
                         break
                     }else{
-                        // console.log(this.costPrice,2)
-                        // console.log(this.shopprom[0][i].condition,3)
                         this.fullmoney = null
                     }
                 }
@@ -799,16 +759,20 @@ export default {
                 this.rulingPrice = newmoney
             }
             // 多规格
-            let spec_array = new Array
-            for(let i in this.cart){
-                if(this.cart[i].spec_key.length > 0){
-                    let goods_num = spec_array[this.cart[i].goods_id] || 0
-                    goods_num += parseInt(this.cart[i].goods_num) 
-                    spec_array[this.cart[i].goods_id] = goods_num
-                }
+            // let spec_array = new Array
+            // for(let i in this.cart){
+            //     if(this.cart[i].spec_key.length > 0){
+            //         let goods_num = spec_array[this.cart[i].goods_id] || 0
+            //         goods_num += parseInt(this.cart[i].goods_num) 
+            //         spec_array[this.cart[i].goods_id] = goods_num
+            //     }
+            // }
+            // this.goods_spec = spec_array
+            let goods_val = 0
+            for(let i in this.cartBox){
+                goods_val += this.cartBox[i].goods_num
             }
-            this.goods_spec = spec_array
-
+            this.goods_val = goods_val
         },
         keyword () {
             if(this.keyword.length > 0){
@@ -850,7 +814,6 @@ export default {
     mounted () {
         this.getlist()
         this.getaddressList()
-        this.getCart()
         window.addEventListener('scroll',this.handleTop)
         
     }

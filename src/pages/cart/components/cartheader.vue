@@ -73,9 +73,10 @@ export default {
         } 
     },
     mounted () {
+        this.coumputertime()
         this.initAddress()
         this.init()
-        this.coumputertime()
+        
     },
     methods:{
         handlePickerConfirm (index,value) {
@@ -90,8 +91,8 @@ export default {
             }
         },
         coumputertime () {
+            console.log(235)
             //把所有时间加入到picker 里面
-            // console.log(this.timer,9998888)
             let nowtime = (Date.parse(new Date())/1000 + parseInt(this.timer.value) * 60)*1000
             var nowhours = new Date(nowtime)
             let timefirst = []
@@ -118,7 +119,6 @@ export default {
                     
                 }
             }
-            // console.log(timefirst)
             // 获得店铺营业时间
             let starttime = this.business_hours.substring(0,2)
             // 开始时间(小时)
@@ -148,6 +148,7 @@ export default {
             }
         
             this.picker.data = timefirst
+            
         },
         show () {
             this.$refs.picker.show();

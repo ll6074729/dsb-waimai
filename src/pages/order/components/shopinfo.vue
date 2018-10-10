@@ -32,6 +32,7 @@
                             <p v-if="item.order_status == 3">订单已取消</p>
                             <p v-if="item.order_status == 4">订单已完成</p>
                             <p v-if="item.order_status == 5">商家已取消订单,请联系商家</p>
+                            <p v-if="item.order_status == 6">订单退款中</p>
                         </div>
                     </div>
                 </router-link>  

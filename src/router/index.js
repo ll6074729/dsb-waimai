@@ -33,7 +33,8 @@ export default new Router({
       name: 'Home',
       component: Home,
       meta:{
-        title:'首页'
+        title:'首页',
+        keepAlive: true
       }
     },
     {
@@ -41,35 +42,41 @@ export default new Router({
       name: 'Text',
       component: Text,
       meta:{
-        title:'测试'
+        title:'测试',
+        keepAlive: false
       }
     },
     {
       path:'/paystatus',
       name:'Paystatus',
       component:Paystatus,
+      meta:{keepAlive: false}
     },
     {
       path:'/complaintList',
       name:'complaintList',
       component:complaintList,
+      meta:{keepAlive: false}
     },
     {
       path:'/collect',
       name:'Collect',
       component:Collect,
+      meta:{keepAlive: false}
     },
     {
       path:'/coupon',
       name:'Coupon',
       component:Coupon,
+      meta:{keepAlive: false}
     },
     {
       path:'/integral',
       name: 'Integral',
       component: Integral,
       meta:{
-        title:'积分明细'
+        title:'积分明细',
+        keepAlive: false
       }
     },
     {
@@ -77,7 +84,8 @@ export default new Router({
       name: 'Balance',
       component: Balance,
       meta:{
-        title:'余额明细'
+        title:'余额明细',
+        keepAlive: false
       }
     },
     {
@@ -85,7 +93,7 @@ export default new Router({
       name: 'Merchant',
       component: Merchant,
       meta:{
-        title:'入住'
+        title:'入住',
       }
     },
     {
@@ -93,7 +101,8 @@ export default new Router({
       name: 'Location',
       component: Location,
       meta:{
-        title:'首页'
+        title:'首页',
+        keepAlive: true
       }
     },
     {
@@ -101,7 +110,8 @@ export default new Router({
       name:'Search',
       component:Search,
       meta:{
-        title:'搜索'
+        title:'搜索',
+        keepAlive: false
       }
     },
     {
@@ -109,7 +119,8 @@ export default new Router({
       name:'Shop',
       component:Shop,
       meta:{
-        title:'商品'
+        title:'商品',
+        keepAlive: false
       }
     },
     {
@@ -117,7 +128,8 @@ export default new Router({
       name:'Cart',
       component:Cart,
       meta:{
-        title:'购物车'
+        title:'购物车',
+        keepAlive: false
       }
     },
     {
@@ -125,7 +137,8 @@ export default new Router({
       name:'Pay',
       component:Pay,
       meta:{
-        title:'支付'
+        title:'支付',
+        keepAlive: false
       }
     },
     {
@@ -133,7 +146,8 @@ export default new Router({
       name:'Order',
       component:Order,
       meta:{
-        title:'订单'
+        title:'订单',
+        keepAlive: false
       }
     },
     {
@@ -141,7 +155,8 @@ export default new Router({
       name:'Personal',
       component:Personal,
       meta:{
-        title:'个人中心'
+        title:'个人中心',
+        keepAlive: true
       }
     },
     {
@@ -149,7 +164,8 @@ export default new Router({
       name:'Site',
       component:Site,
       meta:{
-        title:'新增地址'
+        title:'新增地址',
+        keepAlive: false
       }
     },
     {
@@ -157,7 +173,8 @@ export default new Router({
       name:'Sitelist',
       component:Sitelist,
       meta:{
-        title:'地址列表'
+        title:'地址列表',
+        keepAlive: false
       }
     },
     {
@@ -165,28 +182,41 @@ export default new Router({
       name:'OrderDetails',
       component:OrderDetails,
       meta:{
-        title:'订单信息'
+        title:'订单信息',
+        keepAlive: false
       }
     },
     {
       path:'/evaluate',
       name:'Evaluate',
-      component:Evaluate
+      component:Evaluate,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/complaint',
       name:'Complaint',
-      component:Complaint
+      component:Complaint,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/checkin',
       name:'Checkin',
-      component:Checkin
+      component:Checkin,
+      meta:{
+        keepAlive: false
+      }
     },
     {
       path:'/concurrent',
       name:"Concurrent",
-      component:Concurrent
+      component:Concurrent,
+      meta:{
+        keepAlive: false
+      }
     }
   ]
 })
