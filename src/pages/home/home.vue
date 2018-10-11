@@ -1,5 +1,6 @@
 <template>
-    <div class="header"  v-loading.fullscreen.lock="fullscreenLoading">
+    <div class="header"  >
+        <!-- v-loading.fullscreen.lock="fullscreenLoading" -->
         <!-- 头部轮播 -->
         <homeswiper-banner :banner="banner"></homeswiper-banner>
         <!-- 头部搜索 -->

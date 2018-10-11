@@ -16,7 +16,8 @@
         </swiper>
         <div class="pages-no" v-if="pages.length < 1">
             <!-- 暂无分类 -->
-            <img src="../../../assets/img/SearchLoading.gif" style="width:100%">
+            <img src="../../../assets/img/SearchLoading.gif" style="width:30%;margin-top:-15%">
+            <!-- <p>努力加载中。。。</p> -->
         </div>
    </div>
 </template>
