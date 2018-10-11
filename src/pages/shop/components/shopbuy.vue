@@ -13,6 +13,14 @@
                     <div class="head-right">
                         <div class="food-name">{{goodsinfo.goods_info.title}}</div>
                         <div class="food-price" ref="goodsPrice">￥{{goodsinfo.goods_info.price}}</div>
+                        <div class="food-num">
+                            <img class="minus" src="../../../assets/img/minus@3x.png" @click="makeNum(false)" v-if="this.foodnum > 1">
+                            <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="makeNum(false)" v-if="this.foodnum < 2">
+                            <span>{{foodnum}}</span>
+                            <transition name="bounce">
+                                <img class="plus" src="../../../assets/img/add@3x.png" @click="makeNum(true)">
+                            </transition>
+                        </div>
                     </div>
                     <div class="colse" @click="closeGoodsInfo">
                         <img src="../../../assets/img/close.png" alt="">
@@ -51,7 +59,8 @@ export default {
     props:{
         isBuy:Boolean,
         goodsinfo:Array,
-        cart:Array
+        cart:Array,
+        foodnum:Number,
     },
     data () {
         return {
@@ -71,6 +80,21 @@ export default {
 
     },
     methods:{
+        // 添加商品的数量
+        makeNum (msg) {
+            if(msg){
+                this.foodnum ++
+            }else{
+                if(this.foodnum == 1){
+                    this.$message({
+                        type: 'warning',
+                        message:'商品数量不能低于1'
+                    })
+                }else{
+                    this.foodnum --
+                }
+            }
+        },
         addCart () {
             var cartspec_key = ''
             var data = {}
@@ -124,9 +148,7 @@ export default {
             for(let k in jsonarray){  //循环购物车是否有当前商品
                 if(goodsId == jsonarray[k].goods_id){
                     if(jsonarray[k].spec_key == cartspec_key){ //判断是否有相同规格的商品
-                        console.log('1597')
-                        jsonarray[k].goods_num ++
-                        console.log(jsonarray,4444)
+                        jsonarray[k].goods_num += this.foodnum
                         this.$emit('makeCart',jsonarray)
                         localStorage[shopId] = JSON.stringify(jsonarray)
                         this.closeGoodsInfo()
@@ -134,8 +156,7 @@ export default {
                     }   
                 }
             }
-            console.log('1596')
-            this.$set(this.goodsinfo.goods_info,'goods_num',1)
+            this.$set(this.goodsinfo.goods_info,'goods_num',this.foodnum)
             jsonarray.push(this.goodsinfo.goods_info)
             this.$emit('makeCart',jsonarray)
             localStorage[shopId] = JSON.stringify(jsonarray)
@@ -236,6 +257,7 @@ export default {
                         width 21.33vw
                         height 21.33vw
             .head-right 
+                position relative
                 float left 
                 width 70%
                 margin-left 2.66vw
@@ -247,6 +269,22 @@ export default {
                 font-weight bold
                 .food-price
                     color #469afe
+                .food-num
+                    position absolute
+                    right 0
+                    bottom 0
+                    span
+                        padding 0 3vw
+                        font-weight 400
+                    .minus,.plus
+                        width 5.33vw
+                        height 5.33vw
+                        box-sizing border-box
+                        display inline-block
+                    .minus
+                        line-height 5.33vw
+                    .plus
+                        line-height 5.33vw         
             .colse
                 position absolute
                 top 5.6vw

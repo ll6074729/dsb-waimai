@@ -188,7 +188,7 @@ export default {
         handlePickerConfirm (index,value) {
             this.building = index[1].value
             this.floor = index[2].value
-            this.schoolAddress = index[0].value + index[1].value + index[2].value 
+            this.schoolAddress = index[0].value + index[1].value + index[2].value +'楼'
             this.delivery_id = this.delivery.data[this.$store.state.area_id][index[1].index].child[index[2].index].delivery_id
         },
         getSchool () {

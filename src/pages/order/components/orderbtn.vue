@@ -9,9 +9,9 @@
         <router-link tag="div" :to="{path:'evaluate',query:{order_id:order_id,order_sn:order_sn,shop_id:shop_id}}" class="order-btn-item bg" v-if="order_status == 4 && is_comment == 0">
             评价订单
         </router-link>
-        <div @click="alignOrder" class="order-btn-item bg" v-if="order_status == 4 || order_status == 3">
+        <!-- <div @click="alignOrder(order_id)" class="order-btn-item bg" v-if="order_status == 4 || order_status == 3">
             再来一单
-        </div>
+        </div> -->
         <div class="order-btn-item" v-if="order_status == 0" @click="cancel_order">
             取消订单
         </div>
@@ -40,27 +40,15 @@ export default {
         }
     },
     methods:{
-        alignOrder (shop_id) {
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/buyer/again_orders',
-                data: {
-                    url:'http://api.dqvip.cc/buyer/again_orders',
-                    q_type:'post',
-                    order_id:this.order_id
-                }
-            })
-                .then(this._alignOrder)
-                .catch(function (error) {
-                    console.log(error);
-                })
+        alignOrder (order_id) {
+            this.$emit('alignOrder',order_id)
         },
-        _alignOrder (res) {
-            let date = eval('('+res.data+')')
-            // let date = res.data
-            this.$router.push({path:'shop/'+this.shop_id})
-        },
+        // _alignOrder (res) {
+        //     // let date = eval('('+res.data+')')
+        //     let date = res.data
+        //     console.log(date)
+        //     // this.$router.push({path:'shop/'+this.shop_id})
+        // },
         pagestyle () {
 
         },
@@ -100,21 +88,6 @@ export default {
         },
         pay () {
             this.$router.push({path:'/paystatus',query:{"order_id":this.order_id}})
-            // let _this = this
-            // this.$http({
-            //     method:'post',
-            //     url:'http://wm.dqvip.cc/Mobile/Payment/getpayCode',
-            //     data:{
-            //         order_id:this.order_id,
-            //         pay_radio:'pay_code=weixin'
-            //     },
-            // })
-            //     .then(function(response){
-            //         _this.styleIndex.callpay(response.data)
-            //     })
-            //     .catch(function(error){
-            //         console.log(error)
-            //     })
         }
     }
 }

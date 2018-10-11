@@ -26,6 +26,7 @@ export default {
 <style lang="stylus" scoped>
     .headbg
         position relative
+        background-color #469afe
         .back
             position fixed
             top 4vw
@@ -34,5 +35,5 @@ export default {
                 width 2.13vw
                 height 4.13vw
         .headbg-img
-            width 100%      
+            width 100%   
 </style>

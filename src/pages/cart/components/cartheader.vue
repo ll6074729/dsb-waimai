@@ -14,11 +14,11 @@
             </div>
             <div class="address-content db">
                 <div class="address-top">
-                    {{this.$store.state.defaultSchool}}{{defaultAddress.building}}{{defaultAddress.floor}}-{{defaultAddress.address}}
+                    {{this.$store.state.defaultSchool}}{{defaultAddress.building || JSON.parse(this.$store.state.defaultAddress).building}}{{defaultAddress.floor || JSON.parse(this.$store.state.defaultAddress).floor}}楼{{defaultAddress.address || JSON.parse(this.$store.state.defaultAddress).address}}室
                 </div>
                 <div class="address-info">
-                    <strong>{{defaultAddress.consignee}}</strong>
-                    <strong>{{defaultAddress.mobile}}</strong>
+                    <strong>{{defaultAddress.consignee || JSON.parse(this.$store.state.defaultAddress).consignee}}</strong>
+                    <strong>{{defaultAddress.mobile || JSON.parse(this.$store.state.defaultAddress).mobile}}</strong>
                 </div>
             </div>
             <div class="address-right fr">
@@ -73,8 +73,8 @@ export default {
         } 
     },
     mounted () {
-        this.coumputertime()
         this.initAddress()
+        this.coumputertime()
         this.init()
         
     },
@@ -91,7 +91,6 @@ export default {
             }
         },
         coumputertime () {
-            console.log(235)
             //把所有时间加入到picker 里面
             let nowtime = (Date.parse(new Date())/1000 + parseInt(this.timer.value) * 60)*1000
             var nowhours = new Date(nowtime)
@@ -173,6 +172,7 @@ export default {
 
         // 获取默认地址
         initAddress () {
+            console.log('默认地址设置成功')
             this.defaultAddress = eval('('+this.$store.state.defaultAddress+')')
         }
     }

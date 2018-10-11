@@ -78,7 +78,7 @@ export default {
             if(localStorage.allshopCart){
                 localStorage.allshopCart=''
             }
-            if(this.$store.state.area_id == undefined || this.$store.state.delivery_price == NaN){
+            if(this.$store.state.area_id == undefined){
                 this.$router.push({path:"/Location"})
             }else{
                 this.$http({
@@ -190,20 +190,21 @@ export default {
             
             let addressList = date.data
             let area_price = this.$store.state.delivery_cost
-            let delivery_price
+            let delivery_price = 0
             for(let i in  addressList){
                 // 判断校区是否相同
                 if(addressList[i].area_id == this.$store.state.area_id){
                     if(addressList[i].is_default == 1 ){
                         this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
                         delivery_price = addressList[i].delivery.delivery_price
+                        this.$store.dispatch("changedeliveryPrice",delivery_price)
                         return
                     }
                 }else{
                     this.$store.dispatch("defaultAddress","")
                 }
             }
-            this.$store.dispatch("changedeliveryPrice",delivery_price)
+            this.$store.dispatch("changedeliveryPrice",delivery_price || 0 )
         },
     },
     mounted() {

@@ -26,17 +26,17 @@
                                         <img class="minus" src="../../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[item.goods_id]">
                                         <transition name="bounce">
                                             <img src="../../../assets/img/minus@3x.png" class="minus" alt="" 
-                                                @click="minus(item.goods_id,index)" 
-                                                v-for="cartlist in cart" 
+                                                @click="_minusCart(item.goods_id,index)" 
+                                                v-for="cartlist in cartBox" 
                                                 :key="cartlist.goods_id" 
-                                                v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0"
+                                                v-if="cartlist.goods_id == item.goods_id && cartlist.spec"
                                                 v-show="item.showMinus"
                                             >
                                         </transition>
-                                        <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                        <span v-for="cartlist in cartBox" :key="cartlist.goods_id" v-if="cartlist.goods_id == item.goods_id && cartlist.spec">{{cartlist.goods_num}}</span>
                                         <span v-if="goods_spec[item.goods_id]">{{goods_spec[item.goods_id]}}</span>
                                         <transition name="bounce">
-                                            <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="addCart(item.goods_id,index)" v-show="item.show">
+                                            <img class="plus" src="../../../assets/img/add@3x.png" alt=""  @click="_addCart(item.goods_id,index)" v-show="item.show">
                                         </transition>
                                     </div>
                                 </div>
@@ -67,9 +67,11 @@ export default {
         cart:Array,
         goods_spec:Array,
         goods_feel:Number,
+        cartBox:Array,
     },
     mounted () {
         this._goodsFeel()
+        this.cartBoxfc()
     },
     data () {
         return {
@@ -104,8 +106,37 @@ export default {
             }
                
         },
+        cartBox () {
+            let spec_array = new Array
+            for(let i in this.cartBox){
+                if(!this.cartBox[i].spec){
+                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                    goods_num += parseInt(this.cartBox[i].goods_num) 
+                    spec_array[this.cartBox[i].goods_id] = goods_num
+                }
+            }
+            this.goods_spec = spec_array
+        }
     },
     methods:{
+        _minusCart(goodsId,index){
+            this.$emit('childMinusCart',[goodsId,index])
+        },
+        _addCart(goodsId,index){
+            this.$emit('childAddCart',[goodsId,index])
+        },
+        cartBoxfc () {
+            let spec_array = new Array
+            for(let i in this.cartBox){
+                if(!this.cartBox[i].spec){
+                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                    goods_num += parseInt(this.cartBox[i].goods_num) 
+                    spec_array[this.cartBox[i].goods_id] = goods_num
+                }
+            }
+            this.goods_spec = spec_array
+        },
+
         close () {
             this.$emit('close_feel')
         },
@@ -115,146 +146,7 @@ export default {
                 type: 'warning'
             });
         },
-        minus(GoodId,index){
-            this.goods[index].showMinus = false
-            const that = this
-            let goods_num
-            let cart_id
-            for(let i in this.cart){
-                if(GoodId == this.cart[i].goods_id){
-                    if(this.cart[i].goods_num == 0){
-                        goods_num = this.cart[i].goods_num 
-                    }else{
-                        goods_num = this.cart[i].goods_num -1
-                    }
-                    
-                    cart_id = this.cart[i].cart_id
-                }
-            }
-            console.log(goods_num,cart_id)
-            if(goods_num == 0){
-                
-                this.$http({
-                    method:'post',
-                    // method: 'delete',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_clear',
-                    data:{
-                        cart_id:cart_id,
-                        url:"http://api.dqvip.cc/buyer/cart_clear",
-                        q_type:'delete',
-                    },
-                })
-                    .then(this.$parent.getCart)
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                return
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:"http://api.dqvip.cc/goods_info",
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    let date = eval('('+response.data+')')
-                    // let date = response.data
-                    if(date.status == 200){
-                        that.getCart(date,GoodId,goods_num,cart_id,index)
-                    }
-                    
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        addCart (GoodId,index) {
-            console.log(index)
-            this.goods[index].show = false
-            const that = this
-            var goods_num = 1
-            var cart_id 
-            for(let i in this.cart){
-                if(this.cart[i].goods_id == GoodId){
-                    cart_id = this.cart[i].cart_id
-                    goods_num = parseInt(this.cart[i].goods_num) + 1
-                    break
-                }
-            }
-            // 获取当前商品的信息  规格  
-            this.$http({
-                method: 'post',
-                url: 'mobile/api/q',
-                // url:'api/goods_info',
-                data: {
-                    url:'http://api.dqvip.cc/goods_info',
-                    q_type:'post',
-                    goods_id:GoodId,
-                },
-            })
-                .then(function(response){
-                    let date = eval('('+response.data+')')
-                    // let date = response.data
-                    if(date.status == 200){
-                        that.getCart(date,GoodId,goods_num,cart_id,index)
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-        },
-        getCart (date,GoodId,goods_num,cart_id,index) {
-            let data ;
-            let _this = this
-            // if(cart_id){
-            //     data =  {
-            //         url:'http://api.dqvip.cc/buyer/cart_change',
-            //         goods_id:GoodId,
-            //         shop_id:this.$route.params.id,
-            //         goods_num:goods_num,
-            //         cart_id: cart_id,
-            //         q_type:'post'
-            //     }
-            // }else{
-                data = {
-                    url:'http://api.dqvip.cc/buyer/cart_change',
-                    goods_id:GoodId,
-                    shop_id:this.$route.params.id,
-                    goods_num:goods_num,
-                    q_type:'post'
-                }
-            // }
-            // console.log(date.data)
-            if(date.data.spec.length == 0){
-                this.$http({
-                    method: 'post',
-                    url: 'mobile/api/q',
-                    // url:'api/buyer/cart_change',
-                    data: data,
-                })
-                .then(function(res){
-                    let date = eval('('+res.data+')')
-                    // let date = res.data
-                    console.log(date)
-                    _this.$emit('AglinCart',date)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            }else{
-                this.$emit('close_feel')
-                this.$emit('upup',true)
-                this.$emit('buygoodsinfo',date.data)
-            }
-            this.goods[index].showMinus = true
-            this.goods[index].show = true
-        },
+
         _goodsFeel () {
             if(this.goods_feel){
                 this.$refs.mySwiper.swiper.slideTo(this.goods_feel, 0, false)

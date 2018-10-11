@@ -45,9 +45,6 @@
             <div class="buybtn fr" @click="buybtn" v-loading.fullscreen.lock="fullscreenLoading">
                 立即购买
             </div>
-            <!-- <router-link class="buybtn fr" tag="div" to="/pay">
-                
-            </router-link> -->
         </div>
     </div>
 </template>
@@ -197,24 +194,41 @@ export default {
             this.fullscreenLoading = true;
             var balance_money = this.balance_money || 0
             var integral_num = this.integral_num || 0
+            // 把本地购物车传给服务器
+            var goods_box = JSON.parse(localStorage[this.$route.params.id])
+            var goods_row = new Array()
+            // 组装成后端需要的格式
+            for(let i in goods_box){
+                if(goods_box[i].spec_key){
+                    goods_row.push({goods_id:goods_box[i].goods_id,goods_num:goods_box[i].goods_num,spec_key:goods_box[i].spec_key})
+                }else{
+                    goods_row.push({goods_id:goods_box[i].goods_id,goods_num:goods_box[i].goods_num})
+                }
+            }
+            var submit_date = {
+                url:'http://api.dqvip.cc/buyer/submit_order',
+                shop_id:this.$route.params.id,
+                address_id:JSON.parse(this.$store.state.defaultAddress).address_id,
+                pay_code:this.paycode,
+                delivery_type:"0",
+                user_money:balance_money,
+                integral:integral_num,
+                c_id:this.coupon_id,
+                q_type:'post',
+                estimated_delivery:this.estimated_delivery,
+                goods_row:goods_row
+            }
+            if(this.desc == ''){
+
+            }else{
+                submit_date.user_note=this.desc
+            }
+           
             this.$http({
                 method: 'post',
                 url: '/mobile/api/q',
                 // url:'api/buyer/submit_order',
-                data: {
-                    url:'http://api.dqvip.cc/buyer/submit_order',
-                    shop_id:this.$route.params.id,
-                    address_id:JSON.parse(this.$store.state.defaultAddress).address_id,
-                    pay_code:this.paycode,
-                    delivery_type:"0",
-                    user_note:this.desc,
-                    cart_id:this.cart_id,
-                    user_money:balance_money,
-                    integral:integral_num,
-                    c_id:this.coupon_id,
-                    q_type:'post',
-                    estimated_delivery:this.estimated_delivery
-                },
+                data: submit_date,
             })
             .then(this.buybtnafter)
             .catch(function (error) {
@@ -228,10 +242,19 @@ export default {
             let date = eval('(' + res.data + ')')
             // let date = res.data
             console.log(date)
+            if(date.status !=200){
+                this.$message({
+                    message: date.message,
+                    type: 'warning'
+                });
+                return
+            }
+            
             // 把订单存在本地
             this.$store.dispatch("changeOrderId",date.data.order_id)
             this.$store.dispatch("changeOrderSn",date.data.order_sn)
             let _this = this
+            localStorage.removeItem(this.shopinfo.shop_id)
             if(parseInt(date.data.order_amount) == 0){
                 _this.fullscreenLoading = false;
                 location.href='/#/pay/true';
@@ -365,43 +388,6 @@ export default {
                     this.costPrice = (parseFloat(this.rulingPrice) + parseFloat(this.shopinfo.custom_delivery) +  parseFloat(this.delivery_cost[1].value) + parseFloat(this.$store.state.delivery_price)).toFixed(2) || 0
                 }
             }
-            //  console.log(this.delivery_cost)
-            // if(this.delivery_cost.length == 0){
-            //     location.reload()
-            // }else{
-                // if(this.shopinfo != undefined){
-                //     if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) != 0){
-                //         if(total < parseFloat(this.shopprom[2][0].money)){
-                //             this.rulingPrice = (parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)).toFixed(2)
-                //         }else{
-                //             let custom_money = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.shopinfo.custom) + parseFloat(this.$store.state.delivery_price)
-                //             this.costPrice = (parseFloat(custom_money) + parseFloat(this.costPrice)).toFixed(2)
-                //             this.rulingPrice = (parseFloat(custom_money) + parseFloat(this.rulingPrice)).toFixed(2)
-                //         }
-                //     }else if(parseFloat(this.shopinfo.custom_delivery) != 0 && parseFloat(this.shopinfo.custom) == 0){
-                //         let delivery_price = parseFloat(this.shopinfo.custom_delivery) + parseFloat(this.delivery_cost[1].value) +parseFloat(this.$store.state.delivery_price)
-                //         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                //         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-                //         console.log(this.rulingPrice,2)
-                //     }else if(parseFloat(this.shopinfo.custom_delivery) == 0 && parseFloat(this.shopinfo.custom) != 0){
-                //         let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.shopinfo.custom)
-                //         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                //         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-                //         console.log(this.rulingPrice,3)
-                //     }else{
-                //         let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
-                //         this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                //         this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-                //         console.log(this.rulingPrice,4)
-                //     }
-                // }else{
-                //     let delivery_price = parseFloat(this.delivery_cost[0].value) + parseFloat(this.delivery_cost[1].value)
-                //     this.costPrice = (parseFloat(delivery_price) + parseFloat(this.costPrice)).toFixed(2)
-                //     this.rulingPrice = (parseFloat(delivery_price) + parseFloat(this.rulingPrice)).toFixed(2)
-                //     console.log(this.rulingPrice,5)
-                // }
-            // }
-            // console.log(this.rulingPrice,1111)
            
             if(this.rulingPrice != NaN){
                 this.fullscreenLoading = false

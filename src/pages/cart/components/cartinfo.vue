@@ -20,7 +20,7 @@
                     <div class="goods-name" v-if="page != 'center'">{{item.title}}</div>
                     <div class="goods-name" v-if="page == 'center'">{{item.goods_name}}</div>
                     <div class="goods-type">
-                        <span>{{item.spec_key_name}}</span>
+                        <span>{{item.spec_name || item.spec_key_name}}</span>
                     </div>
                 </div>
                 <div class="goods-num">
@@ -52,22 +52,34 @@ export default {
     mounted () {
         this.cartBoxfc()
     },
+    watch : {
+        cartBox () {
+            for(let i in this.cartBox){
+                let img = []
+                for(var j = 0;j<this.cartBox.length;j++){
+                    if(this.cartBox[i].details_figure.substring(0,this.cartBox[i].details_figure.length -1) == ','){
+                        img = this.cartBox[i].details_figure.split(',')
+                    }else{
+                        img[0] = this.cartBox[i].details_figure
+                    }
+                    
+                }
+                this.cartBox[i].pic = img
+            }
+        }
+    },
     methods: {
         cartBoxfc () {
             for(let i in this.cartBox){
                 let img = []
-                console.log('123')
                 for(var j = 0;j<this.cartBox.length;j++){
-
-                        console.log(this.cartBox[i].details_figure)
-                        if(this.cartBox[i].details_figure.substring(0,this.cartBox[i].details_figure.length -1) == ','){
-                            img = this.cartBox[i].details_figure.split(',')
-                        }else{
-                            img[0] = this.cartBox[i].details_figure
-                        }
+                    if(this.cartBox[i].details_figure.substring(0,this.cartBox[i].details_figure.length -1) == ','){
+                        img = this.cartBox[i].details_figure.split(',')
+                    }else{
+                        img[0] = this.cartBox[i].details_figure
+                    }
                     
                 }
-                // console.log(img,99999999999999999999999999999)
                 this.cartBox[i].pic = img
             }
         }

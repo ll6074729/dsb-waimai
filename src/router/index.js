@@ -34,7 +34,7 @@ export default new Router({
       component: Home,
       meta:{
         title:'首页',
-        keepAlive: true
+        keepAlive: false
       }
     },
     {
@@ -101,8 +101,8 @@ export default new Router({
       name: 'Location',
       component: Location,
       meta:{
-        title:'首页',
-        keepAlive: true
+        title:'选择校区',
+        keepAlive: false
       }
     },
     {

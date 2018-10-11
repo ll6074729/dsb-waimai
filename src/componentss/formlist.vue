@@ -87,8 +87,23 @@ export default {
     },
     mounted () {
         this.AllSchool()
+        this.bg()
+    },
+    beforeDestroy(){
+        this.isbg()
     },
     methods:{
+        bg () {
+            if(this.page == 0 || this.page ==1){
+                document.documentElement.style.background = "#469afe"
+            }else if(this.page ==2){
+                document.documentElement.style.background = "#f7f7f7"
+            }
+            
+        },
+        isbg(){
+            document.documentElement.style = ''
+        },
         PickerConfirm(index) {      
             // if(index[0].index == 0){
             //     this.$message({
@@ -238,7 +253,7 @@ export default {
             border-radius 6.66vw
             width 80vw
             height 13.33vw
-            line-height 13.33vw
+            line-height 14.33vw
             color #469afe
             font-weight bold
             background-color #fff

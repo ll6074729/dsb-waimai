@@ -49,6 +49,7 @@
                 :confirm_time="Number(new Date(item.confirm_time))"
                 :finish_time="Number(new Date(item.finish_time))"
                 @orderlist="orderlist"
+                @alignOrder="alignOrder"
             >
             </order-btn>
             <hr class="hr20" v-if="list.length > 1">
@@ -76,6 +77,9 @@ export default {
         }
     },
     methods:{
+        alignOrder (msg) {
+            this.$emit('alignOrder',msg)
+        },
         orderlist () {
             this.$emit('orderlist','0')
         },

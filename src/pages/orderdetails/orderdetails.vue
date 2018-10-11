@@ -22,26 +22,26 @@
         <hr class="hr20" v-if="order_ps">
         <take-out :order_status="order_status" :order_ps="order_ps"></take-out>
         <hr class="hr20">
-        <cart-info :cart="cart" :page="page" :shopinfo="shop" ></cart-info>
+        <cart-info :cartBox="cartBox" :page="page" :shopinfo="shop" ></cart-info>
         <expen-ses :delivery_cost1="delivery_cost1" :delivery_cost2="delivery_cost2" :shopinfo="shop" :floor_amount="floor_amount"></expen-ses>
         <!-- <aciti-vity :cartprom="cartprom" :shopprom="shopprom" :page="page" :coupon="coupon" :user_money="user_money" :integral="integral"></aciti-vity> -->
-       <aciti-vity :shopprom="shopprom" v-if="shopprom"></aciti-vity>
-       <div class="df" v-if="parseFloat(integral) > 0">
-           <div class="list-name-act">
-                积分抵扣
-            </div>
-            <div class="price-act">
-                -￥{{integral}}
-            </div>
-       </div>
-       <div class="df" v-if="parseFloat(user_money) > 0">
-           <div class="list-name-act">
-                余额抵扣
-            </div>
-            <div class="price-act">
-                -￥{{user_money}}
-            </div>
-       </div>
+        <div class="df" v-if="parseFloat(integral) > 0">
+            <div class="list-name-act">
+                    积分抵扣
+                </div>
+                <div class="price-act">
+                    -￥{{integral}}
+                </div>
+        </div>
+        <div class="df" v-if="parseFloat(user_money) > 0">
+            <div class="list-name-act">
+                    余额抵扣
+                </div>
+                <div class="price-act">
+                    -￥{{user_money}}
+                </div>
+        </div>
+        <aciti-vity :shopprom="shopprom" v-if="shopprom"></aciti-vity>
         <div class="df">
             <div class="list-name">
                 实付款
@@ -90,7 +90,7 @@ export default {
             order_sn:this.$route.query.order_sn,
             address:'',
             user_mobile:'',
-            cart:[],
+            cartBox:[],
             shop:[],
             shopprom:[],
             delivery_cost1:{},
@@ -142,7 +142,7 @@ export default {
             this.consignee = date.data.consignee
             this.address = date.data.address
             this.user_mobile = date.data.mobile
-            this.cart = date.data.order_goods
+            this.cartBox = date.data.order_goods
             this.cartprom = date.data.order_shop_prom
             this.coupon = parseFloat(date.data.coupon_price)
             this.order_amount = parseFloat(date.data.order_amount)

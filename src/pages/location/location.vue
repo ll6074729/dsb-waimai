@@ -25,6 +25,11 @@ export default {
             allSchool:[]
         }
     },
+    // beforeRouteLeave(to, from, next) {
+    //     // 设置下一个路由的 meta
+    //     to.meta.keepAlive = false; // 让 A 不缓存，即刷新
+    //     next();
+    // },
     created () {
         this.openFullScreen()
     },

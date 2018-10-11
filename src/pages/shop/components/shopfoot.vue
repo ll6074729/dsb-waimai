@@ -144,19 +144,31 @@ export default {
                 })
             }else{
                 // 把本地购物车传给服务器
+                var goods_box = JSON.parse(localStorage[this.$route.params.id])
+                var goods_row = new Array()
+                // 组装成后端需要的格式
+                for(let i in goods_box){
+                    if(goods_box[i].spec_key){
+                        goods_row.push({goods_id:goods_box[i].goods_id,goods_num:goods_box[i].goods_num,spec_key:goods_box[i].spec_key})
+                    }else{
+                        goods_row.push({goods_id:goods_box[i].goods_id,goods_num:goods_box[i].goods_num})
+                    }
+                }
                 this.$http({
                     method: 'post',
-                    // url: 'mobile/api/q',
-                    url:'api/buyer/confirm_order',
+                    url: 'mobile/api/q',
+                    // url:'api/buyer/confirm_order',
                     data: {
-                        url:'http://api.dqvip.cc/goods_info',
+                        url:'http://api.dqvip.cc/buyer/confirm_order',
                         q_type:'post',
                         shop_id:this.$route.params.id,
-                        goods_row:localStorage[this.$route.params.id],
+                        goods_row:goods_row,
                     },
                 })
                 .then(this.$router.push({name:'Cart',params:{shop_id:this.$route.params.id}}))
-                
+                .catch(function(error){
+                    console.log(error)
+                })
             }
         },
 

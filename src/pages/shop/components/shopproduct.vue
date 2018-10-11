@@ -80,13 +80,13 @@ export default {
         menuHeight () {
             document.documentElement.scrollTop = document.body.scrollTop = (this.$refs[this.menuHeight][0].offsetTop + this.tabTop)
         },
-        cart () {
+        cartBox () {
             let spec_array = new Array
-            for(let i in this.cart){
-                if(this.cart[i].spec_key.length > 0){
-                    let goods_num = spec_array[this.cart[i].goods_id] || 0
-                    goods_num += parseInt(this.cart[i].goods_num) 
-                    spec_array[this.cart[i].goods_id] = goods_num
+            for(let i in this.cartBox){
+                if(this.cartBox[i].spec_key.length > 0){
+                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                    goods_num += parseInt(this.cartBox[i].goods_num) 
+                    spec_array[this.cartBox[i].goods_id] = goods_num
                 }
             }
             this.goods_spec = spec_array

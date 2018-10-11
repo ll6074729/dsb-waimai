@@ -1,7 +1,7 @@
 <template>
     <div>
         <expen-ses :delivery_cost="delivery_cost" v-if="delivery_cost" :shopinfo="shopinfo"></expen-ses>
-        <hr class="hr20">
+        <!-- <hr class="hr20"> -->
         <aciti-vity :cartprom="cartprom" :page="page" :shopprom="shopprom"></aciti-vity>
         <div class="cost-item df" @click="iscoupon">
             <div class="cost-type">优惠券</div>

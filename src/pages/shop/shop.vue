@@ -104,7 +104,10 @@
         <shop-recommend 
             :food="shop.recommend_goods" 
             :cart="cart" 
+            :cartBox="cartBox"
             :recommendImg="recommendImg"
+            @childAddCart="childAddCart"
+            @childMinusCart="childMinusCart"
             @upup="changeBuy" 
             @AglinCart="AglinCart" 
             @buygoodsinfo="buygoodsinfo" 
@@ -174,6 +177,7 @@
                 :isBuy="isBuy" 
                 :goodsinfo="goodsinfo"
                 :cart="cartBox"
+                :foodnum="foodnum"
                 @AglinCart="AglinCart"
                 @closeGoodsInfo="changeGoodsInfo"
                 @buygoodsinfo="buygoodsinfo"
@@ -207,12 +211,12 @@
                             <div class="shop-num">
                                 <img class="minus" src="../../assets/img/minus_gray@3x.png" @click="minusSpec" v-if="goods_spec[itemList.goods_id]">
                                 <transition name="bounce">
-                                    <img src="../../assets/img/minus@3x.png"  v-show="itemList.showMinus" class="minus" alt="" @click="minus(itemList.goods_id,index)" v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">
+                                    <img src="../../assets/img/minus@3x.png"  v-show="itemList.showMinus" class="minus" alt="" @click="minusCart(itemList.goods_id,index,shop.shop_id)" v-for="cartlist in cartBox" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec">
                                 </transition>
-                                <span v-for="cartlist in cart" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec_key.length == 0">{{cartlist.goods_num}}</span>
+                                <span v-for="cartlist in cartBox" :key="cartlist.goods_id" v-if="cartlist.goods_id == itemList.goods_id && cartlist.spec">{{cartlist.goods_num}}</span>
                                 <span v-if="goods_spec[itemList.goods_id]">{{goods_spec[itemList.goods_id]}}</span>
                                 <transition name="bounce">
-                                    <img class="plus" src="../../assets/img/add@3x.png" alt=""  @click="addCart(itemList.goods_id,index)" v-if="itemList.show">
+                                    <img class="plus" src="../../assets/img/add@3x.png" alt=""  @click="_addCart(itemList.goods_id,index)" v-if="itemList.show">
                                 </transition>
                             </div>
                         </div>
@@ -229,6 +233,9 @@
             :cart="cart" 
             :goods_spec="goods_spec" 
             :goods_feel="goods_feel" 
+            :cartBox="cartBox"
+            @childAddCart="childAddCart"
+            @childMinusCart="childMinusCart"
             @close_feel="closeFeel"
             @upup="changeBuy" 
             @AglinCart="AglinCart" 
@@ -292,11 +299,13 @@ export default {
             range:0,
             cartBox:[],
             goods_val:0,
+            foodnum:1,
         }
     },
     methods:{
         // 多规格修改vue 的值
         makeCart(msg){
+            console.log(msg)
             this.cartBox = msg
         },
         // 子组件的减少
@@ -308,13 +317,20 @@ export default {
             }
             
         },
+        // 适用于主组件
+        _addCart (goodsId,index) {
+            let msg = []
+            msg[0] = goodsId
+            msg[1] = index
+            this.childAddCart (msg)
+        },
         // 子组件的加入购物车
         childAddCart (msg){
             let that = this
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/goods_info',
+                url: 'mobile/api/q',
+                // url:'api/goods_info',
                 data: {
                     url:'http://api.dqvip.cc/goods_info',
                     q_type:'post',
@@ -322,19 +338,18 @@ export default {
                 },
             })
                 .then(function(res){
-                    let date = res.data.data
-                    // let date = eval('('+res.data+')')
+                    // let date = res.data
+                    let date = eval('('+res.data+')')
                     if(msg[2]){
-                        that.addCart(msg[0],msg[1],that.shop.shop_id,date,msg[2])
+                        that.addCart(msg[0],msg[1],that.shop.shop_id,date.data,msg[2])
                     }else{
-                        that.addCart(msg[0],msg[1],that.shop.shop_id,date)
+                        that.addCart(msg[0],msg[1],that.shop.shop_id,date.data)
                     }
                     
                 })
                 .catch(function (error) {
                     console.log(error);
                 })
-            
         },
         randomString (len) {
         　　len = len || 32;
@@ -352,28 +367,45 @@ export default {
          */
          
         addCart(goodsId,index,shopId,date,spec_key){
-                console.log(spec_key)
             // 判断是否存在
                 if(!localStorage[shopId]){
                     localStorage[shopId] = "[]"
                 }
                 var jsonarray = eval('('+localStorage[shopId]+')')
                 // 判断购物车是否有商品 有的话直接进
-                for(let k in jsonarray){  //循环购物车是否有当前商品
-                    if(goodsId == jsonarray[k].goods_id){
-                        if(date.spec.length == 0 || date.spec.length == ''){
-                            console.log('1591')
-                            jsonarray[k].goods_num ++
-                            this.cartBox = jsonarray
-                            localStorage[shopId] = JSON.stringify(jsonarray)
+
+                for(let k in jsonarray){  
+                    
+                    if(goodsId == jsonarray[k].goods_id){  //循环购物车是否有当前商品
+                        if(spec_key){
+                            for(let j in jsonarray){
+                                if(jsonarray[j].spec_key == spec_key){  //循环购物车是否有相同规格的商品
+                                    jsonarray[j].goods_num ++
+                                    this.cartBox = jsonarray
+                                    localStorage[shopId] = JSON.stringify(jsonarray)
+                                    return
+                                }
+                            }
                             
                         }else{
-                            console.log('1592')
-                            this.isBuy = true
-                            this.goodsinfo = date
+                            console.log(22222222222222222)
+                            if(date.spec.length == 0 || date.spec.length == ''){
+                                jsonarray[k].goods_num ++
+                                this.cartBox = jsonarray
+                                localStorage[shopId] = JSON.stringify(jsonarray)
+                                
+                            }else{
+                                this.closeFeel()
+                                this.isBuy = true
+                                this.goodsinfo = date
+                            }
                         }
+                        
+                        
                         return
+                         
                     }
+                   
                 }
 
                 for(var i = 0;i< this.shop.cate.length;i++){
@@ -496,10 +528,10 @@ export default {
         // 获取地址
         getaddressList () {
             this.$http({
-                // method: 'post',
-                method:'get',
-                // url:'mobile/api/q',
-                url:'api/buyer/list_address',
+                method: 'post',
+                // method:'get',
+                url:'mobile/api/q',
+                // url:'api/buyer/list_address',
                 data: {
                     url:'http://api.dqvip.cc/buyer/list_address',
                     q_type:'get'
@@ -511,8 +543,8 @@ export default {
                 })
         },
         getaddrList (res){
-            // const date = eval('('+res.data+')')
-            let date = res.data
+            const date = eval('('+res.data+')')
+            // let date = res.data
             this.addressList = date.data
             let area_price = this.$store.state.delivery_cost
             let delivery_price
@@ -539,8 +571,8 @@ export default {
             // 更改收藏状态
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/collect_shop',
+                url: 'mobile/api/q',
+                // url:'api/buyer/collect_shop',
                 data: {
                     url:'http://api.dqvip.cc/buyer/collect_shop',
                     shop_id:this.$route.params.id,
@@ -554,8 +586,8 @@ export default {
                 })
         },
         collect (res) {
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             if(date.status == 200){
                 if(date.message  != 'false'){
                     this.$message({
@@ -583,8 +615,8 @@ export default {
             // 获取店铺信息 传一个店铺ID
             this.$http({
                 method: 'post',
-                // url: 'mobile/api/q',
-                url:'api/buyer/shop_info',
+                url: 'mobile/api/q',
+                // url:'api/buyer/shop_info',
                 data: {
                     url:'http://api.dqvip.cc/buyer/shop_info',
                     shop_id:this.$route.params.id,
@@ -597,8 +629,8 @@ export default {
                 })
         },
         getlistbox(res){
-            // let date = eval('('+res.data+')')
-            let date = res.data
+            let date = eval('('+res.data+')')
+            // let date = res.data
             this.shop = date.data
             this.GetDistance()
             if(this.shop.is_collect == 1){
@@ -755,19 +787,21 @@ export default {
                         this.fullmoney = null
                     }
                 }
-
                 this.rulingPrice = newmoney
             }
             // 多规格
-            // let spec_array = new Array
-            // for(let i in this.cart){
-            //     if(this.cart[i].spec_key.length > 0){
-            //         let goods_num = spec_array[this.cart[i].goods_id] || 0
-            //         goods_num += parseInt(this.cart[i].goods_num) 
-            //         spec_array[this.cart[i].goods_id] = goods_num
-            //     }
-            // }
-            // this.goods_spec = spec_array
+            let spec_array = new Array
+            for(let i in this.cartBox){
+                if(this.cartBox[i].spec_key){
+                    if(this.cartBox[i].spec_key.length > 0){
+                        let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                        goods_num += parseInt(this.cartBox[i].goods_num) 
+                        spec_array[this.cartBox[i].goods_id] = goods_num
+                    }
+                }
+               
+            }
+            this.goods_spec = spec_array
             let goods_val = 0
             for(let i in this.cartBox){
                 goods_val += this.cartBox[i].goods_num

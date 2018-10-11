@@ -23,7 +23,7 @@
                         </div>
                         <div class="sitename fs24">
                             <!-- {{item.area.address}} -->
-                            {{item.building}}{{item.address}}
+                            {{item.building}}{{item.floor}}楼{{item.address}}室
                         </div>
                     </div>
                     <div class="df">
