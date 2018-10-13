@@ -57,7 +57,7 @@ export default {
             },
             defaulttab:2,
             select:'',
-            type:0,
+            type:'',
             ordershow:false,
             selectArray:0,
             historyOrder:[],
@@ -68,6 +68,7 @@ export default {
         }
     },
     watch : {
+        //选中的订单
         select () {
             for (let i in this.historyOrder){
                 if( this.select ==  this.historyOrder[i].order_id){
@@ -115,7 +116,16 @@ export default {
              if(!this.content == ''){
                 date.content = this.content
             }
-            date.type = this.type
+            if(this.type == ''){
+                this.$message({
+                    type:'warning',
+                    message:'您还没有选择投诉类型'
+                })
+                return 
+            }else{
+                date.type = this.type
+            }
+            
             date.url = 'http://api.dqvip.cc/buyer/user_complaint',
             date.q_type = 'post',
             this.$http({
@@ -217,10 +227,11 @@ export default {
             let date = date1.data.data
             let order = []
             for(let i in date){
-                if(parseInt(Date.parse(new Date(date[i].created_at.replace(/\-/g, "/")))/1000) > parseInt(timer)){
+                if(parseInt(Date.parse(new Date(date[i].created_at.replace(/\-/g, "/")))/1000) > parseInt(timer) && date[i].order_status >= 4){
                     order.push(date[i])
                 }
             }
+
             this.historyOrder = order
         }
     }

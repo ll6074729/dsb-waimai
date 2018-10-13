@@ -105,6 +105,7 @@
             :food="shop.recommend_goods" 
             :cart="cart" 
             :cartBox="cartBox"
+            :goods_spec="goods_spec" 
             :recommendImg="recommendImg"
             @childAddCart="childAddCart"
             @childMinusCart="childMinusCart"
@@ -182,6 +183,7 @@
                 @closeGoodsInfo="changeGoodsInfo"
                 @buygoodsinfo="buygoodsinfo"
                 @makeCart="makeCart"
+                v-if="goodsinfo.goods_info"
                 ></shop-buy>
             </div>
         </div>
@@ -281,7 +283,7 @@ export default {
             costPrice:0, //原价
             rulingPrice:0, //折扣价
             addressList:[],
-            goodsinfo:[],
+            goodsinfo:{},
             shopprom:[],
             shoptitle:[],
             delivery_price:0,
@@ -388,28 +390,29 @@ export default {
                             }
                             
                         }else{
-                            console.log(22222222222222222)
                             if(date.spec.length == 0 || date.spec.length == ''){
                                 jsonarray[k].goods_num ++
                                 this.cartBox = jsonarray
                                 localStorage[shopId] = JSON.stringify(jsonarray)
                                 
                             }else{
-                                this.closeFeel()
                                 this.isBuy = true
-                                this.goodsinfo = date
+                                this.goodsinfo.goods_info = date.goods_info
+                                this.goodsinfo.spec = []
+                                for(let i in date.spec){
+                                    if(date.spec[i].item.length > 0){
+                                        this.goodsinfo.spec.push(date.spec[i])
+                                    }
+                                }
+                                
                             }
                         }
-                        
-                        
-                        return
-                         
+                        return  
                     }
                    
                 }
 
                 for(var i = 0;i< this.shop.cate.length;i++){
-                    console.log('1593')
                     for(var j = 0;j <this.shop.cate[i].goods.length;j++){
                             //查询购物车中是否存在当前商品
                         if(this.shop.cate[i].goods[j].goods_id == goodsId){
@@ -420,7 +423,13 @@ export default {
                                 jsonarray.push(this.shop.cate[i].goods[j])
                             }else{
                                 this.isBuy = true
-                                this.goodsinfo = date
+                                this.goodsinfo.goods_info = date.goods_info
+                                this.goodsinfo.spec = []
+                                for(let i in date.spec){
+                                    if(date.spec[i].item.length > 0){
+                                        this.goodsinfo.spec.push(date.spec[i])
+                                    }
+                                }
                             }
                         }
                     }

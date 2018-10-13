@@ -9,9 +9,9 @@
         <router-link tag="div" :to="{path:'evaluate',query:{order_id:order_id,order_sn:order_sn,shop_id:shop_id}}" class="order-btn-item bg" v-if="order_status == 4 && is_comment == 0">
             评价订单
         </router-link>
-        <!-- <div @click="alignOrder(order_id)" class="order-btn-item bg" v-if="order_status == 4 || order_status == 3">
+        <div @click="alignOrder(order_id)" class="order-btn-item bg" v-if="order_status == 4 || order_status == 3">
             再来一单
-        </div> -->
+        </div>
         <div class="order-btn-item" v-if="order_status == 0" @click="cancel_order">
             取消订单
         </div>
@@ -28,7 +28,7 @@ export default {
         order_status:Number,
         shop_id:Number,
         order_id:Number,
-        order_sn:Number,
+        order_sn:String,
         pay_status:Number,
         is_comment:Number,
         finish_time:Number,
@@ -42,15 +42,6 @@ export default {
     methods:{
         alignOrder (order_id) {
             this.$emit('alignOrder',order_id)
-        },
-        // _alignOrder (res) {
-        //     // let date = eval('('+res.data+')')
-        //     let date = res.data
-        //     console.log(date)
-        //     // this.$router.push({path:'shop/'+this.shop_id})
-        // },
-        pagestyle () {
-
         },
         cancel_order () {
             let _this = this

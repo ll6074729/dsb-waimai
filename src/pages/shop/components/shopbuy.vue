@@ -203,11 +203,18 @@ export default {
             // this.goodsinfo.goods_info.price = (parseFloat(this.goodsinfo.goods_info.price) + parseFloat(foodprice)).toFixed(2)
             this.$forceUpdate()
             this.$set(this.goodsinfo.goods_info,'spec_price',(parseFloat(foodprice)).toFixed(2))
+        },
+        goods_img(){
+            if(this.goodsinfo.goods_info.details_figure){
+                let img = this.goodsinfo.goods_info.details_figure.split(',')
+                this.imgurl = img[0]
+            }
         }
     },
     watch:{
         goodsinfo () {
             console.log(this.goodsinfo)
+            alert(this.goodsinfo.goods_info.details_figure)
             if(this.goodsinfo.goods_info.details_figure){
                 let img = this.goodsinfo.goods_info.details_figure.split(',')
                 this.imgurl = img[0]
@@ -215,7 +222,6 @@ export default {
             // this.$refs.goodsPrice.innerHTML = this.goodsinfo.goods_info.price
         },
         isBuy () {
-            console.log(this.swiper,999)
             // if(this.isBuy){
             //     document.body.style.overflow='hidden';
             //     document.body.style.height = window.screen.height + 'px';
@@ -226,6 +232,9 @@ export default {
                
         },
 
+    },
+    mounted () {
+        this.goods_img()
     }
 }
 </script>

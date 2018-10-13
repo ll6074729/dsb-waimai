@@ -6,9 +6,8 @@
                 我的优惠券
             </div>
             <ul>
-                <!-- v-if="item.condition > costPrice" -->
                 <li class="item pd20" v-for="item in couponList" :key="item.id" :class="{active:item.id ==coupon.id}" @click="couponchange(item)">
-                    <!-- {{couponList}} -->
+                    
                     <div class="coupon-money">
                         ￥<span>{{item.coupon.money}}</span>
                     </div>
@@ -17,10 +16,10 @@
                             {{item.coupon.name}}
                         </div>
                         <div class="coupon-desc mgbt20 fs20">
-                            {{item.coupon.name}}
+                            满{{item.coupon.condition}}可用
                         </div>
                         <div class="coupon-time fs20">
-                            有效期至 {{ item.coupon.use_start_time}}
+                            有效期至 {{ item.coupon.use_end_time}}
                         </div>
                     </div>
                 </li>

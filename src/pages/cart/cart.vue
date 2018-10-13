@@ -74,7 +74,7 @@ export default {
             rulingPrice:0, //折扣价
             rulingPrice_money:0, //优惠券的折扣价
             couponList:[],
-            coupon:{},
+            coupon:null,
             coupon_id:'',
             iscoupon:false,
             paycode:'weixin',
@@ -90,6 +90,7 @@ export default {
             custom_delivery:0,
             fullscreenLoading: true,
             estimated_delivery:'',
+            feel_price:0,
         }
     },
     mounted () {
@@ -108,9 +109,17 @@ export default {
             var integral_num = this.integral_num || 0
             // this.shopprom = []
            this.money()
+            // 判断是否有优惠券
+            if(this.coupon != null){
+                this.rulingPrice =  this.rulingPrice - parseFloat(this.coupon.coupon.money).toFixed(2) || 0
+                if(this.rulingPrice < this.feel_price){
+                    this.rulingPrice =  (parseFloat(this.feel_price)).toFixed(2)
+                }
+            }
             //判断是否已经使用其他支付
-            if(this.balance_money > 0){
-                this.rulingPrice = this.rulingPrice - this.balance_money || 0
+            if(this.balance_money > 0 ){
+                this.rulingPrice = this.rulingPrice - this.balance_money|| 0
+                
             }
             // 判断余额是否超过支付金额 或者小于支付金额
             if(integral_num/100 > parseFloat(this.rulingPrice)){
@@ -125,14 +134,24 @@ export default {
         },
         // 余额
         balance_money (){
+            
             if(!this.balance_money){
                 this.balance_money = ""
             }
             var balance_money = this.balance_money || 0
+
             // this.shopprom = []
             this.money()
+            
+            // 判断是否有优惠券
+            if(this.coupon != null){
+                this.rulingPrice =  this.rulingPrice - parseFloat(this.coupon.coupon.money).toFixed(2) || 0
+                if(parseFloat(this.rulingPrice) < parseFloat(this.feel_price)){
+                    this.rulingPrice =  (parseFloat(this.feel_price)).toFixed(2)
+                }
+            }
             //判断是否已经使用其他支付
-            if(this.integral_num > 0){
+            if(this.integral_num > 0 ){
                 this.rulingPrice = this.rulingPrice - this.integral_num/100 || 0
             }
             // 判断余额是否超过支付金额 或者小于支付金额
@@ -143,13 +162,24 @@ export default {
             }else if(parseFloat(balance_money) == parseFloat(this.rulingPrice)){
                 this.rulingPrice = 0
             }
-            
         },
         // 优惠券
         coupon () {
             // 判断原价是否满足优惠券的金额
+            // 配送费打包费
+            this.balance_money = ''
+            this.integral_num = ''
             if(this.costPrice > parseFloat(this.coupon.coupon.condition)){
-                this.rulingPrice =  parseFloat(this.rulingPrice_money) - parseFloat(this.coupon.coupon.money) || 0
+                if(this.integral_num > 0 || this.balance_money > 0 ){
+                    
+                    this.rulingPrice = parseFloat(this.rulingPrice_money) - this.integral_num - this.balance_money - parseFloat(this.coupon.coupon.money)  || 0
+                }else{
+                    this.rulingPrice =  parseFloat(this.rulingPrice_money) - parseFloat(this.coupon.coupon.money) || 0
+                }
+                // 优惠券减价后是否小于杂费  小于的话就等于杂费
+                if(this.rulingPrice < this.feel_price){
+                    this.rulingPrice =  (parseFloat(this.feel_price)).toFixed(2)
+                }
                 this.coupon_id = this.coupon.id
             }
         },
@@ -247,6 +277,7 @@ export default {
                     message: date.message,
                     type: 'warning'
                 });
+                this.fullscreenLoading = false
                 return
             }
             
@@ -255,7 +286,7 @@ export default {
             this.$store.dispatch("changeOrderSn",date.data.order_sn)
             let _this = this
             localStorage.removeItem(this.shopinfo.shop_id)
-            if(parseInt(date.data.order_amount) == 0){
+            if(parseFloat(date.data.order_amount) < 0.01){
                 _this.fullscreenLoading = false;
                 location.href='/#/pay/true';
             }else{
@@ -303,7 +334,6 @@ export default {
                 console.log(i)
                 total += ((parseFloat(cart[i].price) + parseFloat(cart[i].spec_price || 0)) * cart[i].goods_num)
             }
-            console.log(total,888888888)
             this.costPrice = total.toFixed(2) 
             this.rulingPrice = total.toFixed(2) || 0
             this.cartprom = []
@@ -334,14 +364,17 @@ export default {
                     this.cartprom[1] = shopprom[1][0]
                 }
             }
-            
             // 首单is_first
             // 优惠券价钱是所有价钱算完了之后再计算的  watch 中的 coupon 方法
             if(this.shopinfo.is_first < 1 ){
                 if(this.shopprom[2][0]){
                     this.rulingPrice = this.rulingPrice - parseFloat(this.shopprom[2][0].money) - parseFloat(this.$store.state.delivery_cost) - parseFloat(this.$store.state.packing_expense) - parseFloat(this.$store.state.delivery_price) || 0
                     if(this.rulingPrice < 0){
-                        this.rulingPrice = parseFloat(this.$store.state.delivery_cost) + parseFloat(this.$store.state.packing_expense) + parseFloat(this.$store.state.delivery_price) || 0
+                        if(parseFloat(this.$store.state.delivery_cost) == 0){ //判断校区的配送费还是店铺的配送费
+                             this.rulingPrice = parseFloat(this.$store.state.packing_expense) + parseFloat(this.$store.state.delivery_price) || 0
+                        }else{
+                             this.rulingPrice = parseFloat(this.$store.state.delivery_cost) +  parseFloat(this.$store.state.delivery_price) || 0
+                        }
                     }else{
                         this.rulingPrice = (parseFloat(this.rulingPrice) + parseFloat(this.$store.state.delivery_price) + parseFloat(this.$store.state.delivery_cost) + parseFloat(this.$store.state.packing_expense)).toFixed(2) || 0
                     }
@@ -355,7 +388,7 @@ export default {
                 this.shopprom[2][0] = null
                 this.rulingPrice_money = this.rulingPrice || 0
             }
-            console.log(this.rulingPrice)
+            
              // 加配送费
             /**
               * custom_delivery 店铺配送费
@@ -388,11 +421,11 @@ export default {
                     this.costPrice = (parseFloat(this.rulingPrice) + parseFloat(this.shopinfo.custom_delivery) +  parseFloat(this.delivery_cost[1].value) + parseFloat(this.$store.state.delivery_price)).toFixed(2) || 0
                 }
             }
-           
             if(this.rulingPrice != NaN){
                 this.fullscreenLoading = false
             }
             // 如果是首单的话  只计算商品的钱   配送及打包 还是要算的
+            this.feel_price = (parseFloat(this.rulingPrice) - parseFloat(this.rulingPrice_money)).toFixed(2)  //配送费
         },
         // 初始化购物车
         init () {
@@ -521,10 +554,17 @@ export default {
                 })
         },
         getcouponList (res) {
-            let date = eval('('+res.date+')')
+            let date = eval('('+res.data+')')
             // let date =res.data
+            let nowtime = Date.parse(new Date())
+            
             if(date){
-                this.couponList = date.data
+                for(let i in date.data){
+                    let time = Date.parse(new Date(date.data[i].coupon.use_end_time))
+                    if(time > nowtime){
+                        this.couponList.push(date.data[i])
+                    }
+                }
             }
         }
         

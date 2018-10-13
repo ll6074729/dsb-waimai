@@ -83,11 +83,14 @@ export default {
         cartBox () {
             let spec_array = new Array
             for(let i in this.cartBox){
-                if(this.cartBox[i].spec_key.length > 0){
-                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
-                    goods_num += parseInt(this.cartBox[i].goods_num) 
-                    spec_array[this.cartBox[i].goods_id] = goods_num
+                if(this.cartBox[i].spec_key){
+                    if(this.cartBox[i].spec_key.length > 0){
+                        let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                        goods_num += parseInt(this.cartBox[i].goods_num) 
+                        spec_array[this.cartBox[i].goods_id] = goods_num
+                    }
                 }
+               
             }
             this.goods_spec = spec_array
         },
@@ -131,11 +134,12 @@ export default {
         cartBoxfc () {
             let spec_array = new Array
             for(let i in this.cartBox){
-                if(!this.cartBox[i].spec){
-                    console.log('55555555555')
-                    let goods_num = spec_array[this.cartBox[i].goods_id] || 0
-                    goods_num += parseInt(this.cartBox[i].goods_num) 
-                    spec_array[this.cartBox[i].goods_id] = goods_num
+                if(this.cartBox[i].spec_key){
+                    if(this.cartBox[i].spec_key.length > 0){
+                        let goods_num = spec_array[this.cartBox[i].goods_id] || 0
+                        goods_num += parseInt(this.cartBox[i].goods_num) 
+                        spec_array[this.cartBox[i].goods_id] = goods_num
+                    }
                 }
             }
             this.goods_spec = spec_array

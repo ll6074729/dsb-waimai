@@ -34,7 +34,7 @@ export default new Router({
       component: Home,
       meta:{
         title:'首页',
-        keepAlive: false
+        keepAlive: true,
       }
     },
     {

@@ -84,7 +84,6 @@ export default {
             this.$emit('orderlist','0')
         },
         order (order_id,order_sn) {
-            console.log(order_sn,order_id)
             this.$router.push({path:'/orderdetails',query:{order_sn:order_sn,order_id:order_id}})
         }
     }

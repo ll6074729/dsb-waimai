@@ -10,7 +10,7 @@
         </router-link>
         <router-link to="/Merchant" tag="div">
             <img src="../../../assets/img/组21@3x.png" alt="">
-            <p>入住</p>
+            <p>入驻</p>
         </router-link>
     </div>
 </template>

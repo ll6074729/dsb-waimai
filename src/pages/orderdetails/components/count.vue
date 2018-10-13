@@ -1,6 +1,6 @@
 <template>
     <div class="count">
-        <div class="count-text" v-if="order_status != 0" >
+        <div class="count-text">
             <!-- <el-progress type="circle" :percentage="0"></el-progress> -->
             <el-progress 
                 type="circle" 
@@ -120,7 +120,10 @@ export default {
             let bugtime = parseInt(this.endtimer) - parseInt(this.currenttimer) //倒计时
             let minutes =  parseInt(bugtime / 60 % 60, 10)
             let seconds = parseInt(bugtime / 1000 % 60, 10);
-            if(this.order_status != 4){
+            if(this.order_status == 0){
+                this.count = 100
+                this.text = '未支付'
+            }else if(this.order_status != 4) {
                 if(currenTime && countTime){
                     if(currenTime <= countTime){
                         this.count = parseInt((currenTime/countTime)*100)

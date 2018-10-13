@@ -51,41 +51,26 @@ export default {
             // console.log(msg)
             var shop = []
             for(let i in this.historyOrder){
-                if(this.historyOrder[i].order_id = msg){
-                    shop.push(
-                        {
-                            details_figure:this.historyOrder[i].details_figure,
-                            goods_id:this.historyOrder[i].goods_id,
-                            goods_num:this.historyOrder[i].goods_num,
-                            price :this.historyOrder[i].goods_price,
+                if(this.historyOrder[i].order_id == msg){
+                    for(var j = 0;j<this.historyOrder[i].order_goods.length;j++){
+                        shop.push({
+                            details_figure:this.historyOrder[i].order_goods[j].details_figure,
+                            goods_id:this.historyOrder[i].order_goods[j].goods_id,
+                            goods_num:this.historyOrder[i].order_goods[j].goods_num,
+                            price :this.historyOrder[i].order_goods[j].goods_price,
                             shop_id : this.historyOrder[i].shop_id, 
-                            show : this.historyOrder[i].show,
-                            showMinus : this.historyOrder[i].showMinus,
-                            spec : this.historyOrder[i].spec,
-                            spec_price : this.historyOrder[i].spec_price || 0,
-                            title : this.historyOrder[i].goods_name,
-                            spec_key : this.historyOrder[i].spec_key || '',
-                            spec_key_name : this.historyOrder[i].spec_key_name || ''
-                        }
-                    )
-                    // shop[i].details_figure = this.historyOrder[i].details_figure //图片
-                    // shop[i].goods_id = this.historyOrder[i].goods_id   //ID
-                    // shop[i].goods_num = this.historyOrder[i].goods_num   //数量
-                    // shop[i].price = this.historyOrder[i].goods_price   //价钱
-                    // shop[i].shop_id = this.historyOrder[i].shop_id     //店铺ID
-                    // shop[i].show = this.historyOrder[i].show
-                    // shop[i].showMinus = this.historyOrder[i].showMinus 
-                    // shop[i].spec = this.historyOrder[i].spec   //规格
-                    // shop[i].spec_price = this.historyOrder[i].spec_price || 0 //规格价钱
-                    // if(this.historyOrder[i].spec_key ){ //规格
-                    //     shop[i].spec_key = this.historyOrder[i].spec_key
-                    // }
-                    // if(this.historyOrder[i].spec_key_name ){ //规格名字
-                    //     shop[i].spec_key_name = this.historyOrder[i].spec_key_name 
-                    // }
-                    
-                    // shop[i].title = this.historyOrder[i].goods_name
+                            show : true,
+                            showMinus : true,
+                            spec : this.historyOrder[i].order_goods[j].spec,
+                            spec_price : this.historyOrder[i].order_goods[j].spec_price || 0,
+                            title : this.historyOrder[i].order_goods[j].goods_name,
+                            spec_key : this.historyOrder[i].order_goods[j].spec_key || '',
+                            spec_key_name : this.historyOrder[i].order_goods[j].spec_key_name || ''
+                        })
+                    }
+                    console.log(shop)
                     localStorage[this.historyOrder[i].shop_id] = JSON.stringify(shop)
+                    this.$router.push({path:'shop/'+this.historyOrder[i].shop_id})
                 }
             }
         },

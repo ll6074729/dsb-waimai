@@ -1,7 +1,7 @@
 <template>
     <div class="integral">
         <div>
-            <div class="item df" v-for="item in integral" :key="item.id">
+            <div class="item df" v-for="item in integral" :key="item.id" v-if="parseInt(item.user_money)  != 0 || parseInt(item.pay_points) != 0">
                 <div class="info">
                     <div class="info-text">
                         {{item.desc}}

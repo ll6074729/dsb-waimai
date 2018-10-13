@@ -1,7 +1,7 @@
 <template>
     <div>
             <div class="cost-item df" >
-                <div class="cost-type">配送费<span style="color:#999;font-size:2.93vw">(包含校区基础费+楼层配送费){{this.shopinfo.custom_delivery}}-- {{this.$store.state.delivery_price}}</span></div>
+                <div class="cost-type">配送费<span style="color:#999;font-size:2.93vw">(包含校区基础费+楼层配送费)</span></div>
                 <div class="cost-price">￥{{(parseFloat(this.shopinfo.custom_delivery)+ parseFloat(this.$store.state.delivery_price)).toFixed(2)}} </div>
             </div>
             <div class="cost-item df" v-if="parseFloat(this.shopinfo.custom) !=0">

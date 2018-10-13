@@ -12,11 +12,11 @@
                             {{item.coupon.name}}
                         </div>
                         <div class="coupon-desc mgbt20 fs20">
-                            {{item.coupon.name}}
+                            满{{item.coupon.condition}}可用
                         </div>
                         <div class="coupon-time fs20">
                             <!-- 有效期至 {{ item.coupon.use_start_time * 1000 | formatDate}} -->
-                            有效期至 {{ item.coupon.use_start_time}}
+                            有效期至 {{ item.coupon.use_end_time}}
                         </div>
                     </div>
                 </li> 

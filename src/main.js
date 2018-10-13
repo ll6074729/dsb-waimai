@@ -46,7 +46,12 @@ Vue.config.productionTip = false
 Vue.prototype.styleIndex = styleIndex
 Vue.prototype.$http = axios
 router.afterEach((to,from,next) => {
-  window.scrollTo(0,0);
+    console.log(to,666)
+    console.log(from,666)
+    if(to.name != 'Home'){
+        // window.scrollTo(0,0);
+    }
+  
 })
 Vue.prototype.$wx = wx
 // Vue.prototype.WXconfig = WXconfig

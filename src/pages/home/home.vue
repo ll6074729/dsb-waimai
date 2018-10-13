@@ -12,11 +12,12 @@
             </router-link>
         </div>
         <!-- 分类按钮 -->
-        <homeswiper-tab :list="swiperTab"></homeswiper-tab>
-        <hr class="hr20">
+        
+        <homeswiper-tab :list="swiperTab" v-if="swiperTab.length > 0"></homeswiper-tab>
+        <hr class="hr20" v-if="swiperTab.length > 0">
         <!-- 公告消息 -->
         <homeswiper-tip :notice="notice" v-if="notice"></homeswiper-tip>
-        <hr class="hr20">
+        <hr class="hr20" v-if="notice.length > 0">
         <!-- 优选商家 -->
         <recommend :list="Recommend" v-if="Recommend"></recommend>
         <hr class="hr20">
@@ -41,33 +42,33 @@ import Recommend from "./components/recommend"
 import GoodsList from "../../componentss/goodsList"
 import TabBar from '../../componentss/tabbar'
 export default {
-  name: "Home",
-  components: {
-    HomeswiperBanner,
-    HomeHead,
-    HomeswiperTab,
-    HomeswiperTip,
-    Recommend,
-    GoodsList,
-    TabBar,
-  },
-  data () {
-    return {
-        banner:[],
-        swiperTab: [],
-        Recommend:[],
-        shopprom:null,
-        tags:[],
-        notice:[],
-        shopList:[],
-        defaulttab:0,
-        page:'shop-home',
-        lng:localStorage.lng,
-        lat:localStorage.lat,
-        range:[],
-        fullscreenLoading: true
-    }
-  },
+    name: "Home",
+    components: {
+        HomeswiperBanner,
+        HomeHead,
+        HomeswiperTab,
+        HomeswiperTip,
+        Recommend,
+        GoodsList,
+        TabBar,
+    },
+    data () {
+        return {
+            banner:[],
+            swiperTab: [],
+            Recommend:[],
+            shopprom:null,
+            tags:[],
+            notice:[],
+            shopList:[],
+            defaulttab:0,
+            page:'shop-home',
+            lng:localStorage.lng,
+            lat:localStorage.lat,
+            range:[],
+            fullscreenLoading: true
+        }
+    },
     methods:{
         _GetDistance() {
             if(localStorage.lat || localStorage.lng){
@@ -194,16 +195,23 @@ export default {
             let delivery_price = 0
             for(let i in  addressList){
                 // 判断校区是否相同
-                if(addressList[i].area_id == this.$store.state.area_id){
-                    if(addressList[i].is_default == 1 ){
-                        this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
-                        delivery_price = addressList[i].delivery.delivery_price
-                        this.$store.dispatch("changedeliveryPrice",delivery_price)
-                        return
-                    }
+                if(addressList.length == 1){
+                    this.$store.dispatch("defaultAddress",JSON.stringify(addressList[0]))
+                    delivery_price = addressList[0].delivery.delivery_price
+                    this.$store.dispatch("changedeliveryPrice",delivery_price)
                 }else{
-                    this.$store.dispatch("defaultAddress","")
+                    if(addressList[i].area_id == this.$store.state.area_id){
+                        if(addressList[i].is_default == 1 ){
+                            this.$store.dispatch("defaultAddress",JSON.stringify(addressList[i]))
+                            delivery_price = addressList[i].delivery.delivery_price
+                            this.$store.dispatch("changedeliveryPrice",delivery_price)
+                            return
+                        }
+                    }else{
+                        this.$store.dispatch("defaultAddress","")
+                    }
                 }
+                
             }
             this.$store.dispatch("changedeliveryPrice",delivery_price || 0 )
         },
@@ -214,6 +222,14 @@ export default {
         this.chooesSchool()
         this.handSearch()
        
+    },
+    beforeRouteEnter(to, from, next) {
+        if(from.name=='Location'){
+            to.meta.keepAlive = false;
+        }else{
+            to.meta.keepAlive = true;
+        }
+      next();
     },
 
 }

@@ -63,19 +63,6 @@ export default {
             this.coupontetx = this.coupon.coupon.name
         },
         integral_num () {
-            // var integral_num = this.integral_num || 0
-            // var balance_money = this.balance_money || 0
-            // var constmoney = parseFloat(balance_money) + parseFloat(parseFloat(integral_num)/100)
-            // // 积分大于支付价钱
-            // if(parseFloat(integral_num)/100 > parseFloat(this.rulingPrice)){
-            //     this.integral_num = this.rulingPrice * 100
-            //     this.balance_money = 0
-            // }
-            // //总价大于支付价钱
-            // if(constmoney > parseFloat(this.rulingPrice)){
-            //     this.balance_money = (parseFloat(this.rulingPrice) - parseFloat(integral_num)/100).toFixed(2)
-            // }
-            // this.$emit('getbalance_money', parseFloat(this.balance_money))
             if(this.integral_num  > parseFloat(this.integral)){
                 this.integral_num = parseFloat(this.integral)
             }
@@ -85,18 +72,6 @@ export default {
             this.$emit('getdesc',this.desc)
         },
         balance_money () {
-            // var integral_num = this.integral_num || 0
-            // var balance_money = this.balance_money || 0
-            // var constmoney = parseFloat(balance_money) + parseFloat(parseFloat(integral_num)/100)
-            // // 余额大于支付价钱
-            // if(balance_money > parseFloat(this.rulingPrice)){
-            //     this.balance_money = parseFloat(this.rulingPrice)
-            //     this.integral_num = 0
-            // }
-            // //总价大于支付价钱
-            // if(constmoney > parseFloat(this.rulingPrice)){
-            //     this.integral_num = (parseFloat(this.rulingPrice) - this.balance_money)*100
-            // }
             if(this.balance_money > parseFloat(this.balance)){
                 this.balance_money = parseFloat(this.balance)
             }

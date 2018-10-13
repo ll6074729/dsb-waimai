@@ -152,7 +152,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
     .el-rate >>> .el-rate__icon
-        font-size 4.5vw!important
+        font-size 2.5vw!important
     .el-rate >>> .el-rate__text
         font-size 2.86vw!important
     .collect-list

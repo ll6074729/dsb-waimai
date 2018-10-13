@@ -1,6 +1,6 @@
 <template>
     <div class="df const">
-        <router-link tag="div" to="/balance" class="const-border">
+        <router-link tag="div" to="/balance" >
             <p class="fs40">{{userinfo.moeny}}</p>
             <p class="fs24">余额</p>
         </router-link>

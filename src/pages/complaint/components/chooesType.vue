@@ -2,8 +2,8 @@
 
 <template>
     <div class="chooes-type">
+        <el-radio v-model="radio" label="1" class="chooes-item">投诉商家</el-radio>
         <el-radio v-model="radio" label="0" class="chooes-item">配送问题</el-radio>
-        <el-radio v-model="radio" label="1" class="chooes-item">餐品质量</el-radio>
         <el-radio v-model="radio" label="2" class="chooes-item">平台服务</el-radio>
     </div>
 </template>
@@ -12,12 +12,11 @@ export default {
     name:"chooesType",
     data () {
         return {
-            radio:'0'
+            radio:''
         }
     },
     watch:{
         radio () {
-            console.log(this.radio)
             this.$emit('changeradio',this.radio)
         }
     }

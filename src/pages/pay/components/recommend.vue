@@ -61,6 +61,7 @@ export default {
                     p:first-child
                         margin-bottom 2.66vw
                         font-weight bolder
+                        padding-top 1vw
                         ellipsis()
                     .goods-price
                         color #469afe  

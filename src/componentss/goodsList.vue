@@ -13,8 +13,8 @@
                 </swiper>    
             <!-- </div> -->
         </div>
-        <div ref="shopList" class="shop" :class="page" >
-            <ul :class="{'shop-height':isgoods}" v-if="shopList.length > 0">
+        <div ref="shopList" class="shop" :class="page" v-if="shopList.length > 0">
+            <ul :class="{'shop-height':isgoods}" >
                 <li  v-for="(item,index) in shopList" :key="index" class="shop-list">
                     <router-link class="shop-list-item" :to="'/shop/'+item.shop_id" tag="div">
                         <div class="shop-left">
@@ -346,10 +346,10 @@ export default {
 .shop-no
     text-align center     
     color #999
+    padding-bottom 15vw
     img 
         width 66.66vw
-        height 66.66vw 
-        margin-top 10.33vw    
+        height 66.66vw   
         margin-bottom 5vw    
 .boxfixed
     position fixed!important
