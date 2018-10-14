@@ -99,6 +99,8 @@ export default {
         border none!important
         background #f7f7f7
         height 8vw
+        line-height 8vw
+        padding-top 1vw
         border-radius 1.5vw
         text-align center
     .search-head
