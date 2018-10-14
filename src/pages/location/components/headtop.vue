@@ -18,7 +18,7 @@
         </div>
         <div class="search-content" v-show="keyword" ref="search">
             <ul>
-                <li v-for="(item,index) of list" :key="index" class="list-item" v-show="keyword" @click="handClickSchool(item.address,item.area_id)">
+                <li v-for="(item,index) of list" :key="index" class="list-item" v-show="keyword" @click="handClickSchool(item.address,item.area_id,item.type,item.link)">
                     {{item.address}}
                 </li>
             </ul>
@@ -49,22 +49,27 @@ export default {
         })
     },
     methods:{
-         handClickSchool (school,area_id) {
-            this.$store.dispatch("changeSchool",school)
-            this.$store.dispatch("changearea",area_id)
-            this.$http({
-                method: 'post',
-                url: '/mobile/api/q',
-                data: {
-                    url:'http://api.dqvip.cc/buyer/user_locator',
-                    area_id:area_id,
-                    q_type:'post'
-                },
-            })
-                .then(this.$router.push({path:"/"}))
-                .catch(function (error) {
-                    console.log(error);
+         handClickSchool (school,area_id,type,link) {
+            if(type == 1){
+                let link1 = link.replace("amp;","")
+                window.location.href = link1
+            }else{
+                this.$store.dispatch("changeSchool",school)
+                this.$store.dispatch("changearea",area_id)
+                this.$http({
+                    method: 'post',
+                    url: '/mobile/api/q',
+                    data: {
+                        url:'http://api.dqvip.cc/buyer/user_locator',
+                        area_id:area_id,
+                        q_type:'post'
+                    },
                 })
+                    .then(this.$router.push({path:"/"}))
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+            }
         },
     },
     watch :{

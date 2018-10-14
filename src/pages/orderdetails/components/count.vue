@@ -1,6 +1,6 @@
 <template>
     <div class="count">
-        <div class="count-text">
+        <div class="count-text" v-if="order_status != 0">
             <!-- <el-progress type="circle" :percentage="0"></el-progress> -->
             <el-progress 
                 type="circle" 
@@ -120,23 +120,30 @@ export default {
             let bugtime = parseInt(this.endtimer) - parseInt(this.currenttimer) //倒计时
             let minutes =  parseInt(bugtime / 60 % 60, 10)
             let seconds = parseInt(bugtime / 1000 % 60, 10);
-            if(this.order_status == 0){
-                this.count = 100
-                this.text = '未支付'
-            }else if(this.order_status != 4) {
-                if(currenTime && countTime){
-                    if(currenTime <= countTime){
-                        this.count = parseInt((currenTime/countTime)*100)
-                        this.leftTimer()
+            // if(this._status == 0){
+            //     this.count = 100
+            //     this.text = '未支付'
+            // }else 
+            if(this.order_status != 0) {
+                if(this.order_status == 4 && this.shipping_status == 2){
+                    this.count = 100
+                    // this.$refs.progress.color = "#ff7777"
+                    this.text = '订单完成'
+                }else{
+                    if(currenTime && countTime){
+                        if(currenTime <= countTime){
+                            this.count = parseInt((currenTime/countTime)*100)
+                            this.leftTimer()
+                        }else{
+                            this.count = 100
+                            this.$refs.progress.color = "#ff7777"
+                            this.text = '订单超时'
+                        }
                     }else{
                         this.count = 100
-                        this.$refs.progress.color = "#ff7777"
-                        this.text = '订单超时'
+                        this.$refs.progress.color = "#f7f7f7"
+                        this.text = '已取消'
                     }
-                }else{
-                    this.count = 100
-                    this.$refs.progress.color = "#f7f7f7"
-                    this.text = '已取消'
                 }
             }else{
                 this.count = 100

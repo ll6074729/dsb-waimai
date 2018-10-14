@@ -13,7 +13,7 @@
                         </p>
                     </div>
                     <div class="list-item" 
-                        @click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date)"
+                        @click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date,item.type,item.link)"
                         v-for="(item,index) in nearbySchool" 
                         :key="index">
                         {{item.address}}
@@ -25,7 +25,7 @@
                     </div>
                     <ul>
                         <li class="list-item"
-                            v-on:click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date)"
+                            v-on:click="handClickSchool(item.address,item.area_id,item.delivery_cost,item.packing_expense,item.process_date,item.type,item.link)"
                             v-for="(item,index) in allSchool" 
                             :key="index">
                             {{item.address}}
@@ -56,26 +56,33 @@ export default {
         })
     },
     methods:{
-        handClickSchool (school,area_id,delivery_cost,packing_expense,process_date) {
-            this.$store.dispatch("changeSchool",school)
-            this.$store.dispatch("changearea",area_id)
-            this.$store.dispatch("changeprocess",process_date)
-            this.$store.dispatch("changepacking",parseFloat(packing_expense).toFixed(2))
-            this.$store.dispatch("changedelivery",parseFloat(delivery_cost).toFixed(2))
-            this.$http({
-                    method: 'post',
-                    url: '/mobile/api/q',
-                    // url:'api/buyer/user_locator',
-                    data: {
-                        url:'http://api.dqvip.cc/buyer/user_locator',
-                        area_id:area_id,
-                        q_type:'post'
-                    },
-                })
-                    .then(this.$router.push({path:"/"}))
-                    .catch(function (error) {
-                        console.log(error);
+        handClickSchool (school,area_id,delivery_cost,packing_expense,process_date,type,link) {
+            if(type == 1){
+                let link1 = link.replace("amp;","")
+                window.location.href = link1
+                // return
+            }else{
+                this.$store.dispatch("changeSchool",school)
+                this.$store.dispatch("changearea",area_id)
+                this.$store.dispatch("changeprocess",process_date)
+                this.$store.dispatch("changepacking",parseFloat(packing_expense).toFixed(2))
+                this.$store.dispatch("changedelivery",parseFloat(delivery_cost).toFixed(2))
+            
+                this.$http({
+                        method: 'post',
+                        url: '/mobile/api/q',
+                        // url:'api/buyer/user_locator',
+                        data: {
+                            url:'http://api.dqvip.cc/buyer/user_locator',
+                            area_id:area_id,
+                            q_type:'post'
+                        },
                     })
+                        .then(this.$router.push({path:"/"}))
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+            }
         },
     }
 }

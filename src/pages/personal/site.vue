@@ -159,6 +159,19 @@ export default {
                         q_type:'post'
                     }
                 })
+                .then(function(res){
+                    let address1 = eval('('+res.data+')')
+                    let address = address1.data
+                    // let address = res.data.data
+                    for(let i in address){
+                        if(address[i].is_default == 1){
+                            console.log(address[i])
+                            that.$store.dispatch("defaultAddress",JSON.stringify(address[i]))
+                            that.$store.dispatch("changedeliveryPrice",address[i].delivery.delivery_price)
+                            console.log('address')
+                        }
+                    }
+                })
             }
             if(date.status == 200){
                 this.$message({
